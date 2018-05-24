@@ -1,8 +1,20 @@
 @charset "utf-8";
 /* CSS Document */
 
+/*
+*
+* Global Styles
+*
+*/
+
+
+html {
+  font-size: 10pt; /*base for rems*/
+  font-family: Arial, Helvetica, sans-serif;
+
+}
+
 body,td,th,p{
-	font-family: Arial, Helvetica, sans-serif;
 	font-size: 10pt;
 	color: #333;
 	line-height: 1.5;
@@ -35,6 +47,12 @@ h1, h2, h3, h4, h5, h6 {
 article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+
+/*
+*
+* Main Content
+*
+*/
 #maincontent {
   background-color: #f3f3f3;
   min-height: 100%;
@@ -48,7 +66,10 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   text-align: center;
   text-transform: uppercase;
 }
-/* ====================== Navigation ====================== */
+
+/* -----------------------------------
+ Navigation 
+----------------------------------- */
 nav {
   width: 100%;
   height: 80px;
@@ -97,13 +118,19 @@ nav h1 a {
     color: #01447e;
     text-decoration: underline;
 }
-/* ====================== Map ====================== */
+
+/* -----------------------------------
+ Map
+----------------------------------- */
 #map {
   height: 400px;
   width: 100%;
   background-color: #ccc;
 }
-/* ====================== Restaurant Filtering ====================== */
+
+/* -----------------------------------
+ Restaurant Filtering  
+----------------------------------- */
 .filter-options {
   width: 100%;
   height: 50px;
@@ -129,7 +156,10 @@ nav h1 a {
   width: 200px;
 }
 
-/* ====================== Restaurant Listing ====================== */
+/* -----------------------------------
+ Restaurant Listing  
+----------------------------------- */
+
 #restaurants-list {
   background-color: #f3f3f3;
   list-style: outside none none;
@@ -182,7 +212,9 @@ nav h1 a {
   text-transform: uppercase;
 }
 
-/* ====================== Restaurant Details ====================== */
+/* -----------------------------------
+ Restaurant Details  
+----------------------------------- */
 .inside header {
   position: fixed;
   top: 0;
@@ -273,3 +305,9 @@ nav h1 a {
 #restaurant-hours td {
   color: #666;
 }
+
+/*
+*
+* Media Queries
+*
+*/
