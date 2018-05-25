@@ -78,7 +78,7 @@ nav {
 nav h1 {
   margin: auto;
 }
-nav h1 a {
+.site-title {
   color: #fff;
   font-size: 1.42rem;
   font-weight: 200;
