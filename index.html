@@ -16,9 +16,6 @@
   </header>
 
   <main class="maincontent">
-    <section class="map-container">
-      <div id="map" class="map"></div>
-    </section>
     <section>
       <div class="filter-options">
         <h2>Filter Results</h2>
@@ -29,10 +26,14 @@
           <option value="all">All Cuisines</option>
         </select>
       </div>
+    </section>
+    <section class="map-container">
+      <div id="map" class="map"></div>
+    </section>
+    <section>
       <ul class="restaurants-list"></ul>
     </section>
   </main>
-
   <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap"></script>

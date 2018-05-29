@@ -75,7 +75,12 @@ window.initMap = () => {
     lat: 40.722216,
     lng: -73.987501
   };
-  self.map = new google.maps.Map(document.body.querySelector('#map'), {
+  const mapEl = document.body.querySelector('#map');
+
+  //Set map height
+
+  // mapEl.style.height = document.body.querySelector('.map-container').clientHeight + 'px';
+  self.map = new google.maps.Map(mapEl, {
     zoom: 12,
     center: loc,
     scrollwheel: false
