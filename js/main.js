@@ -1,8 +1,9 @@
 let restaurants,
   neighborhoods,
-  cuisines
-var map
-var markers = []
+  cuisines;
+var map;
+var markers = [];
+var isMapVisible = false;
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -98,6 +99,23 @@ window.initMap = () => {
   setMapSize(); //call the function
 }
 
+/**
+ * Show or hide map
+ */
+
+function toggleMap(){
+  let mapContainer = document.body.querySelector('.map-container');
+  let btnSwitchView = document.body.querySelector('.switch-view');
+
+  if (isMapVisible){
+    mapContainer.classList.remove("show");
+    btnSwitchView.innerHTML = "Show Map";
+  } else {
+    mapContainer.classList.add("show");
+    btnSwitchView.innerHTML = "Show List";
+  }
+  isMapVisible = !isMapVisible;
+}
 
 /**
  * Update page and map for current restaurants.
