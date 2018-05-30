@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchCuisines();
 });
 
+
 /**
  * Fetch all neighborhoods and set their HTML.
  */
@@ -75,18 +76,28 @@ window.initMap = () => {
     lat: 40.722216,
     lng: -73.987501
   };
-  const mapEl = document.body.querySelector('#map');
-
   //Set map height
+  const mapEl = document.body.querySelector('#map');
+  
+  setMapSize = () => { 
+    
+    //set to 0 first, so that the flex box can calculate the container size
+    mapEl.style.height = 0;
+    mapEl.style.height = document.body.querySelector('.map-container').clientHeight + 'px'; 
+  };
 
-  // mapEl.style.height = document.body.querySelector('.map-container').clientHeight + 'px';
+  //Create a listener to handle map size changes
+  google.maps.event.addDomListener(window, 'resize', setMapSize);
   self.map = new google.maps.Map(mapEl, {
     zoom: 12,
     center: loc,
     scrollwheel: false
   });
+
   updateRestaurants();
+  setMapSize(); //call the function
 }
+
 
 /**
  * Update page and map for current restaurants.
