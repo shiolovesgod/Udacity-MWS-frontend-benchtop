@@ -19,6 +19,8 @@
       "Saturday": "12:00 pm - 4:00 pm, 5:30 pm - 12:00 am",
       "Sunday": "12:00 pm - 4:00 pm, 5:30 pm - 11:00 pm"
     },
+    "average_rating": 3.67,
+    "total_reviews": 3,
     "reviews": [{
         "name": "Steve",
         "date": "October 26, 2016",
@@ -58,6 +60,8 @@
       "Saturday": "5:00 pm - 11:30 pm",
       "Sunday": "12:00 pm - 3:00 pm, 5:00 pm - 11:00 pm"
     },
+    "average_rating": 4.33,
+    "total_reviews": 3,
     "reviews": [{
         "name": "Steph",
         "date": "October 26, 2016",
@@ -97,6 +101,8 @@
       "Saturday": "11:30 am - 6:00 am",
       "Sunday": "11:30 am - 2:00 am"
     },
+    "average_rating": 3.67,
+    "total_reviews": 3,
     "reviews": [{
         "name": "Steve",
         "date": "October 26, 2016",
@@ -136,6 +142,8 @@
       "Saturday": "Open 24 hours",
       "Sunday": "Sat - 10:30 pm"
     },
+    "average_rating": 4,
+    "total_reviews": 3,
     "reviews": [{
         "name": "Steve",
         "date": "October 26, 2016",
@@ -175,6 +183,8 @@
       "Saturday": "10:00 am - 12:00 am",
       "Sunday": "10:00 am - 12:00 am"
     },
+    "average_rating": 4,
+    "total_reviews": 3,
     "reviews": [{
         "name": "Steve",
         "date": "October 26, 2016",
@@ -214,6 +224,8 @@
       "Saturday": "12:00 pm - 11:00 pm",
       "Sunday": "12:00 pm - 9:00 pm"
     },
+    "average_rating": 4,
+    "total_reviews": 3,
     "reviews": [{
         "name": "Steve",
         "date": "October 26, 2016",
@@ -253,6 +265,8 @@
       "Saturday": "11:30 am - 10:00 pm",
       "Sunday": "11:30 am - 10:00 pm"
     },
+    "average_rating": 4.33,
+    "total_reviews": 3,
     "reviews": [{
         "name": "Steve",
         "date": "October 26, 2016",
@@ -292,6 +306,8 @@
       "Saturday": "10:00 am - 3:00 pm, 5:30 pm - 11:30 pm",
       "Sunday": "10:00 am - 3:00 pm, 5:30 pm - 11:00 pm"
     },
+    "average_rating": 4,
+    "total_reviews": 3,
     "reviews": [{
         "name": "Steve",
         "date": "October 26, 2016",
@@ -331,6 +347,8 @@
       "Saturday": "5:00 pm - 11:00 pm",
       "Sunday": "5:00 pm - 10:00 pm"
     },
+    "average_rating": 4,
+    "total_reviews": 3,
     "reviews": [{
         "name": "Steve",
         "date": "October 26, 2016",
@@ -370,6 +388,8 @@
       "Saturday": "11:00 am - 12:00 am",
       "Sunday": "11:00 am - 12:00 am"
     },
+    "average_rating": 4.67,
+    "total_reviews": 3,
     "reviews": [{
         "name": "Steve",
         "date": "October 26, 2016",
