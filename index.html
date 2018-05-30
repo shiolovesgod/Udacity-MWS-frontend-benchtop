@@ -11,11 +11,16 @@
 <body>
   <header>
     <nav>
-      <h1 class="site-title"><a href="/">Restaurant Reviews</a></h1>
+      <h1 class="site-title">
+        <a href="/">Restaurant Reviews</a>
+      </h1>
     </nav>
   </header>
 
   <main class="maincontent">
+    <div class="mobile-menu">
+      <div class="switch-view">Show List</div>
+    </div>
     <section>
       <div class="filter-options">
         <h2>Filter Results</h2>
@@ -27,12 +32,14 @@
         </select>
       </div>
     </section>
-    <section class="map-container">
-      <div id="map" class="map"></div>
-    </section>
-    <section>
-      <ul class="restaurants-list"></ul>
-    </section>
+    <div class="mobile-wrapper">
+      <section class="map-container">
+        <div id="map" class="map"></div>
+      </section>
+      <section class="restaurants-info">
+        <ul class="restaurants-list"></ul>
+      </section>
+    </div>
   </main>
   <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
@@ -40,7 +47,10 @@
 
 
   <footer id="footer">
-    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+    Copyright (c) 2017
+    <a href="/">
+      <strong>Restaurant Reviews</strong>
+    </a> All Rights Reserved.
   </footer>
 
 </body>
