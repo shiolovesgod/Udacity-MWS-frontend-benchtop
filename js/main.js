@@ -84,7 +84,7 @@ window.initMap = () => {
     
     //set to 0 first, so that the flex box can calculate the container size
     mapEl.style.height = 0;
-    mapEl.style.height = document.body.querySelector('.map-container').clientHeight + 'px'; 
+    mapEl.style.height = document.body.querySelector('.section-map').clientHeight + 'px'; 
   };
 
   //Create a listener to handle map size changes
@@ -104,7 +104,7 @@ window.initMap = () => {
  */
 
 function toggleMap(){
-  let mapContainer = document.body.querySelector('.map-container');
+  let mapContainer = document.body.querySelector('.section-map');
   let btnSwitchView = document.body.querySelector('.switch-view');
 
   if (isMapVisible){

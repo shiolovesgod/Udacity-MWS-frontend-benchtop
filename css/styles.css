@@ -143,7 +143,7 @@ Main Content
 Map
 ----------------------------------- */
 
-.map-container {
+.section-map {
   transform: translate(0,999px);
   transition: transform 1s ease 0.5s, visibility 1s ease 0.5s;
   visibility: hidden;
@@ -160,7 +160,7 @@ Map
   
 }
 
-.map-container.show {
+.section-map.show {
   transform: translate(0,0);
   visibility: visible;
 }
@@ -202,7 +202,7 @@ Map
 /* -----------------------------------
  Restaurant Listing  
  ----------------------------------- */
- .restaurants-info {
+ .section-restaurants {
    position: absolute;
    top: 0;
    overflow-y: scroll;
@@ -236,6 +236,7 @@ Map
   max-width: 100%;
   min-height: 248px;
   min-width: 100%;
+  /* display: none; */
 }
 .restaurants-list li h1 {
   color: #f18200;
