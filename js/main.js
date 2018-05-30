@@ -110,6 +110,8 @@ function toggleMap(){
   if (isMapVisible){
     mapContainer.classList.remove("show");
     btnSwitchView.innerHTML = "Show Map";
+
+    //remove tab index 
   } else {
     mapContainer.classList.add("show");
     btnSwitchView.innerHTML = "Show List";

@@ -145,7 +145,8 @@ Map
 
 .map-container {
   transform: translate(0,999px);
-  transition: transform 1s ease 0.5s;
+  transition: transform 1s ease 0.5s, visibility 1s ease 0.5s;
+  visibility: hidden;
   z-index: 2;
 
   width: 100%;
@@ -156,10 +157,12 @@ Map
   
   background-color: #ccc;
   overflow: hidden;
+  
 }
 
 .map-container.show {
   transform: translate(0,0);
+  visibility: visible;
 }
 
 
