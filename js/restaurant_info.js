@@ -79,14 +79,21 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     const row = document.createElement('tr');
 
     const day = document.createElement('td');
+    day.className = 'hours-day';
     day.innerHTML = key;
     row.appendChild(day);
 
+    const timeList = document.createElement('ul');
     for (let timeRange of operatingHours[key].split(",")){
-      const time = document.createElement('td');
-      time.innerHTML = timeRange.trim();
-      row.appendChild(time);
+      const timeItem = document.createElement('li');
+      timeItem.innerHTML = timeRange.trim();
+      timeList.appendChild(timeItem);
     }
+
+    const time = document.createElement('td');
+    time.className = 'hours-time';
+    time.appendChild(timeList);
+    row.appendChild(time);
 
     hours.appendChild(row);
   }
