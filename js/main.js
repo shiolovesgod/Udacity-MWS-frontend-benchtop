@@ -172,32 +172,76 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  * Create restaurant HTML.
  */
 createRestaurantHTML = (restaurant) => {
+
+  const a_wrapper = document.createElement('a');
+  a_wrapper.href = DBHelper.urlForRestaurant(restaurant);
   const li = document.createElement('li');
+  
+  const name = document.createElement('h1');
+  name.innerHTML = restaurant.name;
+  name.className = 'restaurant-name';
+  li.append(name);
+
+  const rating_wrapper = document.createElement('div');
+   
+    const ratingIcon = document.createElement('p');
+    ratingIcon.innerHTML = rating2stars(restaurant.average_rating);
+    ratingIcon.className = 'rating-stars';
+    rating_wrapper.append(ratingIcon);
+
+    const ratingText = document.createElement('p');
+    ratingText.innerHTML = restaurant.average_rating.toFixed(1) + ' Stars';
+    ratingText.className = 'rating-text';
+    rating_wrapper.append(ratingText);
+
+    const nReviews = document.createElement('p');
+    nReviews.innerHTML = restaurant.total_reviews + ' Reviews';
+    nReviews.className = 'review-count';
+    rating_wrapper.append(nReviews);
+  
+  li.append(rating_wrapper);
+
+    
+  const neighborhood = document.createElement('p');
+  neighborhood.innerHTML = restaurant.neighborhood;
+  li.append(neighborhood);
+  
+  const address = document.createElement('p');
+  address.innerHTML = restaurant.address;
+  li.append(address);
+
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   li.append(image);
+  
+  a_wrapper.append(li);
 
-  const name = document.createElement('h1');
-  name.innerHTML = restaurant.name;
-  li.append(name);
-
-  const neighborhood = document.createElement('p');
-  neighborhood.innerHTML = restaurant.neighborhood;
-  li.append(neighborhood);
-
-  const address = document.createElement('p');
-  address.innerHTML = restaurant.address;
-  li.append(address);
-
-  const more = document.createElement('a');
-  more.innerHTML = 'View Details';
-  more.href = DBHelper.urlForRestaurant(restaurant);
-  li.append(more)
-
-  return li
+  return a_wrapper
 }
+
+
+/**
+ * Calculate the number of stars (should I use hearts?)
+ */
+
+function rating2stars(rating) {
+  const totalStars = 5;
+  const charFull = '&#61445;'; //font-awesome: fa-star, \f005
+  const charHalf = '&#61731;'; //font-awesome: fa-star-half-o \f123
+  const charEmpty = '&#61446;'; //font-awesome: fa-star-o, \f006
+
+  let fullStars = Math.trunc(rating);
+  let emptyStars = Math.trunc(totalStars - rating);
+  let hasHalfStar = fullStars+emptyStars < totalStars;
+
+  console.log(`rating: ${rating}\nfull: ${fullStars}, half: ${hasHalfStar}, empty: ${emptyStars}`);
+  //Return the star characters as a string
+  return charFull.repeat(fullStars)+charHalf.repeat(hasHalfStar*1)+charEmpty.repeat(emptyStars);
+}
+
+
 
 /**
  * Add markers for current restaurants to the map.
