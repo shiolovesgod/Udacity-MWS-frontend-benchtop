@@ -414,31 +414,37 @@ footer {
 
 @media screen and (min-width: 400px) {
 
-  .mobile-wrapper {
-    display: flex;
-    /* position: absolute; */
-    /* flex-direction: column; */
+  body {
+    max-width: 960px;
+    margin: 0 auto;
   }
+
+  .site-title{ 
+    z-index: 10;
+  }
+  .filter-options {
+    max-width: 400px;
+
+  }
+
   .section-restaurants {
     max-width: 400px;
-    order: 1;
     /* position: relative; */
     /* flex-grow: 1; */
   }
 
- 
-  .section-map, .section-map.show {
+   .section-map, .section-map.show {
     transform: translate(0,0);
     visibility: visible;
-    order: 2;
-    /* position: absolute; */
+
+    border-top: solid 2px #252831; 
+    max-width: 560px;
+    
+    position: absolute;
     right: 0px;
+    top: -40px;
     width: calc(100vw - 400px);
-    /*visibility: visible;
-    z-index: 1;
-    position: relative;
-    order: 2;
-    width:100%; */
+    height: 100vh;
     
   }
 
