@@ -50,6 +50,8 @@ class DBHelper {
     });
   }
 
+
+
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
    */
@@ -162,9 +164,28 @@ class DBHelper {
       title: restaurant.name,
       url: DBHelper.urlForRestaurant(restaurant),
       map: map,
-      animation: google.maps.Animation.DROP}
-    );
+      animation: google.maps.Animation.DROP
+    });
     return marker;
+  }
+
+  /**
+   * Convert rating to stars (a little out of place, I know)
+   */
+
+  static rating2stars(rating) {
+
+    const totalStars = 5;
+    const charFull = '&#61445;'; //font-awesome: fa-star, \f005
+    const charHalf = '&#61731;'; //font-awesome: fa-star-half-o \f123
+    const charEmpty = '&#61446;'; //font-awesome: fa-star-o, \f006
+
+    let fullStars = Math.trunc(rating);
+    let emptyStars = Math.trunc(totalStars - rating);
+    let hasHalfStar = fullStars + emptyStars < totalStars;
+
+    //Return the star characters as a string
+    return charFull.repeat(fullStars) + charHalf.repeat(hasHalfStar * 1) + charEmpty.repeat(emptyStars);
   }
 
 }

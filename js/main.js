@@ -199,7 +199,7 @@ createRestaurantHTML = (restaurant) => {
     rating_wrapper.append(ratingText);
 
     const ratingIcon = document.createElement('p');
-    ratingIcon.innerHTML = rating2stars(restaurant.average_rating);
+    ratingIcon.innerHTML = DBHelper.rating2stars(restaurant.average_rating);
     ratingIcon.className = 'rating-stars';
     rating_wrapper.append(ratingIcon);
 
@@ -232,26 +232,6 @@ createRestaurantHTML = (restaurant) => {
 
   return a_wrapper
 }
-
-
-/**
- * Calculate the number of stars (should I use hearts?)
- */
-
-function rating2stars(rating) {
-  const totalStars = 5;
-  const charFull = '&#61445;'; //font-awesome: fa-star, \f005
-  const charHalf = '&#61731;'; //font-awesome: fa-star-half-o \f123
-  const charEmpty = '&#61446;'; //font-awesome: fa-star-o, \f006
-
-  let fullStars = Math.trunc(rating);
-  let emptyStars = Math.trunc(totalStars - rating);
-  let hasHalfStar = fullStars+emptyStars < totalStars;
-
-  //Return the star characters as a string
-  return charFull.repeat(fullStars)+charHalf.repeat(hasHalfStar*1)+charEmpty.repeat(emptyStars);
-}
-
 
 
 /**
