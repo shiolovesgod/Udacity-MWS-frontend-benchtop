@@ -176,45 +176,57 @@ createRestaurantHTML = (restaurant) => {
   const a_wrapper = document.createElement('a');
   a_wrapper.href = DBHelper.urlForRestaurant(restaurant);
   const li = document.createElement('li');
-  
+
+
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
   name.className = 'restaurant-name';
   li.append(name);
 
+  const content_wrapper = document.createElement('div');
+  content_wrapper.className = 'restaurant-info-wrapper';
+
+  const text_wrapper = document.createElement('div');
+  text_wrapper.className = 'restaurant-info-text';
+  
+
   const rating_wrapper = document.createElement('div');
+  rating_wrapper.className = 'rating';
    
+    const ratingText = document.createElement('p');
+    ratingText.innerHTML = restaurant.average_rating.toFixed(1);
+    ratingText.className = 'rating-text';
+    rating_wrapper.append(ratingText);
+
     const ratingIcon = document.createElement('p');
     ratingIcon.innerHTML = rating2stars(restaurant.average_rating);
     ratingIcon.className = 'rating-stars';
     rating_wrapper.append(ratingIcon);
-
-    const ratingText = document.createElement('p');
-    ratingText.innerHTML = restaurant.average_rating.toFixed(1) + ' Stars';
-    ratingText.className = 'rating-text';
-    rating_wrapper.append(ratingText);
 
     const nReviews = document.createElement('p');
     nReviews.innerHTML = restaurant.total_reviews + ' Reviews';
     nReviews.className = 'review-count';
     rating_wrapper.append(nReviews);
   
-  li.append(rating_wrapper);
+  text_wrapper.append(rating_wrapper);
 
     
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
-  li.append(neighborhood);
+  text_wrapper.append(neighborhood);
   
   const address = document.createElement('p');
   address.innerHTML = restaurant.address;
-  li.append(address);
+  text_wrapper.append(address);
 
+  content_wrapper.append(text_wrapper);
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  li.append(image);
+  content_wrapper.append(image);
+
+  li.append(content_wrapper);
   
   a_wrapper.append(li);
 
@@ -236,7 +248,6 @@ function rating2stars(rating) {
   let emptyStars = Math.trunc(totalStars - rating);
   let hasHalfStar = fullStars+emptyStars < totalStars;
 
-  console.log(`rating: ${rating}\nfull: ${fullStars}, half: ${hasHalfStar}, empty: ${emptyStars}`);
   //Return the star characters as a string
   return charFull.repeat(fullStars)+charHalf.repeat(hasHalfStar*1)+charEmpty.repeat(emptyStars);
 }
