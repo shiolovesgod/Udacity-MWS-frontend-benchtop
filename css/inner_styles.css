@@ -255,6 +255,8 @@ nav {
 .restaurant-address {
   font-size: 1em;
   width: 100%;
+  white-space: nowrap;
+  overflow-x: auto;
   /* margin: 0; */
   /* text-align: center; */
 }
