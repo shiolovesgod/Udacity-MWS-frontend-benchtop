@@ -222,12 +222,6 @@ nav {
   overflow-y: auto;
 }
 
-.inside header {
-  /* position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000; */
-}
 
 .inside .section-map {
  height: 300px;
@@ -373,3 +367,53 @@ footer {
 * Media Queries
 *
 */
+
+@media screen and (min-width:420px) {
+
+  body.inside, {
+    background-color: red;
+    min-width: 350px;
+    max-width: 350px;
+    z-index: -1;
+  }
+  .inside .restaurant-container {
+    width: 50%;
+    margin: 10px 15px;
+    padding: 0;
+    display: inline-block;
+    min-width: 350px;
+    max-width: 350px;
+    
+    z-index: 1;
+    
+  }
+
+  .inside .restaurant-name {
+    margin: 10px 25px;
+  }
+
+  .inside .section-map {
+    width: calc(100vw - 350px);
+    height: 100vh;
+    display: inline-block;
+    overflow: hidden;
+    z-index: 0;
+
+
+    position: fixed;
+    right: 0;
+    padding: 0 15px;
+    
+    
+  }
+
+  .inside .reviews-container {
+    width: 50%;
+    min-width: 350px;
+    max-width: 350px;
+    padding: 0;
+    margin: 10px 10px;
+    /* position: relative; */
+    z-index: 1;
+  }
+}
