@@ -8,6 +8,7 @@ html {
   box-sizing: inherit;
 }
 
+/* Typography sizing based on: http://typecast.com/blog/a-more-modern-scale-for-web-typography */
 
 /*
 *
@@ -23,7 +24,7 @@ html {
 
 body,td,th,p{
 	color: #333;
-	line-height: 1.375;
+	line-height: 1.25;
 }
 body {
 	background-color: #fdfdfd;
@@ -57,9 +58,18 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 	display: block;
 }
 
-h1 { font-size: 2em; }
-h2 { font-size: 1.625em; }
-h3 { font-size: 1.375em; }
+h1 { 
+  font-size: 2em; 
+  line-height:1.25em;
+}
+h2 {
+  font-size: 1.625em; 
+  line-height: 1.1538em;
+}
+h3 { 
+  font-size: 1.375rem;
+  line-height: 1.1363;
+}
 
 /*
 *
@@ -249,11 +259,10 @@ Map
 
 .restaurant-name {
   color: #f18200;
-  /* font-family: Arial,sans-serif; */
-  font-size: 1.1em;
+  /* h1 designation for ARIA with h3 sizing */
+  font-size: 1.375rem;
+  line-height: 1.1363;
   font-weight: 200;
-  letter-spacing: 0;
-  line-height: 1.3;
   margin: 5px 0;
   text-transform: uppercase;
   text-align: left;
@@ -418,10 +427,22 @@ footer {
 
 @media screen and (min-width: 400px) {
 
-  body {
-    max-width: 960px;
-    margin: 0 auto;
+
+  h1 { 
+    font-size: 2.5em; 
+    line-height: 1.125em;
   }
+  h2 {
+    font-size: 2em; 
+    line-height: 1.25em;
+  }
+  h3, .restaurant-name { 
+    font-size: 1.5em; 
+    line-height: 1.25em;
+  }
+
+
+
 
   .site-title{ 
     z-index: 10;
@@ -445,7 +466,7 @@ footer {
     visibility: visible;
 
     border-top: solid 1px #252831; 
-    max-width: 560px;
+    /* max-width: 560px; */
     
     position: absolute;
     right: 0px;
@@ -460,6 +481,27 @@ footer {
     
   }
    
-  
+}
+
+/* Minor Breakpoints */
+
+@media screen and (min-width:600px) { 
+
+  body,td,th,p{
+    line-height: 1.375;
+  }
+
+  h1 { 
+    font-size: 3em; 
+    line-height: 1.05em;
+  }
+  h2 {
+    font-size: 2.25em; 
+    line-height: 1.25em;
+  }
+  h3, .restaurant-name { 
+    font-size: 1.75em; 
+    line-height: 1.25em;
+  }
 
 }
