@@ -1,0 +1,546 @@
+/* Third Party CSSS */
+
+/* Paul Irish: https://www.paulirish.com/2012/box-sizing-border-box-ftw/ */
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+
+/*
+*
+* Global Styles
+*
+*/
+
+html {
+  font-size: 16px; /*base for rems*/
+  font-family: 'Lato', Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: hidden;
+}
+
+body,td,th,p{
+	color: #333;
+	line-height: 1.25;
+}
+body.inside {
+  max-height: 100vh;
+	background-color: #fdfdfd;
+	margin: 0;
+  position:relative; 
+  display: flex;
+  flex-direction: column;
+}
+
+ul, li {
+	/* font-family: Arial, Helvetica, sans-serif; */
+	color: #333;
+}
+a {
+	color: orange;
+	text-decoration: none;
+}
+a:hover, a:focus {
+	color: #3397db;
+	text-decoration: none;
+}
+a img{
+	border: none 0px #fff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 10px;
+}
+article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+
+h1 { 
+  font-size: 2rem; 
+  line-height:1.25;
+}
+h2 {
+  font-size: 1.625rem; 
+  line-height: 1.1538;
+}
+h3 { 
+  font-size: 1.375rem;
+  line-height: 1.1363;
+}
+
+/*
+*
+* Page Content
+*
+*/
+
+
+/* -----------------------------------
+Navigation 
+----------------------------------- */
+nav {
+  width: 100%;
+  
+}
+
+.inside nav {
+  max-width: 400px;
+}
+
+.inside .site-title {
+  /* ARIA designation of h1 but CSS styles of h2*/
+
+  background-color: #252831;
+  color: #fff;
+  margin: auto;
+  font-size: 1.625rem;
+  line-height: 1.1538;
+  font-family: 'Vidaloka', 'Times New Roman', Times, serif;
+  padding: 10px;
+  font-weight: 200;
+  /* letter-spacing: 0.2rem; */
+  text-transform: uppercase;
+  text-align: center;
+}
+.breadcrumb {
+  width: 100%;
+  background-color: #eee;
+  text-align: left;
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+/* Display list items side by side */
+.breadcrumb li {
+  display: inline;
+}
+
+/* Add a slash symbol (/) before/behind each list item */
+.breadcrumb li+li:before {
+    padding: 8px;
+    color: black;
+    content: "/\00a0";
+  }
+
+/* Add a color to all links inside the list */
+.breadcrumb li a {
+  color: #0275d8;
+    text-decoration: none;
+}
+
+/* Add a color on mouse-over */
+.breadcrumb li a:hover {
+  color: #01447e;
+    text-decoration: underline;
+}
+
+/* -----------------------------------
+ Main Content
+ ----------------------------------- */
+.maincontent {
+  /* max-height: 100%; */
+  overflow-y: auto;
+  position: relative;
+  height: 100%;
+}
+
+/* -----------------------------------
+ Restaurant Listing  
+ ----------------------------------- */
+ .section-restaurants {
+   position: absolute;
+   top: 0;
+   overflow-y: scroll;
+   height: 100%;
+   width: 100%;
+ }
+.restaurants-list {
+  background-color: #f3f3f3;
+  list-style: outside none none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.restaurants-list a {
+  background-color: #fff;
+  border: 2px solid #ccc;
+  /* font-family: Arial,sans-serif; */
+  margin: 5px;
+  padding: 10px;
+  min-width: 310px;
+  /* width: 100%; */
+}
+
+.restaurants-list a:hover, .restaurants-list a:focus {
+  background-color: #fff;
+  border: 2px solid #f18200;
+}
+
+.restaurant-info-wrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+.restaurant-info-text{
+  width: 100%;
+  text-align: left;
+  
+}
+
+.restaurant-name {
+  /* color: #f18200; */
+  /* font-family: Arial,sans-serif; */
+  /* font-size: 1.1em; */
+  /* font-weight: 200; */
+  /* letter-spacing: 0; */
+  /* line-height: 1.3; */
+  /* margin: 5px 0; */
+  /* text-transform: uppercase; */
+  /* text-align: left; */
+}
+
+.rating {
+  display: flex;
+  /* justify-content: space-around; */
+}
+
+.rating-text, .rating-stars {
+  font-size: 1.2rem;
+  color: #3397DB;
+  padding-right: 5px;
+}
+.rating-stars {
+  font-family: 'FontAwesome';
+}
+.restaurants-list .restaurant-img {
+  background-color: #ccc;
+  display: block;
+  margin: 0 auto;
+  width: 30%;
+  align-self: center;
+}
+
+.restaurants-list p {
+  margin: 0;
+}
+
+
+/* -----------------------------------
+ Restaurant Details (restaurant.html)
+ ----------------------------------- */
+.inside {
+  overflow-y: auto;
+}
+
+
+.inside .section-map {
+ height: 300px;
+}
+.inside .map {
+  background-color: #ccc;
+  height: 90%;
+  width: 90%;
+  margin: 15px auto;
+}
+
+.inside .restaurant-container {
+  margin: 0 10px auto;
+  text-align: center;
+  max-width: 350px;
+}
+
+.inside .restaurant-name {
+  color: #f18200;
+
+  /* h1 designation for ARIA with h3 sizing (same as name on main page) */
+  font-size: 1.375rem;
+  line-height: 1.1363;
+  font-weight: 200;
+  text-transform: uppercase;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.inside .restaurant-img {
+  width: 90%;
+  margin: 0 auto;
+}
+.restaurant-address {
+  font-weight: bold;
+  width: 100%;
+  white-space: nowrap;
+  overflow-x: auto;
+  /* margin: 0; */
+  /* text-align: center; */
+}
+.restaurant-cuisine {
+  background-color: #333;
+  color: #ddd;
+  font-size: 1rem;
+  font-weight: 300;
+  letter-spacing: 10px;
+  margin: 0 auto;
+  padding: 2px 0;
+  text-align: center;
+  text-transform: uppercase;
+	width: 90%;
+}
+
+.restaurant-hours {
+  margin: 0 auto;
+  width: 100%;
+}
+
+.restaurant-hours td, tr, th, tead {
+  /* display: block; */
+  vertical-align: top;
+  padding: 2px;
+  border-top: dotted 1px black;
+}
+
+.restaurant-hours .hours-day {
+  text-align: center;
+}
+.hours-time {
+  text-align: center;
+}
+
+.restaurant-hours td, .restaurant-hours .reviews-list {
+  color: #666;
+}
+
+.hours-time ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 auto;
+  color: #666;
+}
+
+.restaurant-container, .reviews-container {
+  border-bottom: 1px solid #d9d9d9;
+  border-top: 1px solid #fff;
+  /* padding: 140px 40px 30px; */
+  padding: 0 10px 20px;
+  width: 100%;
+}
+.reviews-container {
+  max-width: 350px;
+  /* padding: 30px 40px 80px; */
+  padding: 0 20px;
+}
+.reviews-container h2 {
+  color: #f58500;
+  font-weight: 400;
+  letter-spacing: -1px;
+
+}
+.reviews-list {
+  margin: 0;
+  padding: 0;
+}
+.reviews-list li {
+  width: 100%;
+  position: relative;
+  display: block;
+  list-style-type: none;
+  background-color: #fff;
+  border: 2px solid #f3f3f3;
+  margin: 0 0 5px;
+  padding: 10px;
+  overflow: hidden;
+}
+.reviews-list li p, 
+.reviews-list li div 
+{
+  margin: 0 0 5px;
+}
+
+.review-comments {
+  cursor: pointer;
+}
+
+/* Add  ellipsis to reviews 
+Derived from: https://css-tricks.com/line-clampin/ */
+.fade-ellipsis {
+  line-height: 1.375em;
+  max-height: calc(4*1.375em);
+  overflow: hidden;
+  position: relative;
+}
+
+.fade-ellipsis:after {
+  content: "...";
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30%;
+  height: 1.43em; /*slightly larger than line height*/
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+}
+
+/* -----------------------------------
+ Switch between map and list
+ ----------------------------------- */
+ .switch-view {
+   width: 100%;
+   padding: 10px 0;
+
+ }
+
+ .switch-view, footer {
+   z-index: 50;
+ }
+
+/* -----------------------------------
+ Footer
+ ----------------------------------- */
+
+ .inside footer {
+  /* bottom: 0; */
+  /* position: absolute; */
+  width: 100%;
+}
+
+footer {
+  background-color: #444;
+  color: #aaa;
+  font-size: 0.5rem;
+  letter-spacing: 0px;
+  padding: 5px;
+  text-align: center;
+  text-transform: uppercase;
+  max-width: 400px;
+}
+/*
+*
+* Media Queries
+*
+*/
+
+@media screen and (min-width:420px) {
+
+  h1 { 
+    font-size: 2.5rem; 
+    line-height: 1.125;
+  }
+  h2,
+  .inside .site-title 
+  {
+    font-size: 2rem; 
+    line-height: 1.25;
+  }
+  h3,
+  .inside .restaurant-name
+  { 
+    font-size: 1.5rem; 
+    line-height: 1.25;
+  }
+
+  
+
+  body.inside, {
+    background-color: red;
+    width: 350px;
+    z-index: -1;
+  }
+
+  nav {
+    margin: 0;
+  }
+
+  .inside .restaurant-container {
+    margin: 10px 15px;
+    padding: 0;
+    display: inline-block;
+    z-index: 1;
+    
+  }
+
+  .inside .section-map {
+    width: calc(100vw - 400px);
+    height: 100vh;
+    display: inline-block;
+    overflow: hidden;
+    z-index: 0;
+
+
+    position: fixed;
+    top:0;
+    right: 0;
+    padding: 0;
+    
+  }
+
+  .inside .map {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .restaurant-hours td, tr, th, tead {
+    padding: 4px;
+  }
+
+  .inside .reviews-container {
+    padding: 0;
+    width: 350px;
+    margin: 20px 25px;
+    z-index: 1;
+  }
+
+  .reviews-list li {
+    margin: 10px auto;
+  }
+
+  .reviews-list li {
+    margin: 0 0 15px;
+    padding: 15px;
+  }
+  .reviews-list li p, 
+  .reviews-list li div 
+  {
+    margin: 0 0 10px;
+  }
+
+}
+
+/* Minor Breakpoints */
+
+@media screen and (min-width:600px) { 
+
+  body,td,th,p{
+    line-height: 1.375;
+  }
+
+  h1 { 
+    font-size: 3rem; 
+    line-height: 1.05;
+  }
+  h2 {
+    font-size: 2.25rem; 
+    line-height: 1.25;
+  }
+  h3,
+  .inside .restaurant-name
+  { 
+    font-size: 1.75rem; 
+    line-height: 1.25;
+  }
+
+  .restaurant-hours td, tr, th, tead {
+    padding: 6px;
+  }
+
+}

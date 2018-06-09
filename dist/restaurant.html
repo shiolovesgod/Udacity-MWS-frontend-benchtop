@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <link rel="stylesheet" href="css/inner_styles.css" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Vidaloka|Lato">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <title>Restaurant Info</title>
+</head>
+
+<body class="inside">
+  <header>
+    <nav>
+      <h1 class="site-title"><a href="/">Restaurant Reviews</a></h1>
+    <!-- Beginning breadcrumb -->
+    <ul class="breadcrumb">
+      <li><a href="/">Home</a></li>
+    </ul>
+  </nav>
+  </header>
+
+  <!-- Beginning main -->
+  <main class="maincontent">
+
+    <!-- Beginning restaurant -->
+    <section id="restaurant-container" class="restaurant-container">
+      <h1 class="restaurant-name"></h1>
+      <img class="restaurant-img">
+      <p class="restaurant-cuisine"></p>
+      <p class="restaurant-address"></p>
+      <table class="restaurant-hours"></table>
+    </section>
+
+    <section class="section-map">
+      <div id="map" class="map"></div>
+    </section>
+
+    <!-- Beginning reviews -->
+    <section class="reviews-container">
+      <ul class="reviews-list"></ul>
+    </section>
+    
+  </main>
+  
+
+  <!-- Beginning footer -->
+  <footer>
+    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+  </footer>
+  
+
+  <!-- Beginning scripts -->
+  <script type="text/javascript" src="js/dbhelper.js"></script>
+  <script type="text/javascript" src="js/restaurant_info.js"></script>
+  <!-- Google Maps -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap"></script>
+  
+
+</body>
+
+</html>

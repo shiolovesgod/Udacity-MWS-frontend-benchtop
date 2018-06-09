@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Vidaloka">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Restaurant Reviews</title>
+
+  <!-- TODO: add favicons -->
+</head>
+
+<body>
+  <header>
+    <nav>
+      <h1 class="site-title">
+        <a href="/">Restaurant Reviews</a>
+      </h1>
+    </nav>
+  </header>
+
+  <main class="maincontent">
+    <section>
+      <div class="filter-options">
+        <h2>Filter Results</h2>
+        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
+          <option value="all">All Neighborhoods</option>
+        </select>
+        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
+          <option value="all">All Cuisines</option>
+        </select>
+      </div>
+    </section>
+    <div class="mobile-wrapper">
+      <section class="section-map">
+        <div id="map" class="map"></div>
+      </section>
+      <section class="section-restaurants">
+        <ul class="restaurants-list"></ul>
+      </section>
+    </div>
+    <button class="switch-view" onclick="toggleMap()">Show Map</button>
+  </main>
+  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap"></script>
+
+
+  <footer id="footer">
+    Copyright (c) 2017
+    <a href="/">
+      <strong>Restaurant Reviews</strong>
+    </a> All Rights Reserved.
+  </footer>
+
+</body>
+
+</html>
