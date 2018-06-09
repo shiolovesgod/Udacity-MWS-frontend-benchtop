@@ -272,6 +272,31 @@ nav {
   text-transform: uppercase;
 	width: 90%;
 }
+
+.restaurant-hours {
+  margin: 0 auto;
+  width: 100%;
+}
+
+.restaurant-hours td, tr, th, tead {
+  /* display: block; */
+  padding: 4px;
+  border-top: dotted 1px black;
+  text-align: left;
+}
+
+
+.restaurant-hours td, .restaurant-hours .reviews-list {
+  color: #666;
+}
+
+.hours-time ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 auto;
+  color: #666;
+}
+
 .restaurant-container, .reviews-container {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
@@ -307,31 +332,33 @@ nav {
 }
 .reviews-list li p {
   margin: 0 0 10px;
+  
+}
+.review-comments {
+  margin: 0 0 10px;
+  cursor: pointer;
 }
 
-.restaurant-hours {
-  margin: 0 auto;
-  width: 100%;
+/* Add  ellipsis to reviews 
+Derived from: https://css-tricks.com/line-clampin/ */
+.fade-ellipsis {
+  line-height: 1.375em;
+  max-height: calc(4*1.375em);
+  overflow: hidden;
+  position: relative;
 }
 
-.restaurant-hours td, tr, th, tead {
-  /* display: block; */
-  padding: 4px;
-  border-top: dotted 1px black;
-  text-align: left;
+.fade-ellipsis:after {
+  content: "...";
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30%;
+  height: 1.43em; /*slightly larger than line height*/
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
 }
 
-
-.restaurant-hours td, .restaurant-hours .reviews-list {
-  color: #666;
-}
-
-.hours-time ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0 auto;
-  color: #666;
-}
 /* -----------------------------------
  Switch between map and list
  ----------------------------------- */

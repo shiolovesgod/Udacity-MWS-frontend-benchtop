@@ -84,7 +84,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     row.appendChild(day);
 
     const timeList = document.createElement('ul');
-    for (let timeRange of operatingHours[key].split(",")){
+    for (let timeRange of operatingHours[key].split(",")) {
       const timeItem = document.createElement('li');
       timeItem.innerHTML = timeRange.trim();
       timeList.appendChild(timeItem);
@@ -139,30 +139,40 @@ createReviewHTML = (review) => {
   const rating_wrapper = document.createElement('div');
   rating_wrapper.className = 'rating';
 
-    const ratingIcon = document.createElement('p');
-    ratingIcon.innerHTML = DBHelper.rating2stars(review.rating);
-    ratingIcon.className = 'rating-stars';
-    rating_wrapper.append(ratingIcon);
+  const ratingIcon = document.createElement('p');
+  ratingIcon.innerHTML = DBHelper.rating2stars(review.rating);
+  ratingIcon.className = 'rating-stars';
+  rating_wrapper.append(ratingIcon);
 
-    const ratingText = document.createElement('p');
-    ratingText.innerHTML = `${review.rating} Stars`;
-    ratingText.className = 'rating-text';
-    rating_wrapper.append(ratingText);
-  
-    li.append(rating_wrapper);
+  const ratingText = document.createElement('p');
+  ratingText.innerHTML = `${review.rating} Stars`;
+  ratingText.className = 'rating-text';
+  rating_wrapper.append(ratingText);
+
+  li.append(rating_wrapper);
 
 
   const comments = document.createElement('p');
+  comments.className = "review-comments";
+  comments.classList.add("fade-ellipsis");
   comments.innerHTML = review.comments;
+
+  comments.addEventListener("click", function toggleEllispis(event) {
+    //this two classes are antithetic (when one is off, the other is on)
+    event.target.classList.toggle("fade-ellipsis");
+    event.target.classList.toggle("show");
+  })
+
   li.appendChild(comments);
 
   return li;
 }
 
+
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
-fillBreadcrumb = (restaurant=self.restaurant) => {
+fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.querySelector('.breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
