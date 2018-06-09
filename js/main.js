@@ -216,7 +216,8 @@ createRestaurantHTML = (restaurant) => {
   text_wrapper.append(neighborhood);
   
   const address = document.createElement('p');
-  address.innerHTML = restaurant.address;
+
+  address.innerHTML = restaurant.address.replace(", ","<br>");
   text_wrapper.append(address);
 
   content_wrapper.append(text_wrapper);
