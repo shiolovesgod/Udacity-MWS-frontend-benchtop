@@ -17,7 +17,7 @@ html {
 
 html {
   font-size: 16px; /*base for rems*/
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Lato', Arial, Helvetica, sans-serif;
   min-height: 100vh;
   max-height: 100vh;
   overflow-y: hidden;
@@ -37,7 +37,7 @@ body.inside {
 }
 
 ul, li {
-	font-family: Arial, Helvetica, sans-serif;
+	/* font-family: Arial, Helvetica, sans-serif; */
 	color: #333;
 }
 a {
@@ -51,8 +51,9 @@ a:hover, a:focus {
 a img{
 	border: none 0px #fff;
 }
+
 h1, h2, h3, h4, h5, h6 {
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
   margin: 0 0 20px;
 }
 article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
@@ -87,9 +88,10 @@ nav {
   color: #fff;
   margin: auto;
   font-size: 1.3rem;
+  font-family: 'Vidaloka', 'Times New Roman', Times, serif;
   padding: 10px;
   font-weight: 200;
-  letter-spacing: 0.3rem;
+  /* letter-spacing: 0.2rem; */
   text-transform: uppercase;
   text-align: center;
 }
@@ -160,7 +162,7 @@ nav {
 .restaurants-list a {
   background-color: #fff;
   border: 2px solid #ccc;
-  font-family: Arial,sans-serif;
+  /* font-family: Arial,sans-serif; */
   margin: 5px;
   padding: 10px;
   min-width: 310px;
@@ -185,7 +187,7 @@ nav {
 
 .restaurant-name {
   color: #f18200;
-  font-family: Arial,sans-serif;
+  /* font-family: Arial,sans-serif; */
   font-size: 1.1em;
   font-weight: 200;
   letter-spacing: 0;
@@ -246,7 +248,7 @@ nav {
 
 .inside .restaurant-name {
   color: #f18200;
-  font-family: Arial,sans-serif;
+  /* font-family: Arial,sans-serif; */
   font-size: 1.5rem;
   font-weight: 200;
   letter-spacing: 0;
