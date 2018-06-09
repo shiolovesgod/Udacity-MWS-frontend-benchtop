@@ -59,12 +59,12 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 
 h1 { 
-  font-size: 2em; 
-  line-height:1.25em;
+  font-size: 2rem; 
+  line-height:1.25;
 }
 h2 {
-  font-size: 1.625em; 
-  line-height: 1.1538em;
+  font-size: 1.625rem; 
+  line-height: 1.1538;
 }
 h3 { 
   font-size: 1.375rem;
@@ -98,39 +98,7 @@ nav {
   text-transform: uppercase;
   text-align: center;
 }
-.breadcrumb {
-    padding: 10px 40px 16px;
-    list-style: none;
-    background-color: #eee;
-    font-size: 1.5rem;
-    margin: 0;
-    width: calc(50% - 80px); /*100%; */
-    text-align: left;
-}
 
-/* Display list items side by side */
-.breadcrumb li {
-  display: inline;
-}
-
-/* Add a slash symbol (/) before/behind each list item */
-.breadcrumb li+li:before {
-    padding: 8px;
-    color: black;
-    content: "/\00a0";
-  }
-
-/* Add a color to all links inside the list */
-.breadcrumb li a {
-  color: #0275d8;
-    text-decoration: none;
-}
-
-/* Add a color on mouse-over */
-.breadcrumb li a:hover {
-  color: #01447e;
-    text-decoration: underline;
-}
 
 /* -----------------------------------
 Main Content
@@ -278,6 +246,7 @@ Map
   padding-right: 5px;
 }
 .rating-stars {
+  font-size: 1.2rem;
   font-family: 'FontAwesome';
 }
 .restaurants-list .restaurant-img {
@@ -429,16 +398,16 @@ footer {
 
 
   h1 { 
-    font-size: 2.5em; 
-    line-height: 1.125em;
+    font-size: 2.5rem; 
+    line-height: 1.125;
   }
   h2 {
-    font-size: 2em; 
-    line-height: 1.25em;
+    font-size: 2rem; 
+    line-height: 1.25;
   }
   h3, .restaurant-name { 
-    font-size: 1.5em; 
-    line-height: 1.25em;
+    font-size: 1.5rem; 
+    line-height: 1.25;
   }
 
 
@@ -452,7 +421,7 @@ footer {
   }
 
   .filter-options select {
-    padding: 05px 10px;
+    padding: 5px 10px;
     border-radius: 25px;
   }
   .section-restaurants {
@@ -476,6 +445,11 @@ footer {
     
   }
 
+  .restaurants-list a {
+    margin: 10px;
+    padding: 15px;
+  }
+
   .switch-view {
     display: none;
     
@@ -492,16 +466,19 @@ footer {
   }
 
   h1 { 
-    font-size: 3em; 
-    line-height: 1.05em;
+    font-size: 3rem; 
+    line-height: 1.05;
   }
   h2 {
-    font-size: 2.25em; 
-    line-height: 1.25em;
+    font-size: 2.25rem; 
+    line-height: 1.25;
   }
-  h3, .restaurant-name { 
-    font-size: 1.75em; 
-    line-height: 1.25em;
+  h3,
+  .restaurant-name
+  { 
+    font-size: 1.75rem; 
+    line-height: 1.25;
   }
-
 }
+
+

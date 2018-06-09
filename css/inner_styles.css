@@ -215,7 +215,7 @@ nav {
 }
 
 .rating-text, .rating-stars {
-  font-size: 1.2em;
+  font-size: 1.2rem;
   color: #3397DB;
   padding-right: 5px;
 }
@@ -526,17 +526,17 @@ footer {
 
   h1 { 
     font-size: 3rem; 
-    line-height: 1.05rem;
+    line-height: 1.05;
   }
   h2 {
     font-size: 2.25rem; 
-    line-height: 1.25rem;
+    line-height: 1.25;
   }
   h3,
   .inside .restaurant-name
   { 
     font-size: 1.75rem; 
-    line-height: 1.25rem;
+    line-height: 1.25;
   }
 
   .restaurant-hours td, tr, th, tead {
