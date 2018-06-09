@@ -1,3 +1,10 @@
+/**
+ * TODO:Features
+ *  1. Link the hover & focus states of a restaurant
+ *     to the map marker
+ */
+
+
 let restaurants,
   neighborhoods,
   cuisines;
@@ -247,4 +254,5 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     });
     self.markers.push(marker);
   });
+
 }

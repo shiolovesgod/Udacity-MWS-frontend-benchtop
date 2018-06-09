@@ -1,3 +1,9 @@
+/**
+ * TODO:Features
+ *  1. Add a class to the current day based 
+ *     on the timezone and current time at the location
+ */
+
 let restaurant;
 var map;
 
