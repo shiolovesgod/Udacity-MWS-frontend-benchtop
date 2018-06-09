@@ -195,6 +195,7 @@ Map
   margin: 0 10px;
   padding: 0 10px;
   border-radius: 10px;
+  flex-grow: 1;
 }
 
 /* -----------------------------------

@@ -158,9 +158,7 @@ createReviewHTML = (review) => {
   comments.innerHTML = review.comments;
 
   comments.addEventListener("click", function toggleEllispis(event) {
-    //this two classes are antithetic (when one is off, the other is on)
     event.target.classList.toggle("fade-ellipsis");
-    event.target.classList.toggle("show");
   })
 
   li.appendChild(comments);
