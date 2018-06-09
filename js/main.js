@@ -1,7 +1,9 @@
 /**
  * TODO:Features
- *  1. Link the hover & focus states of a restaurant
- *     to the map marker
+ *  1. Link the map to the marker in mobile view
+ *     (click once, preview place in popup)
+ *  2. On hover map icon, highlight corresponding 
+ *     location
  */
 
 
@@ -118,7 +120,7 @@ function toggleMap(){
     mapContainer.classList.remove("show");
     btnSwitchView.innerHTML = "Show Map";
 
-    //remove tab index 
+  //remove tab index 
   } else {
     mapContainer.classList.add("show");
     btnSwitchView.innerHTML = "Show List";
@@ -169,9 +171,11 @@ resetRestaurants = (restaurants) => {
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const ul = document.body.querySelector('.restaurants-list');
-  restaurants.forEach(restaurant => {
+  restaurants.forEach((restaurant, idx) => {
     ul.append(createRestaurantHTML(restaurant));
+
   });
+
   addMarkersToMap();
 }
 
@@ -238,8 +242,29 @@ createRestaurantHTML = (restaurant) => {
   
   a_wrapper.append(li);
 
+  
+  //link the html element to the marker index
+  a_wrapper.setAttribute('data-rest-id', restaurant.id);
+  a_wrapper.addEventListener('mouseenter', (e) => {startAnimation(e, restaurant.id)});
+  a_wrapper.addEventListener('focus', (e) => {startAnimation(e, restaurant.id)});
+  a_wrapper.addEventListener('mouseleave', (e) => {stopAnimation(e, restaurant.id)});
+  a_wrapper.addEventListener('blur', (e) => {stopAnimation(e, restaurant.id)});
+
   return a_wrapper
+
+  function startAnimation(e, id) {
+    //find the matching id (would be faster to track index)
+     let thisMarker = self.markers.find((element)=>{ return element.rest_id == id });
+    thisMarker.setAnimation(google.maps.Animation.BOUNCE);  
+  }
+  
+  function stopAnimation(e, id) {
+    let thisMarker = self.markers.find((element)=>{ return element.rest_id == id });
+    thisMarker.setAnimation(null);
+  }
+  
 }
+
 
 
 /**

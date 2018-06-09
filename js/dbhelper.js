@@ -168,7 +168,7 @@ class DBHelper {
       animation: google.maps.Animation.DROP,
       rest_id: restaurant.id
     });
-    console.log(marker);
+
     return marker;
   }
 
