@@ -564,7 +564,7 @@ footer {
     z-index: 10;
   }
   .filter-options {
-    max-width: 400px;
+    max-width: 425px;
     
   }
 
@@ -573,7 +573,7 @@ footer {
     border-radius: 25px;
   }
   .section-restaurants {
-    max-width: 400px;
+    max-width: 425px;
     /* position: relative; */
     flex-grow: 1;
   }
@@ -585,7 +585,7 @@ footer {
     position: absolute;
     right: 0px;
     top: -50px;
-    width: calc(100vw - 400px);
+    width: calc(100vw - 425px);
     height: calc(100vh - (50px + 20px));
     
   }

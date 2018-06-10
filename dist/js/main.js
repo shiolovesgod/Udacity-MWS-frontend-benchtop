@@ -243,9 +243,9 @@ createRestaurantHTML = (restaurant) => {
 
   content_wrapper.appendChild(text_wrapper);
 
-  const image = document.createElement('img');
+  //mainly for different screen density
+  const image = HTMLHelper.generateImgHTML(restaurant, 200, [200, 400, 600, 800], '200px');
   image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
   content_wrapper.appendChild(image);
 
   a_wrapper.appendChild(content_wrapper);

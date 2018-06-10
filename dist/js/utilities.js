@@ -6,6 +6,28 @@
 
 class HTMLHelper {
 
+  static generateImgHTML(restaurant, defaultSize, imgSizes = [], sizesQuery = '') {
+
+    const img = document.createElement('img');
+    img.setAttribute('src', `./img/${restaurant.id}-${defaultSize}w.jpg`);
+    img.setAttribute(`alt`, restaurant.photoDesc);
+
+    if (imgSizes.length > 0) {
+      let srcsetVal = [];
+      for (let [idx, imgSize] of imgSizes.entries()) {
+        srcsetVal.push(`./img/${restaurant.id}-${imgSize}w.jpg ${idx+1}x`)
+      }
+      img.setAttribute('srcset', srcsetVal.join(', '));
+    }
+
+    if (sizesQuery.length > 0) {
+      img.setAttribute('sizes', sizesQuery);  
+    }  //i may want to rewrite this to accommodate 'w' instead of 'x'    
+
+    return img;
+
+  }
+
   static generatePictureHTML(restaurant, imgSizes, queries = []) {
 
     // var queries = ['(min-width:300px)', '']; //imgSizes must be greater than nQueries
