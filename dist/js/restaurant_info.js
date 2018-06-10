@@ -25,38 +25,8 @@ window.initMap = () => {
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
 
-    // Remove tab index from map items after tiles have ben loaded
-  google.maps.event.addListener(self.map, 'tilesloaded', () => {
-
-    //A little sloppy, but the timeout makes sure the controls are loaded
-    setTimeout(() => {
-
-      //Remove tab index from: iframe and div
-      document.querySelector('#map .gm-style div:first-child').setAttribute('tabindex', -1);
-      document.querySelector('#map .gm-style iframe').setAttribute('tabindex', -1);
-
-      //Tab through divs first
-      document.querySelectorAll('#map .gm-style div[role="button"]')
-        .forEach((el) => {
-          el.setAttribute('tabindex', 0);
-          el.classList.add('map-control');
-        }); //map & satellite
-
-      //Then Buttons
-      document.querySelectorAll('#map .gm-style button')
-        .forEach((el) => {
-          el.setAttribute('tabindex', 0);
-          el.classList.add('map-control');
-        }); //zoom in, zoomout, full screen
-
-      //Finally a's (currently not focusable)
-      document.querySelectorAll('#map .gm-style a[href]')
-        .forEach((el) => {
-          el.setAttribute('tabindex', -1);
-          el.classList.add('map-link');
-        }); //zoom in, zoomout, full screen
-    }, 500);
-  });
+    // Remove tab index from map items after tiles have been loaded 
+    HTMLHelper.setMapTabOrder(self.map);
   });
 
 
@@ -97,12 +67,13 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const address = document.body.querySelector('.restaurant-address');
 
   //Add a soft break before state + zip (without RegEx)
-  const addressStr_pre = restaurant.address.split("").reverse().join("").replace(","," >rbw<,").split("").reverse().join("");
+  const addressStr_pre = restaurant.address.split("").reverse().join("").replace(",", " >rbw<,").split("").reverse().join("");
   address.innerHTML = addressStr_pre;
 
-  const image = document.body.querySelector('.restaurant-img');
-  image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  const image_wrapper = document.body.querySelector('.restaurant-img-wrapper');
+  const picture = HTMLHelper.generatePictureHTML(restaurant, [[400, 800], [200, 400, 600], [400]], ['(min-width:300px)','']);
+  picture.querySelector('img').className = 'restaurant-img';
+  image_wrapper.appendChild(picture);
 
   const cuisine = document.body.querySelector('.restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
