@@ -212,7 +212,7 @@ Map
 
 .restaurants-list a:hover, .restaurants-list a:focus {
   background-color: #fff;
-  border: 2px solid #f18200;
+  border: 2px solid #b35f00;
 }
 
 .restaurant-info-wrapper {
@@ -227,7 +227,7 @@ Map
 }
 
 .restaurant-name {
-  color: #f18200;
+  color: #252831;
   /* h1 designation for ARIA with h3 sizing */
   font-size: 1.375rem;
   line-height: 1.1363;
@@ -243,7 +243,7 @@ Map
 }
 
 .rating-text, .rating-stars{
-  color: #3397DB;
+  color: #b35f00;
   padding-right: 5px;
 }
 .review-count {
