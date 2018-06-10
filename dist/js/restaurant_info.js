@@ -176,9 +176,19 @@ createReviewHTML = (review) => {
   comments.innerHTML = review.comments;
   comments.setAttribute("tabindex", 0);
 
+  //Add listeners if the user clicks or presses key down on element
   comments.addEventListener("click", function toggleEllispis(event) {
     event.target.classList.toggle("fade-ellipsis");
   })
+    
+  comments.addEventListener("keydown", (e)=>{
+    
+    console.log(e.keyCode);
+    if (e.keyCode == 13 || e.keyCode == 32) {
+      e.preventDefault();
+        event.target.classList.toggle("fade-ellipsis");
+    }
+  });
 
   li.appendChild(comments);
 
