@@ -2,10 +2,10 @@
  * TODO:Features & Chores
  *  1. Link the map to the marker in mobile view
  *     (click once, preview place in popup)
- *  2. On hover map icon, highlight corresponding 
- *     location
- *  3. Create a helper file for common map controls
- *  4. Add cuisine type to photo area?
+ *  2. Add cuisine type to photo area?
+ *  3. Clean up, eslint, and transpile all CSS, JS, and image files
+ *  4. Create a JS controller and split the tasks into different files
+ * 
  */
 
 
@@ -301,7 +301,6 @@ createRestaurantHTML = (restaurant) => {
 }
 
 
-
 /**
  * Add markers for current restaurants to the map.
  */
@@ -315,3 +314,29 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 }
+
+/** ====================================================================
+ * Service Worker Section
+ *  ====================================================================
+ */
+
+
+ /* SW TIPS
+  * 
+  * Accessing sw: navigator.serviceWorker.controller
+  * 
+  */
+
+ /**
+ * Register the service worker
+ */
+
+ if(navigator.serviceWorker){
+   navigator.serviceWorker.register('./js/sw.js')
+   .then((reg)=>{
+     console.log('sw registered');
+   })
+   .catch((err)=>{
+     console.log('sw error');
+   });
+ }
