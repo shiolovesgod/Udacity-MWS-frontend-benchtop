@@ -94,7 +94,6 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   const tbody = document.createElement('tbody');
   for (let key in operatingHours) {
     const row = document.createElement('tr');
-
     const day = document.createElement('th');
     day.setAttribute('scope', 'row');
     day.className = 'hours-day';

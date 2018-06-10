@@ -315,7 +315,7 @@ Map Container
   text-align: center;
 }
 
-.restaurant-hours td, .restaurant-hours .reviews-list {
+.restaurant-hours td, .restaurant-hours th, .restaurant-hours .reviews-list {
   color: #666;
 }
 
@@ -448,7 +448,7 @@ footer {
     font-size: 1.3rem;
   }
 
-  .restaurant-hours td {
+  .restaurant-hours td, .restaurant-hours th {
     display: block;
     padding: 0px;
     padding-left: 20px;
@@ -577,7 +577,7 @@ footer {
     margin: 0;
   }
 
-  .restaurant-hours td, tr, th, tead {
+  .restaurant-hours td, .restaurant-hours th, tr, th, tead {
     padding: 4px;
   }
 
@@ -627,7 +627,7 @@ footer {
     line-height: 1.25;
   }
 
-  .restaurant-hours td, tr, th, tead {
+  .restaurant-hours td, .restaurant-hours th, tr, th, tead {
     padding: 6px;
   }
 
