@@ -200,17 +200,24 @@ Map
   flex-direction: column;
   justify-content: flex-start;
 }
-.restaurants-list a {
+
+.restaurants-list li {
+  padding: 0;
+  margin: 5px auto;
+}
+
+.restaurants-list li a {
   background-color: #fff;
   border: 2px solid #ccc;
   /* font-family: Arial,sans-serif; */
-  margin: 5px;
   padding: 10px;
   /* min-width: 310px; */
   /* width: 100%; */
+  display: block;
 }
 
-.restaurants-list a:hover, .restaurants-list a:focus {
+
+.restaurants-list li a:hover, .restaurants-list li a:focus {
   background-color: #fff;
   border: 2px solid #b35f00;
 }
@@ -502,9 +509,8 @@ footer {
   .restaurants-list {
     margin: auto auto;
   }
-  .restaurants-list a {
-    margin: 10px;
-    padding: 15px;
+  .restaurants-list li {
+    margin: 6px auto;
     width: 95%;
   }
 
@@ -534,8 +540,6 @@ footer {
 }
 
 /* Large Screens */
-
-
 
 
 @media screen and (min-width: 550px) {
@@ -585,9 +589,8 @@ footer {
     
   }
 
-  .restaurants-list a {
-    margin: 10px;
-    padding: 15px;
+  .restaurants-list li {
+    margin: 15px auto;
   }
 
   .switch-view {

@@ -225,15 +225,15 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 createRestaurantHTML = (restaurant) => {
 
+  const li = document.createElement('li');
   const a_wrapper = document.createElement('a');
   a_wrapper.href = DBHelper.urlForRestaurant(restaurant);
-  const li = document.createElement('li');
-
+  
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
   name.className = 'restaurant-name';
-  li.append(name);
+  a_wrapper.appendChild(name);
 
   const content_wrapper = document.createElement('div');
   content_wrapper.className = 'restaurant-info-wrapper';
@@ -248,40 +248,38 @@ createRestaurantHTML = (restaurant) => {
     const ratingText = document.createElement('p');
     ratingText.innerHTML = restaurant.average_rating.toFixed(1);
     ratingText.className = 'rating-text';
-    rating_wrapper.append(ratingText);
+    rating_wrapper.appendChild(ratingText);
 
     const ratingIcon = document.createElement('p');
     ratingIcon.innerHTML = DBHelper.rating2stars(restaurant.average_rating);
     ratingIcon.className = 'rating-stars';
-    rating_wrapper.append(ratingIcon);
+    rating_wrapper.appendChild(ratingIcon);
 
     const nReviews = document.createElement('p');
     nReviews.innerHTML = restaurant.total_reviews + ' Reviews';
     nReviews.className = 'review-count';
-    rating_wrapper.append(nReviews);
+    rating_wrapper.appendChild(nReviews);
   
-  text_wrapper.append(rating_wrapper);
+  text_wrapper.appendChild(rating_wrapper);
 
     
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
-  text_wrapper.append(neighborhood);
+  text_wrapper.appendChild(neighborhood);
   
   const address = document.createElement('p');
 
   address.innerHTML = restaurant.address.replace(", ","<br>");
-  text_wrapper.append(address);
+  text_wrapper.appendChild(address);
 
-  content_wrapper.append(text_wrapper);
+  content_wrapper.appendChild(text_wrapper);
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  content_wrapper.append(image);
+  content_wrapper.appendChild(image);
 
-  li.append(content_wrapper);
-  
-  a_wrapper.append(li);
+  a_wrapper.appendChild(content_wrapper);
 
   
   //link the html element to the marker index
@@ -291,7 +289,9 @@ createRestaurantHTML = (restaurant) => {
   a_wrapper.addEventListener('mouseleave', (e) => {stopAnimation(e, restaurant.id)});
   a_wrapper.addEventListener('blur', (e) => {stopAnimation(e, restaurant.id)});
 
-  return a_wrapper
+  li.append(a_wrapper);
+
+  return li;
 
   function startAnimation(e, id) {
     //find the matching id (would be faster to track index)
