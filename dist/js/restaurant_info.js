@@ -91,10 +91,12 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
  */
 fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
   const hours = document.body.querySelector('.restaurant-hours');
+  const tbody = document.createElement('tbody');
   for (let key in operatingHours) {
     const row = document.createElement('tr');
 
     const day = document.createElement('th');
+    day.setAttribute('scope', 'row');
     day.className = 'hours-day';
     day.innerHTML = key;
     row.appendChild(day);
@@ -111,8 +113,9 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     time.appendChild(timeList);
     row.appendChild(time);
 
-    hours.appendChild(row);
+    tbody.appendChild(row);
   }
+  hours.appendChild(tbody);
 }
 
 /**
