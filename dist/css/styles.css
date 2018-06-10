@@ -204,6 +204,7 @@ Map
 .restaurants-list li {
   padding: 0;
   margin: 5px auto;
+  width: 95%;
 }
 
 .restaurants-list li a {
