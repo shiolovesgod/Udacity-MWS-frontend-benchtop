@@ -305,6 +305,7 @@ Map Container
   vertical-align: top;
   padding: 2px;
   border-top: dotted 1px black;
+  font-weight: 300;
 }
 
 .restaurant-hours .hours-day {
