@@ -24,7 +24,42 @@ window.initMap = () => {
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
+
+    // Remove tab index from map items after tiles have ben loaded
+  google.maps.event.addListener(self.map, 'tilesloaded', () => {
+
+    //A little sloppy, but the timeout makes sure the controls are loaded
+    setTimeout(() => {
+
+      //Remove tab index from: iframe and div
+      document.querySelector('#map .gm-style div:first-child').setAttribute('tabindex', -1);
+      document.querySelector('#map .gm-style iframe').setAttribute('tabindex', -1);
+
+      //Tab through divs first
+      document.querySelectorAll('#map .gm-style div[role="button"]')
+        .forEach((el) => {
+          el.setAttribute('tabindex', 0);
+          el.classList.add = "map-control";
+        }); //map & satellite
+
+      //Then Buttons
+      document.querySelectorAll('#map .gm-style button')
+        .forEach((el) => {
+          el.setAttribute('tabindex', 0);
+          el.classList.add = "map-control";
+        }); //zoom in, zoomout, full screen
+
+      //Finally a's (currently not focusable)
+      document.querySelectorAll('#map .gm-style a[href]')
+        .forEach((el) => {
+          el.setAttribute('tabindex', -1);
+          el.classList.add = "map-link";
+        }); //zoom in, zoomout, full screen
+    }, 500);
   });
+  });
+
+
 }
 
 /**
@@ -163,6 +198,7 @@ createReviewHTML = (review) => {
   comments.className = "review-comments";
   comments.classList.add("fade-ellipsis");
   comments.innerHTML = review.comments;
+  comments.setAttribute("tabindex", 0);
 
   comments.addEventListener("click", function toggleEllispis(event) {
     event.target.classList.toggle("fade-ellipsis");

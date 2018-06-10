@@ -1,9 +1,10 @@
 /**
- * TODO:Features
+ * TODO:Features & Chores
  *  1. Link the map to the marker in mobile view
  *     (click once, preview place in popup)
  *  2. On hover map icon, highlight corresponding 
  *     location
+ *  3. Create a helper file for common map controls
  */
 
 
@@ -81,32 +82,71 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
 /**
  * Initialize Google map, called from HTML.
  */
-window.initMap = () => {
-  let loc = {
-    lat: 40.722216,
-    lng: -73.987501
-  };
-  //Set map height
-  const mapEl = document.body.querySelector('#map');
-  
-  setMapSize = () => { 
-    
-    //set to 0 first, so that the flex box can calculate the container size
-    mapEl.style.height = 0;
-    mapEl.style.height = document.body.querySelector('.section-map').clientHeight + 'px'; 
-  };
+ window.initMap = () => {
+   let loc = {
+     lat: 40.722216,
+     lng: -73.987501
+   };
+   //Set map height
+   const mapEl = document.body.querySelector('#map');
 
-  //Create a listener to handle map size changes
-  google.maps.event.addDomListener(window, 'resize', setMapSize);
-  self.map = new google.maps.Map(mapEl, {
-    zoom: 12,
-    center: loc,
-    scrollwheel: false
-  });
+   //Create function for resizing map to parent container
+   setMapSize = () => {
 
-  updateRestaurants();
-  setMapSize(); //call the function
-}
+     //set to 0 first, so that the flex box can calculate the container size
+     mapEl.style.height = 0;
+     mapEl.style.height = document.body.querySelector('.section-map').clientHeight + 'px';
+   };
+
+   //Create a listener to handle map size changes
+   google.maps.event.addDomListener(window, 'resize', setMapSize);
+
+   //Create a new map
+   self.map = new google.maps.Map(mapEl, {
+     zoom: 12,
+     center: loc,
+     scrollwheel: false
+   });
+
+   // Remove tab index from map items after tiles have ben loaded 
+   // I may need to move the tabindex value to 1 for non-map elements
+   google.maps.event.addListener(self.map, 'tilesloaded', () => {
+
+     //A little sloppy, but the timeout makes sure the controls are loaded
+     setTimeout(() => {
+
+       //Remove tab index from: iframe and div
+       document.querySelector('#map .gm-style div:first-child').setAttribute('tabindex', -1);
+       document.querySelector('#map .gm-style iframe').setAttribute('tabindex', -1);
+
+       //Tab through divs first
+       document.querySelectorAll('#map .gm-style div[role="button"]')
+         .forEach((el) => {
+           el.setAttribute('tabindex', 0); //2
+           el.classList.add = "map-control";
+         }); //map & satellite
+
+       //Then Buttons
+       document.querySelectorAll('#map .gm-style button')
+         .forEach((el) => {
+           el.setAttribute('tabindex', 0); //3
+           el.classList.add = "map-control";
+         }); //zoom in, zoomout, full screen
+
+       //Finally a's (currently not focusable)
+       document.querySelectorAll('#map .gm-style a[href]')
+         .forEach((el) => {
+           el.setAttribute('tabindex', -1);
+           el.classList.add = "map-link";
+         }); //zoom in, zoomout, full screen
+     }, 500);
+   });
+
+
+   updateRestaurants();
+   setMapSize(); //set initial map size
+
+ }
 
 /**
  * Show or hide map
@@ -177,6 +217,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   });
 
   addMarkersToMap();
+
 }
 
 /**
@@ -279,5 +320,4 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     });
     self.markers.push(marker);
   });
-
 }
