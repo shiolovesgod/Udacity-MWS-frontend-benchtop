@@ -150,6 +150,9 @@ updateRestaurants = () => {
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
 
+  self.selectedCuisine = cuisine;
+  self.selectedNeighborhood = neighborhood;
+
   DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
     if (error) { // Got an error!
       console.error(error);
@@ -187,6 +190,26 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 
   addMarkersToMap();
 
+  //Let user know if results 
+  //Started with just notifying them in nothing found, but it's weird not to do both
+  const cuisine = self.selectedCuisine;
+  const neighborhood = self.selectedNeighborhood;
+
+  if (restaurants.length < 1)
+  {  
+    let li = document.createElement('li');
+    li.innerHTML = `No restaurant reviews found for <wbr> ${cuisine} cuisine in ${neighborhood}.`;
+    li.setAttribute('aria-role','alert');
+    li.setAttribute('aria-live','polite');
+    ul.append(li);
+
+  }
+  // Notify user of number of results found?
+  // else if (cuisine != "all" || neighborhood !="all" ) { //may be overkill?
+  //   let li = document.createElement('li');
+  //   document.body.querySelector('aria-alert').innerHTML = `${restaurants.length} reviewed restaurants found.`;
+  // }
+
 }
 
 /**
@@ -217,7 +240,7 @@ createRestaurantHTML = (restaurant) => {
     const ratingText = document.createElement('p');
     ratingText.innerHTML = restaurant.average_rating.toFixed(1);
     ratingText.className = 'rating-text';
-    ratingText.setAttribute('aria-label','Average rating');
+    ratingText.setAttribute('aria-label',`Average rating ${ratingText.innerHTML}`);
     rating_wrapper.appendChild(ratingText);
 
     const ratingIcon = document.createElement('p');

@@ -164,7 +164,7 @@ createReviewHTML = (review) => {
   const ratingText = document.createElement('p');
   ratingText.innerHTML = `${review.rating} Stars`;
   ratingText.className = 'rating-text';
-  ratingText.setAttribute('aria-label','User rating');
+  ratingText.setAttribute('aria-label',`User rating ${ratingText.innerHTML}`);
   rating_wrapper.append(ratingText);
 
   li.append(rating_wrapper);
