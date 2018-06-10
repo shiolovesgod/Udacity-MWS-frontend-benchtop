@@ -473,20 +473,23 @@ footer {
   }
 
   .section-restaurants {
-    display: flex;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 70%;
+    width: 100%;
+    height: 60%;
     z-index: 10;
+    padding-bottom: 10px;
+    overflow: auto;
+    border-bottom: solid 3px #FFA500;
+    
   }
 
    .section-map, .section-map.show {
     transform: translate(0,0);
     visibility: visible;
-    right: 0;
-    top: 0;
-    width: 30%;  
+    top: 60%;
+    width: 100%;  
+    height: 40% ;
+    /* padding: 15px; */
+    /* background-color: #FFA500; */
   }
 
   .rating{
@@ -500,14 +503,15 @@ footer {
   }
 
   .restaurant-info-text {
-    width: 100%;
+    width: 50%;
   }
 
   .restaurants-list .restaurant-img {
-    display:none;
+    width:50%;
 }
 
   .restaurants-list {
+    height: 100%;
     margin: auto auto;
   }
   .restaurants-list li {
@@ -574,7 +578,8 @@ footer {
   }
   .section-restaurants {
     max-width: 425px;
-    /* position: relative; */
+    height: 100%;
+    border-bottom: none;
     flex-grow: 1;
   }
 
