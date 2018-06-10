@@ -410,7 +410,6 @@ footer {
 
   .restaurants-list .restaurant-img {
     width: 45%;
-    /* height: 100%; */
     align-self: top;
 }
 }
@@ -459,6 +458,87 @@ footer {
 /* Mid-Range Screens */
 
 @media screen and (min-width: 400px) {
+  .mobile-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .section-restaurants {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70%;
+    z-index: 10;
+  }
+
+   .section-map, .section-map.show {
+    transform: translate(0,0);
+    visibility: visible;
+    right: 0;
+    top: 0;
+    width: 30%;  
+  }
+
+  .rating{
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 10px 5px;
+  }
+
+  .restaurant-info-wrapper {
+    flex-wrap: wrap;
+  }
+
+  .restaurant-info-text {
+    width: 100%;
+  }
+
+  .restaurants-list .restaurant-img {
+    display:none;
+}
+
+  .restaurants-list {
+    margin: auto auto;
+  }
+  .restaurants-list a {
+    margin: 10px;
+    padding: 15px;
+    width: 95%;
+  }
+
+  .switch-view {
+    display: none;
+    
+  }
+   
+}
+
+@media screen and (min-width: 450px) {
+
+  .filter-options select {
+    padding: 5px 10px;
+    border-radius: 25px;
+  }
+
+  .restaurant-info-text {
+    width: 60%;
+  }
+
+  .restaurants-list .restaurant-img {
+    display: block;
+    width: 40%;
+    align-self: top;
+}
+}
+
+/* Large Screens */
+
+
+
+
+@media screen and (min-width: 550px) {
 
 
   h1 { 
@@ -473,8 +553,6 @@ footer {
     font-size: 1.5rem; 
     line-height: 1.25;
   }
-
-
 
 
   .site-title{ 
@@ -492,16 +570,13 @@ footer {
   .section-restaurants {
     max-width: 400px;
     /* position: relative; */
-    /* flex-grow: 1; */
+    flex-grow: 1;
   }
 
    .section-map, .section-map.show {
     transform: translate(0,0);
     visibility: visible;
-
-    border-top: solid 1px #252831; 
-    /* max-width: 560px; */
-    
+    border-top: solid 1px #252831;     
     position: absolute;
     right: 0px;
     top: -50px;
@@ -518,13 +593,12 @@ footer {
   .switch-view {
     display: none;
     
-  }
+  } 
    
-}
+}  
 
-/* Large Screens */
 
-@media screen and (min-width:600px) { 
+@media screen and (min-width:650px) { 
 
   body,td,th,p{
     line-height: 1.375;
