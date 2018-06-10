@@ -230,7 +230,9 @@ createRestaurantHTML = (restaurant) => {
 
   const content_wrapper = document.createElement('div');
   content_wrapper.className = 'restaurant-info-wrapper';
-  
+
+  const text_wrapper = document.createElement('div');
+  text_wrapper.className = 'restaurant-info-text';
 
   const rating_wrapper = document.createElement('div');
   rating_wrapper.className = 'rating';
