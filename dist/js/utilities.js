@@ -79,7 +79,9 @@ class HTMLHelper {
 
         //Remove tab index from: iframe and div
         document.querySelector('#map .gm-style div:first-child').setAttribute('tabindex', -1);
-        document.querySelector('#map .gm-style iframe').setAttribute('tabindex', -1);
+        let iFrame = document.querySelector('#map .gm-style iframe');
+          iFrame.setAttribute('aria-label','Restaurant location map');
+          iFrame.setAttribute('tabindex', -1);
 
         //Tab through divs first
         document.querySelectorAll('#map .gm-style div[role="button"]')

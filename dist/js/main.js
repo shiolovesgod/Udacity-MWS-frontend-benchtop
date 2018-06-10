@@ -217,11 +217,13 @@ createRestaurantHTML = (restaurant) => {
     const ratingText = document.createElement('p');
     ratingText.innerHTML = restaurant.average_rating.toFixed(1);
     ratingText.className = 'rating-text';
+    ratingText.setAttribute('aria-label','Average rating');
     rating_wrapper.appendChild(ratingText);
 
     const ratingIcon = document.createElement('p');
     ratingIcon.innerHTML = DBHelper.rating2stars(restaurant.average_rating);
     ratingIcon.className = 'rating-stars';
+    ratingIcon.setAttribute('aria-hidden','true');
     rating_wrapper.appendChild(ratingIcon);
 
     const nReviews = document.createElement('p');

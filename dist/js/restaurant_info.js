@@ -158,11 +158,13 @@ createReviewHTML = (review) => {
   const ratingIcon = document.createElement('p');
   ratingIcon.innerHTML = DBHelper.rating2stars(review.rating);
   ratingIcon.className = 'rating-stars';
+  ratingIcon.setAttribute('aria-hidden','true');
   rating_wrapper.append(ratingIcon);
 
   const ratingText = document.createElement('p');
   ratingText.innerHTML = `${review.rating} Stars`;
   ratingText.className = 'rating-text';
+  ratingText.setAttribute('aria-label','User rating');
   rating_wrapper.append(ratingText);
 
   li.append(rating_wrapper);
