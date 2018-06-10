@@ -82,71 +82,71 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
 /**
  * Initialize Google map, called from HTML.
  */
- window.initMap = () => {
-   let loc = {
-     lat: 40.722216,
-     lng: -73.987501
-   };
-   //Set map height
-   const mapEl = document.body.querySelector('#map');
+window.initMap = () => {
+  let loc = {
+    lat: 40.722216,
+    lng: -73.987501
+  };
+  //Set map height
+  const mapEl = document.body.querySelector('#map');
 
-   //Create function for resizing map to parent container
-   setMapSize = () => {
+  //Create function for resizing map to parent container
+  setMapSize = () => {
 
-     //set to 0 first, so that the flex box can calculate the container size
-     mapEl.style.height = 0;
-     mapEl.style.height = document.body.querySelector('.section-map').clientHeight + 'px';
-   };
+    //set to 0 first, so that the flex box can calculate the container size
+    mapEl.style.height = 0;
+    mapEl.style.height = document.body.querySelector('.section-map').clientHeight + 'px';
+  };
 
-   //Create a listener to handle map size changes
-   google.maps.event.addDomListener(window, 'resize', setMapSize);
+  //Create a listener to handle map size changes
+  google.maps.event.addDomListener(window, 'resize', setMapSize);
 
-   //Create a new map
-   self.map = new google.maps.Map(mapEl, {
-     zoom: 12,
-     center: loc,
-     scrollwheel: false
-   });
+  //Create a new map
+  self.map = new google.maps.Map(mapEl, {
+    zoom: 12,
+    center: loc,
+    scrollwheel: false
+  });
 
-   // Remove tab index from map items after tiles have ben loaded 
-   // I may need to move the tabindex value to 1 for non-map elements
-   google.maps.event.addListener(self.map, 'tilesloaded', () => {
+  // Remove tab index from map items after tiles have ben loaded 
+  // I may need to move the tabindex value to 1 for non-map elements
+  google.maps.event.addListener(self.map, 'tilesloaded', () => {
 
-     //A little sloppy, but the timeout makes sure the controls are loaded
-     setTimeout(() => {
+    //A little sloppy, but the timeout makes sure the controls are loaded
+    setTimeout(() => {
 
-       //Remove tab index from: iframe and div
-       document.querySelector('#map .gm-style div:first-child').setAttribute('tabindex', -1);
-       document.querySelector('#map .gm-style iframe').setAttribute('tabindex', -1);
+      //Remove tab index from: iframe and div
+      document.querySelector('#map .gm-style div:first-child').setAttribute('tabindex', -1);
+      document.querySelector('#map .gm-style iframe').setAttribute('tabindex', -1);
 
-       //Tab through divs first
-       document.querySelectorAll('#map .gm-style div[role="button"]')
-         .forEach((el) => {
-           el.setAttribute('tabindex', 0); //2
-           el.classList.add = "map-control";
-         }); //map & satellite
+      //Tab through divs first
+      document.querySelectorAll('#map .gm-style div[role="button"]')
+        .forEach((el) => {
+          el.setAttribute('tabindex', 0);
+          el.classList.add('map-control');
+        }); //map & satellite
 
-       //Then Buttons
-       document.querySelectorAll('#map .gm-style button')
-         .forEach((el) => {
-           el.setAttribute('tabindex', 0); //3
-           el.classList.add = "map-control";
-         }); //zoom in, zoomout, full screen
+      //Then Buttons
+      document.querySelectorAll('#map .gm-style button')
+        .forEach((el) => {
+          el.setAttribute('tabindex', 0);
+          el.classList.add('map-control');
+        }); //zoom in, zoomout, full screen
 
-       //Finally a's (currently not focusable)
-       document.querySelectorAll('#map .gm-style a[href]')
-         .forEach((el) => {
-           el.setAttribute('tabindex', -1);
-           el.classList.add = "map-link";
-         }); //zoom in, zoomout, full screen
-     }, 500);
-   });
+      //Finally a's (currently not focusable)
+      document.querySelectorAll('#map .gm-style a[href]')
+        .forEach((el) => {
+          el.setAttribute('tabindex', -1);
+          el.classList.add('map-link');
+        }); //zoom in, zoomout, full screen
+    }, 500);
+  });
 
 
-   updateRestaurants();
-   setMapSize(); //set initial map size
+  updateRestaurants();
+  setMapSize(); //set initial map size
 
- }
+}
 
 /**
  * Show or hide map

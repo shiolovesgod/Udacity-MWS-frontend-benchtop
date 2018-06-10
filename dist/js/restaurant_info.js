@@ -39,21 +39,21 @@ window.initMap = () => {
       document.querySelectorAll('#map .gm-style div[role="button"]')
         .forEach((el) => {
           el.setAttribute('tabindex', 0);
-          el.classList.add = "map-control";
+          el.classList.add('map-control');
         }); //map & satellite
 
       //Then Buttons
       document.querySelectorAll('#map .gm-style button')
         .forEach((el) => {
           el.setAttribute('tabindex', 0);
-          el.classList.add = "map-control";
+          el.classList.add('map-control');
         }); //zoom in, zoomout, full screen
 
       //Finally a's (currently not focusable)
       document.querySelectorAll('#map .gm-style a[href]')
         .forEach((el) => {
           el.setAttribute('tabindex', -1);
-          el.classList.add = "map-link";
+          el.classList.add('map-link');
         }); //zoom in, zoomout, full screen
     }, 500);
   });
