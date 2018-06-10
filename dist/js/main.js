@@ -5,6 +5,7 @@
  *  2. On hover map icon, highlight corresponding 
  *     location
  *  3. Create a helper file for common map controls
+ *  4. Add cuisine type to photo area?
  */
 
 
@@ -237,9 +238,6 @@ createRestaurantHTML = (restaurant) => {
 
   const content_wrapper = document.createElement('div');
   content_wrapper.className = 'restaurant-info-wrapper';
-
-  const text_wrapper = document.createElement('div');
-  text_wrapper.className = 'restaurant-info-text';
   
 
   const rating_wrapper = document.createElement('div');
@@ -260,19 +258,18 @@ createRestaurantHTML = (restaurant) => {
     nReviews.className = 'review-count';
     rating_wrapper.append(nReviews);
   
-  text_wrapper.append(rating_wrapper);
+  content_wrapper.append(rating_wrapper);
 
     
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
-  text_wrapper.append(neighborhood);
+  content_wrapper.append(neighborhood);
   
   const address = document.createElement('p');
 
   address.innerHTML = restaurant.address.replace(", ","<br>");
-  text_wrapper.append(address);
+  content_wrapper.append(address);
 
-  content_wrapper.append(text_wrapper);
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
