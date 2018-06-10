@@ -252,42 +252,19 @@ createRestaurantHTML = (restaurant) => {
     nReviews.className = 'review-count';
     rating_wrapper.appendChild(nReviews);
   
-<<<<<<< HEAD
-  content_wrapper.append(rating_wrapper);
-||||||| merged common ancestors
-  text_wrapper.append(rating_wrapper);
-=======
   text_wrapper.appendChild(rating_wrapper);
->>>>>>> a111y
 
     
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
-<<<<<<< HEAD
-  content_wrapper.append(neighborhood);
-||||||| merged common ancestors
-  text_wrapper.append(neighborhood);
-=======
   text_wrapper.appendChild(neighborhood);
->>>>>>> a111y
   
   const address = document.createElement('p');
 
   address.innerHTML = restaurant.address.replace(", ","<br>");
-<<<<<<< HEAD
-  content_wrapper.append(address);
-||||||| merged common ancestors
-  text_wrapper.append(address);
-=======
   text_wrapper.appendChild(address);
->>>>>>> a111y
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-  content_wrapper.append(text_wrapper);
-=======
   content_wrapper.appendChild(text_wrapper);
->>>>>>> a111y
 
   //mainly for different screen density
   const image = HTMLHelper.generateImgHTML(restaurant, 200, [200, 400, 600, 800], '200px');
