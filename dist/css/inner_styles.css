@@ -265,8 +265,13 @@ Map Container
   text-align: center;
 }
 
+.inside .restaurant-img-wrapper {
+  display: block;
+  width: 100%;
+}
 .inside .restaurant-img {
   width: 90%;
+  
   margin: 0 auto;
 }
 .restaurant-address {
