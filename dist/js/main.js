@@ -83,71 +83,40 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
 /**
  * Initialize Google map, called from HTML.
  */
- window.initMap = () => {
-   let loc = {
-     lat: 40.722216,
-     lng: -73.987501
-   };
-   //Set map height
-   const mapEl = document.body.querySelector('#map');
+window.initMap = () => {
+  let loc = {
+    lat: 40.722216,
+    lng: -73.987501
+  };
+  //Set map height
+  const mapEl = document.body.querySelector('#map');
 
-   //Create function for resizing map to parent container
-   setMapSize = () => {
+  //Create function for resizing map to parent container
+  setMapSize = () => {
 
-     //set to 0 first, so that the flex box can calculate the container size
-     mapEl.style.height = 0;
-     mapEl.style.height = document.body.querySelector('.section-map').clientHeight + 'px';
-   };
+    //set to 0 first, so that the flex box can calculate the container size
+    mapEl.style.height = 0;
+    mapEl.style.height = document.body.querySelector('.section-map').clientHeight + 'px';
+  };
 
-   //Create a listener to handle map size changes
-   google.maps.event.addDomListener(window, 'resize', setMapSize);
+  //Create a listener to handle map size changes
+  google.maps.event.addDomListener(window, 'resize', setMapSize);
 
-   //Create a new map
-   self.map = new google.maps.Map(mapEl, {
-     zoom: 12,
-     center: loc,
-     scrollwheel: false
-   });
+  //Create a new map
+  self.map = new google.maps.Map(mapEl, {
+    zoom: 12,
+    center: loc,
+    scrollwheel: false
+  });
 
-   // Remove tab index from map items after tiles have ben loaded 
-   // I may need to move the tabindex value to 1 for non-map elements
-   google.maps.event.addListener(self.map, 'tilesloaded', () => {
-
-     //A little sloppy, but the timeout makes sure the controls are loaded
-     setTimeout(() => {
-
-       //Remove tab index from: iframe and div
-       document.querySelector('#map .gm-style div:first-child').setAttribute('tabindex', -1);
-       document.querySelector('#map .gm-style iframe').setAttribute('tabindex', -1);
-
-       //Tab through divs first
-       document.querySelectorAll('#map .gm-style div[role="button"]')
-         .forEach((el) => {
-           el.setAttribute('tabindex', 0); //2
-           el.classList.add = "map-control";
-         }); //map & satellite
-
-       //Then Buttons
-       document.querySelectorAll('#map .gm-style button')
-         .forEach((el) => {
-           el.setAttribute('tabindex', 0); //3
-           el.classList.add = "map-control";
-         }); //zoom in, zoomout, full screen
-
-       //Finally a's (currently not focusable)
-       document.querySelectorAll('#map .gm-style a[href]')
-         .forEach((el) => {
-           el.setAttribute('tabindex', -1);
-           el.classList.add = "map-link";
-         }); //zoom in, zoomout, full screen
-     }, 500);
-   });
+  // Remove tab index from map items after tiles have been loaded 
+  HTMLHelper.setMapTabOrder(self.map);
 
 
-   updateRestaurants();
-   setMapSize(); //set initial map size
+  updateRestaurants();
+  setMapSize(); //set initial map size
 
- }
+}
 
 /**
  * Show or hide map
@@ -181,6 +150,9 @@ updateRestaurants = () => {
 
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
+
+  self.selectedCuisine = cuisine;
+  self.selectedNeighborhood = neighborhood;
 
   DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
     if (error) { // Got an error!
@@ -219,6 +191,26 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 
   addMarkersToMap();
 
+  //Let user know if results 
+  //Started with just notifying them in nothing found, but it's weird not to do both
+  const cuisine = self.selectedCuisine;
+  const neighborhood = self.selectedNeighborhood;
+
+  if (restaurants.length < 1)
+  {  
+    let li = document.createElement('li');
+    li.innerHTML = `No restaurant reviews found for <wbr> ${cuisine} cuisine in ${neighborhood}.`;
+    li.setAttribute('aria-role','alert');
+    li.setAttribute('aria-live','polite');
+    ul.append(li);
+
+  }
+  // Notify user of number of results found?
+  // else if (cuisine != "all" || neighborhood !="all" ) { //may be overkill?
+  //   let li = document.createElement('li');
+  //   document.body.querySelector('aria-alert').innerHTML = `${restaurants.length} reviewed restaurants found.`;
+  // }
+
 }
 
 /**
@@ -226,15 +218,15 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 createRestaurantHTML = (restaurant) => {
 
+  const li = document.createElement('li');
   const a_wrapper = document.createElement('a');
   a_wrapper.href = DBHelper.urlForRestaurant(restaurant);
-  const li = document.createElement('li');
-
+  
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
   name.className = 'restaurant-name';
-  li.append(name);
+  a_wrapper.appendChild(name);
 
   const content_wrapper = document.createElement('div');
   content_wrapper.className = 'restaurant-info-wrapper';
@@ -246,39 +238,63 @@ createRestaurantHTML = (restaurant) => {
     const ratingText = document.createElement('p');
     ratingText.innerHTML = restaurant.average_rating.toFixed(1);
     ratingText.className = 'rating-text';
-    rating_wrapper.append(ratingText);
+    ratingText.setAttribute('aria-label',`Average rating ${ratingText.innerHTML}`);
+    rating_wrapper.appendChild(ratingText);
 
     const ratingIcon = document.createElement('p');
     ratingIcon.innerHTML = DBHelper.rating2stars(restaurant.average_rating);
     ratingIcon.className = 'rating-stars';
-    rating_wrapper.append(ratingIcon);
+    ratingIcon.setAttribute('aria-hidden','true');
+    rating_wrapper.appendChild(ratingIcon);
 
     const nReviews = document.createElement('p');
     nReviews.innerHTML = restaurant.total_reviews + ' Reviews';
     nReviews.className = 'review-count';
-    rating_wrapper.append(nReviews);
+    rating_wrapper.appendChild(nReviews);
   
+<<<<<<< HEAD
   content_wrapper.append(rating_wrapper);
+||||||| merged common ancestors
+  text_wrapper.append(rating_wrapper);
+=======
+  text_wrapper.appendChild(rating_wrapper);
+>>>>>>> a111y
 
     
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
+<<<<<<< HEAD
   content_wrapper.append(neighborhood);
+||||||| merged common ancestors
+  text_wrapper.append(neighborhood);
+=======
+  text_wrapper.appendChild(neighborhood);
+>>>>>>> a111y
   
   const address = document.createElement('p');
 
   address.innerHTML = restaurant.address.replace(", ","<br>");
+<<<<<<< HEAD
   content_wrapper.append(address);
+||||||| merged common ancestors
+  text_wrapper.append(address);
+=======
+  text_wrapper.appendChild(address);
+>>>>>>> a111y
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+  content_wrapper.append(text_wrapper);
+=======
+  content_wrapper.appendChild(text_wrapper);
+>>>>>>> a111y
 
-  const image = document.createElement('img');
+  //mainly for different screen density
+  const image = HTMLHelper.generateImgHTML(restaurant, 200, [200, 400, 600, 800], '200px');
   image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  content_wrapper.append(image);
+  content_wrapper.appendChild(image);
 
-  li.append(content_wrapper);
-  
-  a_wrapper.append(li);
+  a_wrapper.appendChild(content_wrapper);
 
   
   //link the html element to the marker index
@@ -288,7 +304,9 @@ createRestaurantHTML = (restaurant) => {
   a_wrapper.addEventListener('mouseleave', (e) => {stopAnimation(e, restaurant.id)});
   a_wrapper.addEventListener('blur', (e) => {stopAnimation(e, restaurant.id)});
 
-  return a_wrapper
+  li.append(a_wrapper);
+
+  return li;
 
   function startAnimation(e, id) {
     //find the matching id (would be faster to track index)
