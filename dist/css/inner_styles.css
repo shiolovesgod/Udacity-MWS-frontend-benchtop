@@ -254,7 +254,7 @@ nav {
 }
 
 .inside .restaurant-container {
-  margin: 0 10px auto;
+  /* margin: 0 10px auto; */
   text-align: center;
   max-width: 350px;
 }
@@ -301,7 +301,7 @@ nav {
   width: 100%;
 }
 
-.restaurant-hours td, tr, th, tead {
+.restaurant-hours td, tr, th, thead {
   /* display: block; */
   vertical-align: top;
   padding: 2px;
@@ -428,6 +428,54 @@ footer {
 *
 */
 
+/* Smallest Screens */
+
+@media screen and (max-width:300px) {
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 5px;
+  }
+
+
+  h2 {
+    font-size: 1.375rem;
+    line-height: 1.1363;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+  }
+
+  .restaurant-hours td {
+    display: block;
+    padding: 0px;
+    padding-left: 20px;
+    border-top:none;
+    text-align:left;
+  }
+  
+  .restaurant-hours .hours-day {
+    border-top: dotted 1px black;
+    text-align:left;
+
+  }
+
+  .reviews-list li {
+    padding: 5px;
+  }
+
+  
+  .fade-ellipsis {
+    max-height: calc(3*1.375rem);
+  }
+  .rating-text, .rating-stars {
+    font-size: 1rem;
+  }
+}
+
+
+/* Mid-Range Screens */
+
 @media screen and (min-width:420px) {
 
   h1 { 
@@ -516,7 +564,7 @@ footer {
 
 }
 
-/* Minor Breakpoints */
+/* Larger Screens */
 
 @media screen and (min-width:600px) { 
 
@@ -544,3 +592,4 @@ footer {
   }
 
 }
+

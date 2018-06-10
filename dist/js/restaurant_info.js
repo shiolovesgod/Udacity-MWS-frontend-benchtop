@@ -95,7 +95,10 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   name.innerHTML = restaurant.name;
 
   const address = document.body.querySelector('.restaurant-address');
-  address.innerHTML = restaurant.address;
+
+  //Add a soft break before state + zip (without RegEx)
+  const addressStr_pre = restaurant.address.split("").reverse().join("").replace(","," >rbw<,").split("").reverse().join("");
+  address.innerHTML = addressStr_pre;
 
   const image = document.body.querySelector('.restaurant-img');
   image.className = 'restaurant-img';
