@@ -323,7 +323,8 @@ addMarkersToMap = (restaurants = self.restaurants) => {
 
  /* SW TIPS
   * 
-  * Accessing sw: navigator.serviceWorker.controller
+  * ++ Accessing SW: navigator.serviceWorker.controller
+  * ++ Shift + F5: reload bypassing sw
   * 
   */
 
@@ -332,7 +333,7 @@ addMarkersToMap = (restaurants = self.restaurants) => {
  */
 
  if(navigator.serviceWorker){
-   navigator.serviceWorker.register('./js/sw.js')
+   navigator.serviceWorker.register('/sw.js', {scope: '/'})
    .then((reg)=>{
      console.log('sw registered');
    })

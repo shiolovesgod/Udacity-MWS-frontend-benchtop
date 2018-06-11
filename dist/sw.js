@@ -1,4 +1,8 @@
+/**
+ * Global vars
+ */
 
+ const CACHED_DIRS = ['/', '/js/','/css/']
 
 
 /**
@@ -28,6 +32,8 @@ self.addEventListener('fetch', (fetchEvent) => {
 function fetchRequestCallback (req) {
   //1. Parse the request
   const filetype = req.url.split('.').pop(); //someone else's code?
+  const host = req.origin;
+  
 
   console.log(`Request received: ${req.url}`);
 
@@ -44,11 +50,15 @@ function fetchRequestCallback (req) {
 function networkFetchHandler(req) {
 
   return fetch(req).then((res)=>{
+    console.log(res.status)
     if (res.status === 200) { // fetch ok
 
       return res; 
 
     } else { //fetch error
+      console.log('trouble in the camp')
+      console.log(res);
+      console.log(res.status);
         return new Response("I need a custom handler");
     }
   }).catch((err) => {

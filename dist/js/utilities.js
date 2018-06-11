@@ -9,13 +9,13 @@ class HTMLHelper {
   static generateImgHTML(restaurant, defaultSize, imgSizes = [], sizesQuery = '') {
 
     const img = document.createElement('img');
-    img.setAttribute('src', `./img/${restaurant.id}-${defaultSize}w.jpg`);
+    img.setAttribute('src', `/img/${restaurant.id}-${defaultSize}w.jpg`);
     img.setAttribute(`alt`, restaurant.photoDesc);
 
     if (imgSizes.length > 0) {
       let srcsetVal = [];
       for (let [idx, imgSize] of imgSizes.entries()) {
-        srcsetVal.push(`./img/${restaurant.id}-${imgSize}w.jpg ${idx+1}x`)
+        srcsetVal.push(`/img/${restaurant.id}-${imgSize}w.jpg ${idx+1}x`)
       }
       img.setAttribute('srcset', srcsetVal.join(', '));
     }
@@ -45,7 +45,7 @@ class HTMLHelper {
         let source = document.createElement('source');
         let srcsetVal = [];
         for (let [idx, imgSize] of imgSizes[i].entries()) {
-          srcsetVal.push(`./img/${restaurant.id}-${imgSize}w.jpg ${idx+1}x`)
+          srcsetVal.push(`/img/${restaurant.id}-${imgSize}w.jpg ${idx+1}x`)
         }
 
         source.setAttribute('srcset', srcsetVal.join(', '));
@@ -58,7 +58,7 @@ class HTMLHelper {
 
       } else { //default img tag
         let img = document.createElement('img');
-        img.setAttribute('src', `./img/${restaurant.id}-${imgSizes[i]}w.jpg`);
+        img.setAttribute('src', `/img/${restaurant.id}-${imgSizes[i]}w.jpg`);
         img.setAttribute(`alt`, restaurant.photoDesc);
 
         picture.appendChild(img);
