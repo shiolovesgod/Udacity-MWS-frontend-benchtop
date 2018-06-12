@@ -37,7 +37,6 @@ body.inside {
 }
 
 ul, li {
-	/* font-family: Arial, Helvetica, sans-serif; */
 	color: #333;
 }
 a {
@@ -92,8 +91,7 @@ nav {
 }
 
 .inside .site-title {
-  /* ARIA designation of h1 but CSS styles of h2*/
-
+/* ARIA designation of h1 but CSS styles of h2*/
   background-color: #252831;
   color: #fff;
   margin: auto;
@@ -116,7 +114,6 @@ nav {
   overflow-x: auto;
 }
 
-/* Display list items side by side */
 .breadcrumb li {
   display: inline;
 }
@@ -149,8 +146,6 @@ nav {
   height: 100%;
 }
 
-
-
 /* -----------------------------------
 Map Container
  ----------------------------------- */
@@ -172,7 +167,7 @@ Map Container
 
 
 /* -----------------------------------
- Restaurant Details (restaurant.html)
+ Restaurant Details 
  ----------------------------------- */
 
 .inside .restaurant-container {
@@ -181,8 +176,6 @@ Map Container
 }
 
 .inside .restaurant-name {
-  color:  #b35f00;
-
   /* h1 designation for ARIA with h3 sizing (same as name on main page) */
   font-size: 1.375rem;
   line-height: 1.1363;
@@ -190,6 +183,7 @@ Map Container
   text-transform: uppercase;
   margin: 10px 0;
   text-align: center;
+  color:  #b35f00;
 }
 
 .inside .restaurant-img-wrapper {
@@ -220,6 +214,10 @@ Map Container
 	width: 90%;
 }
 
+/* -----------------------------------
+ Restaurant Hours 
+ ----------------------------------- */
+
 .restaurant-hours {
   margin: 0 auto;
   width: 100%;
@@ -231,24 +229,25 @@ Map Container
   border-top: dotted 1px black;
   font-weight: 300;
 }
-
 .restaurant-hours .hours-day {
   text-align: center;
 }
 .hours-time {
   text-align: center;
 }
-
 .restaurant-hours td, .restaurant-hours th, .restaurant-hours .reviews-list {
   color: #666;
 }
-
 .hours-time ul {
   list-style-type: none;
   padding: 0;
   margin: 0 auto;
   color: #666;
 }
+
+/* -----------------------------------
+ Restaurant Reviews
+ ----------------------------------- */
 
 .restaurant-container, .reviews-container {
   border-bottom: 1px solid #d9d9d9;
@@ -263,7 +262,6 @@ Map Container
 .rating {
   display: flex;
 }
-
 .rating-text, .rating-stars {
   font-size: 1.2rem;
   color: #b35f00;
@@ -272,7 +270,6 @@ Map Container
 .rating-stars {
   font-family: 'FontAwesome';
 }
-
 .reviews-container h2 {
   color:  #b35f00;
   font-weight: 400;
@@ -299,11 +296,9 @@ Map Container
 {
   margin: 0 0 5px;
 }
-
 .review-comments {
   cursor: pointer;
 }
-
 /* Add  ellipsis to reviews 
 Derived from: https://css-tricks.com/line-clampin/ */
 .fade-ellipsis {
@@ -312,7 +307,6 @@ Derived from: https://css-tricks.com/line-clampin/ */
   overflow: hidden;
   position: relative;
 }
-
 .fade-ellipsis:after {
   content: "...";
   text-align: center;
@@ -337,11 +331,8 @@ Derived from: https://css-tricks.com/line-clampin/ */
  ----------------------------------- */
 
  .inside footer {
-  /* bottom: 0; */
-  /* position: absolute; */
   width: 100%;
 }
-
 footer {
   background-color: #444;
   color: #aaa;
@@ -364,20 +355,19 @@ footer {
 
 @media screen and (max-width:300px) {
 
+ /* Font sizes */
   h1, h2, h3, h4, h5, h6 {
     margin: 0 0 5px;
   }
-
-
   h2 {
     font-size: 1.375rem;
     line-height: 1.1363;
   }
-
   h3 {
     font-size: 1.3rem;
   }
 
+  /* Hours display */
   .restaurant-hours td, .restaurant-hours th {
     display: block;
     padding: 0px;
@@ -385,18 +375,16 @@ footer {
     border-top:none;
     text-align:left;
   }
-  
   .restaurant-hours .hours-day {
     border-top: dotted 1px black;
     text-align:left;
 
   }
 
+  /* Review Formatting */
   .reviews-list li {
     padding: 5px;
   }
-
-  
   .fade-ellipsis {
     max-height: calc(3*1.375rem);
   }
@@ -410,30 +398,25 @@ footer {
 
 @media screen and (min-width:400px) {
 
-  .inside nav,  .inside .restaurant-container, .reviews-container, .inside footer {
+  .inside nav, .inside .restaurant-container, .reviews-container, .inside footer {
     width: 70%;
   }
-
   .reviews-container {
     padding: 10px;
     margin: 2%;
   }
-
   .inside .section-map {
     width: 30%;
     height: 100vh;
     display: inline-block;
     overflow: hidden;
     z-index: 0;
-
-
     position: fixed;
     top:0;
     right: 0;
     padding: 0;
     
   }
-
   .inside .map {
     width: 100%;
     height: 100%;
@@ -445,9 +428,9 @@ footer {
 
 
 /* Larger Screens */
-
 @media screen and (min-width:550px) {
 
+  /* Change font size */
   h1 { 
     font-size: 2.5rem; 
     line-height: 1.125;
@@ -465,18 +448,15 @@ footer {
     line-height: 1.25;
   }
 
-  
-
+  /* Rearrange layout */
   body.inside, {
     background-color: red;
     width: 350px;
     z-index: -1;
   }
-
   nav {
     margin: 0;
   }
-
   .inside .restaurant-container {
     margin: 10px 15px;
     padding: 0;
@@ -484,22 +464,18 @@ footer {
     z-index: 1;
     
   }
-
   .inside .section-map {
     width: calc(100vw - 400px);
     height: 100vh;
     display: inline-block;
     overflow: hidden;
     z-index: 0;
-
-
     position: fixed;
     top:0;
     right: 0;
     padding: 0;
     
   }
-
   .inside .map {
     width: 100%;
     height: 100%;
@@ -507,17 +483,16 @@ footer {
     margin: 0;
   }
 
+  /* Format restaurant details */
   .restaurant-hours td, .restaurant-hours th, tr, th, tead {
     padding: 4px;
   }
-
   .inside .reviews-container {
     padding: 0;
     width: 350px;
     margin: 20px 25px;
     z-index: 1;
   }
-
   .reviews-list li {
     margin: 10px auto;
   }
@@ -541,7 +516,6 @@ footer {
   body,td,th,p{
     line-height: 1.375;
   }
-
   h1 { 
     font-size: 3rem; 
     line-height: 1.05;
@@ -556,10 +530,8 @@ footer {
     font-size: 1.75rem; 
     line-height: 1.25;
   }
-
   .restaurant-hours td, .restaurant-hours th, tr, th, tead {
     padding: 6px;
   }
-
 }
 
