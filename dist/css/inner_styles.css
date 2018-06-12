@@ -102,7 +102,6 @@ nav {
   font-family: 'Vidaloka', 'Times New Roman', Times, serif;
   padding: 10px;
   font-weight: 200;
-  /* letter-spacing: 0.2rem; */
   text-transform: uppercase;
   text-align: center;
 }
@@ -145,82 +144,11 @@ nav {
  Main Content
  ----------------------------------- */
 .maincontent {
-  /* max-height: 100%; */
   overflow-y: auto;
   position: relative;
   height: 100%;
 }
 
-/* -----------------------------------
- Restaurant Listing  
- ----------------------------------- */
- .section-restaurants {
-   position: absolute;
-   top: 0;
-   overflow-y: scroll;
-   height: 100%;
-   width: 100%;
- }
-.restaurants-list {
-  background-color: #f3f3f3;
-  list-style: outside none none;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-.restaurants-list a {
-  background-color: #fff;
-  border: 2px solid #ccc;
-  /* font-family: Arial,sans-serif; */
-  margin: 5px;
-  padding: 10px;
-  min-width: 310px;
-  /* width: 100%; */
-}
-
-.restaurants-list a:hover, .restaurants-list a:focus {
-  background-color: #fff;
-  border: 2px solid  #b35f00;
-}
-
-.restaurant-info-wrapper {
-  display: flex;
-  justify-content: space-around;
-}
-
-.restaurant-info-text{
-  width: 100%;
-  text-align: left;
-  
-}
-
-.rating {
-  display: flex;
-  /* justify-content: space-around; */
-}
-
-.rating-text, .rating-stars {
-  font-size: 1.2rem;
-  color: #b35f00;
-  padding-right: 5px;
-}
-.rating-stars {
-  font-family: 'FontAwesome';
-}
-.restaurants-list .restaurant-img {
-  background-color: #ccc;
-  display: block;
-  margin: 0 auto;
-  width: 30%;
-  align-self: center;
-}
-
-.restaurants-list p {
-  margin: 0;
-}
 
 
 /* -----------------------------------
@@ -248,7 +176,6 @@ Map Container
  ----------------------------------- */
 
 .inside .restaurant-container {
-  /* margin: 0 10px auto; */
   text-align: center;
   max-width: 350px;
 }
@@ -279,8 +206,6 @@ Map Container
   width: 100%;
   white-space: nowrap;
   overflow-x: auto;
-  /* margin: 0; */
-  /* text-align: center; */
 }
 .restaurant-cuisine {
   background-color: #333;
@@ -301,7 +226,6 @@ Map Container
 }
 
 .restaurant-hours td, tr, th, thead {
-  /* display: block; */
   vertical-align: top;
   padding: 2px;
   border-top: dotted 1px black;
@@ -329,15 +253,26 @@ Map Container
 .restaurant-container, .reviews-container {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
-  /* padding: 140px 40px 30px; */
   padding: 0 10px 20px;
   width: 100%;
 }
 .reviews-container {
   max-width: 350px;
-  /* padding: 30px 40px 80px; */
   padding: 0 20px;
 }
+.rating {
+  display: flex;
+}
+
+.rating-text, .rating-stars {
+  font-size: 1.2rem;
+  color: #b35f00;
+  padding-right: 5px;
+}
+.rating-stars {
+  font-family: 'FontAwesome';
+}
+
 .reviews-container h2 {
   color:  #b35f00;
   font-weight: 400;
@@ -392,13 +327,8 @@ Derived from: https://css-tricks.com/line-clampin/ */
 /* -----------------------------------
  Switch between map and list
  ----------------------------------- */
- .switch-view {
-   width: 100%;
-   padding: 10px 0;
-
- }
-
- .switch-view, footer {
+ 
+ footer {
    z-index: 50;
  }
 
