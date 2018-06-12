@@ -12,7 +12,8 @@ class HTMLHelper {
   static generateImgHTML(restaurant, defaultSize, imgSizes = [], sizesQuery = '') {
 
     const img = document.createElement('img');
-    img.setAttribute('src', `/img/${restaurant.id}-${defaultSize}w.jpg`);
+    img.classList.add('lozad'); //lazy loading
+    img.setAttribute('data-src', `/img/${restaurant.id}-${defaultSize}w.jpg`);
     img.setAttribute(`alt`, restaurant.photoDesc);
 
     if (imgSizes.length > 0) {
@@ -20,7 +21,7 @@ class HTMLHelper {
       for (let [idx, imgSize] of imgSizes.entries()) {
         srcsetVal.push(`/img/${restaurant.id}-${imgSize}w.jpg ${idx+1}x`)
       }
-      img.setAttribute('srcset', srcsetVal.join(', '));
+      img.setAttribute('data-srcset', srcsetVal.join(', '));
     }
 
     if (sizesQuery.length > 0) {
@@ -65,9 +66,8 @@ class HTMLHelper {
 
       } else { //default img tag
         let img = document.createElement('img');
-        img.setAttribute('src', `/img/${restaurant.id}-${imgSizes[i]}w.jpg`);
+        img.setAttribute('data-src', `/img/${restaurant.id}-${imgSizes[i]}w.jpg`);
         img.setAttribute(`alt`, restaurant.photoDesc);
-
         picture.appendChild(img);
 
       }

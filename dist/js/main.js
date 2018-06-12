@@ -8,6 +8,9 @@
  * 
  */
 
+/**
+ * Global vars
+ */
 
 let restaurants,
   neighborhoods,
@@ -16,12 +19,15 @@ var map;
 var markers = [];
 var isMapVisible = false;
 
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
+
+
 });
 
 
@@ -122,15 +128,15 @@ window.initMap = () => {
  * Show or hide map
  */
 
-function toggleMap(){
+function toggleMap() {
   let mapContainer = document.body.querySelector('.section-map');
   let btnSwitchView = document.body.querySelector('.switch-view');
 
-  if (isMapVisible){
+  if (isMapVisible) {
     mapContainer.classList.remove("show");
     btnSwitchView.innerHTML = "Show Map";
 
-  //remove tab index 
+    //remove tab index 
   } else {
     mapContainer.classList.add("show");
     btnSwitchView.innerHTML = "Show List";
@@ -196,12 +202,11 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const cuisine = self.selectedCuisine;
   const neighborhood = self.selectedNeighborhood;
 
-  if (restaurants.length < 1)
-  {  
+  if (restaurants.length < 1) {
     let li = document.createElement('li');
     li.innerHTML = `No restaurant reviews found for <wbr> ${cuisine} cuisine in ${neighborhood}.`;
-    li.setAttribute('aria-role','alert');
-    li.setAttribute('aria-live','polite');
+    li.setAttribute('aria-role', 'alert');
+    li.setAttribute('aria-live', 'polite');
     ul.append(li);
 
   }
@@ -211,6 +216,10 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   //   document.body.querySelector('aria-alert').innerHTML = `${restaurants.length} reviewed restaurants found.`;
   // }
 
+  //Setup lazy loading (third-party code)
+  const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+  console.log('lazy?')
+  observer.observe();
 }
 
 /**
@@ -221,7 +230,7 @@ createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
   const a_wrapper = document.createElement('a');
   a_wrapper.href = DBHelper.urlForRestaurant(restaurant);
-  
+
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
@@ -236,52 +245,60 @@ createRestaurantHTML = (restaurant) => {
 
   const rating_wrapper = document.createElement('div');
   rating_wrapper.className = 'rating';
-   
-    const ratingText = document.createElement('p');
-    ratingText.innerHTML = restaurant.average_rating.toFixed(1);
-    ratingText.className = 'rating-text';
-    ratingText.setAttribute('aria-label',`Average rating ${ratingText.innerHTML}`);
-    rating_wrapper.appendChild(ratingText);
 
-    const ratingIcon = document.createElement('p');
-    ratingIcon.innerHTML = DBHelper.rating2stars(restaurant.average_rating);
-    ratingIcon.className = 'rating-stars';
-    ratingIcon.setAttribute('aria-hidden','true');
-    rating_wrapper.appendChild(ratingIcon);
+  const ratingText = document.createElement('p');
+  ratingText.innerHTML = restaurant.average_rating.toFixed(1);
+  ratingText.className = 'rating-text';
+  ratingText.setAttribute('aria-label', `Average rating ${ratingText.innerHTML}`);
+  rating_wrapper.appendChild(ratingText);
 
-    const nReviews = document.createElement('p');
-    nReviews.innerHTML = restaurant.total_reviews + ' Reviews';
-    nReviews.className = 'review-count';
-    rating_wrapper.appendChild(nReviews);
-  
+  const ratingIcon = document.createElement('p');
+  ratingIcon.innerHTML = DBHelper.rating2stars(restaurant.average_rating);
+  ratingIcon.className = 'rating-stars';
+  ratingIcon.setAttribute('aria-hidden', 'true');
+  rating_wrapper.appendChild(ratingIcon);
+
+  const nReviews = document.createElement('p');
+  nReviews.innerHTML = restaurant.total_reviews + ' Reviews';
+  nReviews.className = 'review-count';
+  rating_wrapper.appendChild(nReviews);
+
   text_wrapper.appendChild(rating_wrapper);
 
-    
+
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
   text_wrapper.appendChild(neighborhood);
-  
+
   const address = document.createElement('p');
 
-  address.innerHTML = restaurant.address.replace(", ","<br>");
+  address.innerHTML = restaurant.address.replace(", ", "<br>");
   text_wrapper.appendChild(address);
 
   content_wrapper.appendChild(text_wrapper);
 
   //mainly for different screen density
   const image = HTMLHelper.generateImgHTML(restaurant, 200, [200, 400, 600, 800], '200px');
-  image.className = 'restaurant-img';
+  image.classList.add('restaurant-img');
   content_wrapper.appendChild(image);
 
   a_wrapper.appendChild(content_wrapper);
 
-  
+
   //link the html element to the marker index
   a_wrapper.setAttribute('data-rest-id', restaurant.id);
-  a_wrapper.addEventListener('mouseenter', (e) => {startAnimation(e, restaurant.id)});
-  a_wrapper.addEventListener('focus', (e) => {startAnimation(e, restaurant.id)});
-  a_wrapper.addEventListener('mouseleave', (e) => {stopAnimation(e, restaurant.id)});
-  a_wrapper.addEventListener('blur', (e) => {stopAnimation(e, restaurant.id)});
+  a_wrapper.addEventListener('mouseenter', (e) => {
+    startAnimation(e, restaurant.id)
+  });
+  a_wrapper.addEventListener('focus', (e) => {
+    startAnimation(e, restaurant.id)
+  });
+  a_wrapper.addEventListener('mouseleave', (e) => {
+    stopAnimation(e, restaurant.id)
+  });
+  a_wrapper.addEventListener('blur', (e) => {
+    stopAnimation(e, restaurant.id)
+  });
 
   li.append(a_wrapper);
 
@@ -289,15 +306,19 @@ createRestaurantHTML = (restaurant) => {
 
   function startAnimation(e, id) {
     //find the matching id (would be faster to track index)
-     let thisMarker = self.markers.find((element)=>{ return element.rest_id == id });
-    thisMarker.setAnimation(google.maps.Animation.BOUNCE);  
+    let thisMarker = self.markers.find((element) => {
+      return element.rest_id == id
+    });
+    thisMarker.setAnimation(google.maps.Animation.BOUNCE);
   }
-  
+
   function stopAnimation(e, id) {
-    let thisMarker = self.markers.find((element)=>{ return element.rest_id == id });
+    let thisMarker = self.markers.find((element) => {
+      return element.rest_id == id
+    });
     thisMarker.setAnimation(null);
   }
-  
+
 }
 
 
@@ -321,23 +342,25 @@ addMarkersToMap = (restaurants = self.restaurants) => {
  */
 
 
- /* SW TIPS
-  * 
-  * ++ Accessing SW: navigator.serviceWorker.controller
-  * ++ Shift + F5: reload bypassing sw
-  * 
-  */
+/* SW TIPS
+ * 
+ * ++ Accessing SW: navigator.serviceWorker.controller
+ * ++ Shift + F5: reload bypassing sw
+ * 
+ */
 
- /**
+/**
  * Register the service worker
  */
 
- if(navigator.serviceWorker){
-   navigator.serviceWorker.register('/sw.js', {scope: '/'})
-   .then((reg)=>{
-     console.log('sw registered');
-   })
-   .catch((err)=>{
-     console.log('sw error');
-   });
- }
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register('/sw.js', {
+      scope: '/'
+    })
+    .then((reg) => {
+      console.log('sw registered');
+    })
+    .catch((err) => {
+      console.log('sw error');
+    });
+}

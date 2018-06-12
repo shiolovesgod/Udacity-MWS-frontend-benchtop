@@ -72,7 +72,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image_wrapper = document.body.querySelector('.restaurant-img-wrapper');
   const picture = HTMLHelper.generatePictureHTML(restaurant, [[400, 800], [200, 400, 600], [400]], ['(min-width:300px)','']);
-  picture.querySelector('img').className = 'restaurant-img';
+  picture.querySelector('img').classList.add('restaurant-img');
   image_wrapper.appendChild(picture);
 
   const cuisine = document.body.querySelector('.restaurant-cuisine');
