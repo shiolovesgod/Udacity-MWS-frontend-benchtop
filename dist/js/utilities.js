@@ -6,6 +6,9 @@
 
 class HTMLHelper {
 
+  /**
+  * Generate <img> tags with sizes and srcset attributes
+  */
   static generateImgHTML(restaurant, defaultSize, imgSizes = [], sizesQuery = '') {
 
     const img = document.createElement('img');
@@ -28,13 +31,17 @@ class HTMLHelper {
 
   }
 
+  /**
+  * Generate <picture> tags 
+  */
   static generatePictureHTML(restaurant, imgSizes, queries = []) {
 
-    // var queries = ['(min-width:300px)', '']; //imgSizes must be greater than nQueries
-    // var imgSizes = [
-    //   [200, 400, 600],
-    //   [400, 800], 200
-    // ]; //srcset for size query, default srcset (no query), default image size
+    /*  Sample inputs
+    var queries = ['(min-width:300px)', '']; //imgSizes must be greater than nQueries
+    var imgSizes = [
+      [200, 400, 600],
+      [400, 800], 200
+    ];*/
 
     const picture = document.createElement('picture');
 
@@ -70,6 +77,9 @@ class HTMLHelper {
 
   }
 
+  /**
+  * Re-configure the order and focusability of Google Maps elements
+  */
   static setMapTabOrder(map) {
     // I may need to move the tabindex value to 1 for non-map elements
     google.maps.event.addListener(map, 'tilesloaded', () => {
