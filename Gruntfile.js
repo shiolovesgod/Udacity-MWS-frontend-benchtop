@@ -79,11 +79,27 @@ module.exports = function(grunt) {
       },
     },
   });
+
+  /* Un-CSS - Remove unused css files (NOT CURRENTLY IN USE)*/
+  // uncss {
+  //   dist: {
+  //     options: {
+  //       ignore: ['.show'] //added at runtime
+  //     },
+  //     files: {
+  //       'dist/css/style.css': ['dist/']
+  //     }
+
+  //   }
+  // }
+
+
   
   grunt.loadNpmTasks('grunt-responsive-images');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-mkdir');
+  grunt.loadNpmTasks('grunt-uncss');
   grunt.registerTask('default', ['clean', 'mkdir', 'copy', 'responsive_images']);
 
 };
