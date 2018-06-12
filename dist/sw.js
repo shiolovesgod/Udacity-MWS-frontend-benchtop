@@ -30,15 +30,16 @@ self.addEventListener('install',(event) => {
 
   // Initialize cache with base files: css, js, html 
   //TO DO: make grunt automatically build this list
-  const baseCacheURLs = ['/', '/restaurant.html',
+  const initCacheURLs = ['/', '/restaurant.html',
     '/js/main.js', '/js/restaurant_info.js', '/js/utilities.js',
     '/js/third-party/picturefill.min.js',
     '/css/styles.css', '/css/inner_styles.css',
     '/css/third-party/google-fonts.css',
     '/data/restaurants.json',//for now
   ];
-  event.waitUntil(caches.open(CORE_CACHE_NAME))
-
+  event.waitUntil(caches.open(CORE_CACHE_NAME)).then(cache => {
+    return cache.addAll(initCacheURLs);
+  });
 
 });
 
@@ -58,14 +59,21 @@ function fetchRequestCallback (req) {
   //1. Parse the request
   var reqParsed = parseRequest(req) 
 
-  //2. Categorize request: db, image, css, js
+  //2. If no cache, return
+  if (!reqParsed.isCache) return networkFetchHandler(req);
 
-  //3. Send back cached response & update cache 
-  return networkFetchHandler(req);
- 
+  //3. Send back cached response if exists, otherwise cache
+  return caches.open(reqParsed.cacheName).then(cache => {
+    return cache.match(reqParsed.cachedURL||req.url).then(cacheRes => {
+      if (cacheRes) return cacheRes;
 
-  // must return a promise that resolves to a response
-
+      //add to cache
+      return networkFetchHandler(req).then(netRes => {
+        if (netRes.ok) cache.put(reqParsed.cacheName, netRes.clone());
+        return netRes;
+      })
+    })
+  })
 }
 
 function parseRequest (req) {
@@ -75,6 +83,7 @@ function parseRequest (req) {
   let cacheFlag = false;
   let fileDir = reqURL.pathname.replace(rFilename, '');
   let cachedURL = ''; //not always necessary
+  let cacheName = CORE_CACHE_NAME;
 
   if (reqURL.origin === location.origin) {
 
@@ -96,10 +105,14 @@ function parseRequest (req) {
 
   //2. Serve appropriate cache URL for images
   switch (fileDir) {
-    case '/img/': //do something special for images?
+    case '/':
+      cachedURL = '/root';
+    case '/img/': 
       cachedURL = req.url.replace(/-\d+w.jpg$/, '');
+      cacheName = IMG_CACHE_NAME;
       break;
-    case 1:
+    case '/data/':
+      cacheName = DATA_CACHE_NAME; //for now, until IndexedDb
       break;
     default:
   }
@@ -108,7 +121,8 @@ function parseRequest (req) {
   //OUTPUT
   return { 
     isCache: cacheFlag,
-    cachedURL
+    cachedURL,
+    cacheName
   };
 
 }
@@ -116,7 +130,7 @@ function parseRequest (req) {
  //This function returns true if the cached directory exists
  function testDir (str, rules = rCACHED_DIRS) { 
   for (let rExp of rules) {
-    if ( rExp.test(str) ) { return true;}
+    if ( rExp.test(str) ) return true;
   }
   return false;
 } //idea based on user:spen @ stack overflow
