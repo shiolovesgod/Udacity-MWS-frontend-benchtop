@@ -218,7 +218,6 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 
   //Setup lazy loading (third-party code)
   const observer = lozad(); // lazy loads elements with default selector as '.lozad'
-  console.log('lazy?')
   observer.observe();
 }
 
