@@ -139,12 +139,12 @@ nav {
 }
 
 /* Add a color on mouse-over */
-.breadcrumb li a:hover , .breadcrumb li a:focus {
+.breadcrumb li a:hover, .breadcrumb li a:focus {
   color: #b35f00;
     text-decoration: underline;
 }
 
-.breadcrumb li .current-page:focus {
+.breadcrumb li .current-page:hover, .breadcrumb li .current-page:focus {
   color: #333;
   text-decoration: underline;
 }
