@@ -184,8 +184,6 @@ createReviewHTML = (review) => {
   })
     
   comments.addEventListener("keydown", (e)=>{
-    
-    console.log(e.keyCode);
     if (e.keyCode == 13 || e.keyCode == 32) {
       e.preventDefault();
         event.target.classList.toggle("fade-ellipsis");
@@ -204,7 +202,13 @@ createReviewHTML = (review) => {
 fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.querySelector('.breadcrumb');
   const li = document.createElement('li');
-  li.innerHTML = restaurant.name;
+  const a = document.createElement('a');
+    a.innerHTML = restaurant.name;
+    a.href=`./restaurant.html?id=${restaurant.id}`;
+    a.className = 'current-page';
+    a.setAttribute('aria-current','page');
+  li.append(a);
+
   breadcrumb.appendChild(li);
 }
 

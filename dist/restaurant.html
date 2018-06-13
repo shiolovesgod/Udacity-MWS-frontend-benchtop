@@ -14,13 +14,15 @@
 
 <body class="inside">
   <header>
-    <nav>
-      <h1 class="site-title"><a href="/">Restaurant Reviews</a></h1>
-    <!-- Beginning breadcrumb -->
-    <ul class="breadcrumb">
-      <li><a href="/">Home</a></li>
-    </ul>
-  </nav>
+    <h1 class="site-title">
+      <a href="/">Restaurant Reviews</a>
+    </h1>
+    <nav aria-label="Breadcrumb">
+      <!-- Beginning breadcrumb -->
+      <ul class="breadcrumb">
+        <li><a href="/">Home</a></li>
+      </ul>
+    </nav>
   </header>
 
   <!-- Beginning main -->
@@ -43,15 +45,18 @@
     <section class="reviews-container" aria-label="Restaurant reviews">
       <ul class="reviews-list"></ul>
     </section>
-    
+
   </main>
-  
+
 
   <!-- Beginning footer -->
   <footer>
-    Copyright (c) 2017 <a href="./"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+    Copyright (c) 2017
+    <a href="./">
+      <strong>Restaurant Reviews</strong>
+    </a> All Rights Reserved.
   </footer>
-  
+
 
   <!-- Beginning scripts -->
   <script type="text/javascript" src="js/dbhelper.js"></script>
@@ -59,7 +64,7 @@
   <script type="text/javascript" src="js/restaurant_info.js"></script>
   <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap"></script>
-  
+
 
 </body>
 

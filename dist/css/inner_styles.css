@@ -81,13 +81,14 @@ h3 {
 /* -----------------------------------
 Navigation 
 ----------------------------------- */
+header {
+  max-width: 400px;
+}
+
+
 nav {
   width: 100%;
   
-}
-
-.inside nav {
-  max-width: 400px;
 }
 
 .inside .site-title {
@@ -102,6 +103,7 @@ nav {
   font-weight: 200;
   text-transform: uppercase;
   text-align: center;
+  white-space: nowrap;
 }
 .breadcrumb {
   width: 100%;
@@ -128,13 +130,23 @@ nav {
 /* Add a color to all links inside the list */
 .breadcrumb li a {
   color: #005096;
-    text-decoration: none;
+  text-decoration: none;
+}
+
+.breadcrumb .current-page {
+  color: #333;
+  text-decoration: none;
 }
 
 /* Add a color on mouse-over */
-.breadcrumb li a:hover, .breadcrumb li a:focus {
+.breadcrumb li a:hover , .breadcrumb li a:focus {
   color: #b35f00;
     text-decoration: underline;
+}
+
+.breadcrumb li .current-page:focus {
+  color: #333;
+  text-decoration: underline;
 }
 
 /* -----------------------------------
@@ -367,6 +379,11 @@ footer {
     font-size: 1.3rem;
   }
 
+  /* Site Title */
+  .inside .site-title{
+    white-space: normal;
+  }
+
   /* Hours display */
   .restaurant-hours td, .restaurant-hours th {
     display: block;
@@ -398,7 +415,7 @@ footer {
 
 @media screen and (min-width:400px) {
 
-  .inside nav, .inside .restaurant-container, .reviews-container, .inside footer {
+  header, .inside .restaurant-container, .reviews-container, .inside footer {
     width: 70%;
   }
   .reviews-container {
