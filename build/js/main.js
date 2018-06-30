@@ -24,10 +24,10 @@ var isMapVisible = false;
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
+  console.log('DOM Content loaded');
   fetchNeighborhoods();
   fetchCuisines();
-
-
+  console.log('Fetch complete');
 });
 
 
