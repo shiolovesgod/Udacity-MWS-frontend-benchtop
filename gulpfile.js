@@ -30,9 +30,16 @@ gulp.task('styles', () => {
 
 
 gulp.task('scripts', () => {
-  return gulp.src('src/js/**/*.js')
-    // .pipe(concat('all.js'))
+
+  //concat utils
+  gulp.src(['src/js/utils/**/*.js'])
+    .pipe(concat('library.js'))
     .pipe(gulp.dest('build/js/'));
+
+  //copy main files
+  return gulp.src('src/js/*.js')
+    .pipe(gulp.dest('build/js/'));
+
 });
 
 gulp.task('reload', (done) => {
@@ -42,9 +49,8 @@ gulp.task('reload', (done) => {
 
 
 //Run the build
-gulp.task('default', (done) => {
-
-  gulp.parallel('copy-skeleton', 'copy-images', 'styles', 'scripts');
+gulp.task('default', gulp.parallel('copy-skeleton', 'styles', 'scripts', (done) => {
+  
   console.log('starting the watch');
   gulp.watch('src/js/**/*.js', gulp.series('scripts', 'reload'));
   gulp.watch('src/css/**/*.css', gulp.series('styles', 'reload'));
@@ -57,7 +63,7 @@ gulp.task('default', (done) => {
     }
   });
   done();
-});
+}));
 
 
 /*
@@ -68,10 +74,16 @@ gulp.task('default', (done) => {
 
 
 gulp.task('minify-js', () => {
-  return gulp.src('src/js/**/*.js')
-    // .pipe(concat('all.js'))
-    .pipe(uglify())
+  //concat utils
+  gulp.src(['src/js/utils/**/*.js'])
+    .pipe(concat('library.js'))
     .pipe(gulp.dest('dist/js/'));
+
+  //copy main files
+  return gulp.src('src/js/*.js')
+    .pipe(gulp.dest('dist/js/'));
+
+    
 });
 
 gulp.task('minify-css', () => {
@@ -83,9 +95,7 @@ gulp.task('minify-css', () => {
     .pipe(gulp.dest('dist/css/'));
 });
 
-gulp.task('dist', (done) => {
-
-  gulp.parallel('minify-css', 'minify-js');
+gulp.task('dist', gulp.parallel('minify-css', 'minify-js', (done) => {
 
   //copy html
   gulp.src('src/*.html')
@@ -102,4 +112,4 @@ gulp.task('dist', (done) => {
 
   done();
 
-});
+}));

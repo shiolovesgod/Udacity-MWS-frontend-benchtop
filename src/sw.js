@@ -3,7 +3,7 @@
  */
 
 //Define cache variables
-const CACHED_DIRS = ['/', '/js/', '/js/third-party/', '/css/', '/css/third-party/', '/img/*', '/data/'];
+const CACHED_DIRS = ['/', '/js/',  '/css/', '/css/third-party/', '/img/*', '/data/'];
 const rCACHED_DIRS = CACHED_DIRS.map(dir => {
   return new RegExp(`^${dir.split('*').join('.*')}$`)
 });
@@ -16,10 +16,9 @@ const EXT_CACHED = ['https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFC
   'http://localhost:8000/data/restaurants.json', //most likely hosted elsewhere in future
 ];
 
-const CORE_CACHE_NAME = 'restreviews-static-v1';
-const IMG_CACHE_NAME = 'restreviews-imgs-v1';
-const DATA_CACHE_NAME = 'restreviews-data-v1';
-var allCaches = [CORE_CACHE_NAME, IMG_CACHE_NAME, DATA_CACHE_NAME];
+const CORE_CACHE_NAME = 'restreviews-static-v2';
+const IMG_CACHE_NAME = 'restreviews-imgs-v2';
+var allCaches = [CORE_CACHE_NAME, IMG_CACHE_NAME];
 
 /**
  * SW Event Listeners
@@ -32,11 +31,9 @@ self.addEventListener('install', (event) => {
   // Initialize cache with base files: css, js, html 
   //TO DO: make grunt automatically build this list
   const initCacheURLs = ['/', '/restaurant.html',
-    '/js/main.js', '/js/restaurant_info.js', '/js/utilities.js',
-    '/js/third-party/picturefill.min.js',
+    '/js/main.js', '/js/restaurant_info.js', '/js/library.js',
     '/css/styles.css', '/css/inner_styles.css',
-    '/css/third-party/google-fonts.css',
-    '/data/restaurants.json', //for now
+    '/css/third-party/google-fonts.css'
   ];
   event.waitUntil(caches.open(CORE_CACHE_NAME).then(cache => {
     return cache.addAll(initCacheURLs);
@@ -115,10 +112,6 @@ function parseRequest(req) {
     case '/img/':
       cachedURL = req.url.replace(/-\d+w.jpg$/, '');
       cacheName = IMG_CACHE_NAME;
-      break;
-    case '/data/':
-      cacheName = DATA_CACHE_NAME; //for now, until IndexedDb
-      forceRefresh = true;
       break;
     default:
   }
