@@ -193,6 +193,9 @@ class DBHelper {
     //Get the ID from the url
     const dbReviewsCached = DBHelper._getDbReview(id);
 
+    //If you find the db fetch, use it
+    if (!id && dbReviewsCached) callback(null, dbReviewsCached);
+
     let xhr = new XMLHttpRequest();
     xhr.open('GET', fetchURL);
     xhr.onload = () => {
