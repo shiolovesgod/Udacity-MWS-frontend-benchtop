@@ -3,7 +3,7 @@
  */
 
 //Define cache variables
-const CACHED_DIRS = ['/', '/js/', '/css/', '/css/third-party/', '/img/*', '/data/'];
+const CACHED_DIRS = ['/', '/js/', '/css/', '/css/third-party/', '/img/*', '/data/', 'icon/'];
 const rCACHED_DIRS = CACHED_DIRS.map(dir => {
   return new RegExp(`^${dir.split('*').join('.*')}$`)
 });
