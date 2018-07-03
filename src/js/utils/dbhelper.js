@@ -1,6 +1,14 @@
 /**
  * Common database helper functions.
  */
+
+const DB_PROMISED = idb.open('restreviews-db', 1, upgradeDB => {
+  switch (upgradeDB.oldVersion) {
+    case 0:
+      upgradeDB.createObjectStore('reviews');
+  }
+});
+
 class DBHelper {
 
   /**
@@ -12,41 +20,25 @@ class DBHelper {
     return `http://localhost:${port}/restaurants`;
   }
 
+  static get dbPromised() {
+    return DB_PROMISED;
+  }
+
+
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const restaurants = JSON.parse(xhr.responseText);
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
+    DBHelper._handleDBfetch(callback);
   }
 
   /**
    * Fetch a restaurant by its ID.
    */
   static fetchRestaurantById(id, callback) {
+
     // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) { // Got the restaurant
-          callback(null, restaurant);
-        } else { // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
-        }
-      }
-    });
+    DBHelper._handleDBfetch(callback, id);
   }
 
 
@@ -92,7 +84,7 @@ class DBHelper {
       if (error) {
         callback(error, null);
       } else {
-        let results = restaurants; 
+        let results = restaurants;
         if (cuisine != 'all') { // filter by cuisine
           results = results.filter(r => r.cuisine_type == cuisine);
         }
@@ -189,5 +181,75 @@ class DBHelper {
     //Return the star characters as a string
     return charFull.repeat(fullStars) + charHalf.repeat(hasHalfStar * 1) + charEmpty.repeat(emptyStars);
   }
+
+
+
+  static _handleDBfetch(callback, id) {
+
+    let fetchURL = DBHelper.DATABASE_URL;
+
+    if (id) fetchURL = fetchURL + `/${id}`;
+
+    //Get the ID from the url
+    const dbReviewsCached = DBHelper._getDbReview(id);
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', fetchURL);
+    xhr.onload = () => {
+      if (xhr.status == 200) {
+        const restaurants = JSON.parse(xhr.responseText);
+
+        if (!id) {
+        //update the items in the idb
+        restaurants.forEach(rest => {
+          DBHelper._putDbReview(rest) 
+        });
+      } 
+
+        //run the callback
+        callback(null, restaurants);
+      } else if (dbReviewsCached && dbReviewsCached.length > 0) {
+        callback(null, dbReviewsCached);
+      } else {
+        let  err = '';
+        if (id) {
+          err = 'Restaurant does not exist';
+        } else {
+          err = `Request failed and review(s) not cached. Returned status of ${xhr.status}`;
+        }
+
+        callback(err, null);
+      }
+    }
+    xhr.send();
+  }
+
+  static _getDbReview(id) {
+    DBHelper.dbPromised.then(db => {
+      const tx = db.transaction('reviews');
+
+      const reviewTable = tx.objectStore('reviews');
+
+      if (id) {
+        return reviewTable.get(id);
+      } else {
+        return reviewTable.getAll(); 
+      }
+    }).then(reviews => reviews);
+
+  }
+
+  static _putDbReview(review) {
+    //returns true if success, false if fails
+    return DBHelper.dbPromised.then(db => {
+      const tx = db.transaction('reviews','readwrite');
+      const reviewTable = tx.objectStore('reviews');
+      reviewTable.put(review, review.id);
+
+      return tx.complete;
+    }).then(() => true).catch(() => false)
+
+  }
+
 
 }

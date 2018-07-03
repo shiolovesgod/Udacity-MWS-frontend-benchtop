@@ -11,11 +11,10 @@
 /**
  * Global vars
  */
-
 let restaurants,
   neighborhoods,
   cuisines;
-var map;
+var map; 
 var markers = [];
 var isMapVisible = false;
 
