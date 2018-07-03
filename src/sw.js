@@ -56,9 +56,6 @@ function fetchRequestCallback(req) {
   //1. Parse the request
   var reqParsed = parseRequest(req)
 
-  console.log(req.url)
-  console.log(`Cahce??? ${reqParsed.isCache}`)
-
   //2. If no cache, return
   if (!reqParsed.isCache && !reqParsed.isIDB) return networkFetchHandler(req);
 
