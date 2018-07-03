@@ -3,7 +3,7 @@
  */
 
 //Define cache variables
-const CACHED_DIRS = ['/', '/js/',  '/css/', '/css/third-party/', '/img/*', '/data/'];
+const CACHED_DIRS = ['/', '/js/', '/css/', '/css/third-party/', '/img/*', '/data/'];
 const rCACHED_DIRS = CACHED_DIRS.map(dir => {
   return new RegExp(`^${dir.split('*').join('.*')}$`)
 });
@@ -57,7 +57,7 @@ function fetchRequestCallback(req) {
   var reqParsed = parseRequest(req)
 
   //2. If no cache, return
-  if (!reqParsed.isCache) return networkFetchHandler(req);
+  if (!reqParsed.isCache && !reqParsed.isIDB) return networkFetchHandler(req);
 
   let cachedURL = reqParsed.cachedURL || req.url;
 
@@ -107,7 +107,7 @@ function parseRequest(req) {
     case '/':
       if (reqURL.pathname == '/restaurant.html') {
         cachedURL = req.url.replace(/(?:\?).+$/, '');
-      }
+      } 
       break;
     case '/img/':
       cachedURL = req.url.replace(/-\d+w.jpg$/, '');
@@ -120,7 +120,8 @@ function parseRequest(req) {
   return {
     isCache: cacheFlag,
     cachedURL,
-    cacheName
+    cacheName,
+    forceRefresh
   };
 
 }
@@ -137,22 +138,22 @@ function testDir(str, rules = rCACHED_DIRS) {
 function networkFetchHandler(req) {
 
   return fetch(req).then((res) => {
+    
+    
     if (res.status === 200 || res.type == 'opaque') { // fetch ok
-
       return res;
-
     } else {
       //TO DO: Add custom Response handlers
       //new Response("I need a custom handler");
-      console.log('HEREs WHATS WWRONG')
-      console.log(res);
-      return res
+      return res;
     }
 
   }).catch((err) => {
     //something is really wrong
-    console.log(err);
-    return err;
+    return new Response(err, {
+      status: 410,
+      statusText: err
+    });
   });
 
 }
@@ -162,3 +163,4 @@ function networkFetchHandler(req) {
  * 
  * 1. Switch from json to serve data to IndexedDb
  */
+
