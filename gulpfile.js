@@ -86,17 +86,18 @@ gulp.task('default', gulp.parallel('copy-skeleton', 'styles', 'scripts', (done) 
 
 gulp.task('minify-js', () => {
   //concat utils
-  gulp.src(['src/js/utils/**/*.js'])
-    .pipe(sourcemaps.init())
+  gulp.src(['src/js/utils/third-party/*.js','src/js/utils/*.js'])
+    // .pipe(sourcemaps.init())
     .pipe(concat('library.js'))
-    .pipe(sourcemaps.write())
+    .pipe(uglify())
+    // .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist/js/'));
 
   //copy main files
   return gulp.src('src/js/*.js')
+    .pipe(uglify())
     .pipe(gulp.dest('dist/js/'));
 
-    
 });
 
 gulp.task('minify-css', () => {
@@ -125,4 +126,12 @@ gulp.task('dist', gulp.parallel('minify-css', 'minify-js', (done) => {
 
   done();
 
+}));
+
+gulp.task('launch-dist', gulp.series('dist', (done)=>{
+  server.init({
+    server: {
+      baseDir: './dist'
+    }
+  });
 }));
