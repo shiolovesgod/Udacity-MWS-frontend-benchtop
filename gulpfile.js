@@ -120,7 +120,7 @@ gulp.task('minify-css', () => {
     .pipe(gulp.dest('dist/css/'));
 });
 
-gulp.task('dist', gulp.parallel('minify-css', 'minify-js','favicon', (done) => {
+gulp.task('dist', gulp.parallel('minify-css', 'minify-js', (done) => {
 
   //copy html
   gulp.src('src/*.html')
