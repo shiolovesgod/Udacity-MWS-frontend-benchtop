@@ -5,8 +5,17 @@ const concat = require('gulp-concat');
 const uglify = require('gulp-uglify-es').default;
 const uglifycss = require('gulp-uglifycss');
 const server = require('browser-sync');
+const sourcemaps = require('gulp-sourcemaps');
 
 
+gulp.task('watch-files', (done)=>{
+  gulp.watch('src/js/**/*.js', gulp.series('scripts'));
+  gulp.watch('src/css/**/*.css', gulp.series('styles'));
+  gulp.watch('src/*.html', gulp.series('copy-skeleton'));
+  gulp.watch('src/sw.js', gulp.series('copy-skeleton'));
+
+  done();
+});
 
 gulp.task('copy-skeleton', (done) => {
   gulp.src('src/*.html')
@@ -32,8 +41,10 @@ gulp.task('styles', () => {
 gulp.task('scripts', () => {
 
   //concat utils
-  gulp.src(['src/js/utils/**/*.js'])
+  gulp.src(['src/js/utils/third-party/*.js','src/js/utils/*.js'])
+    .pipe(sourcemaps.init())
     .pipe(concat('library.js'))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('build/js/'));
 
   //copy main files
@@ -76,7 +87,9 @@ gulp.task('default', gulp.parallel('copy-skeleton', 'styles', 'scripts', (done) 
 gulp.task('minify-js', () => {
   //concat utils
   gulp.src(['src/js/utils/**/*.js'])
+    .pipe(sourcemaps.init())
     .pipe(concat('library.js'))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist/js/'));
 
   //copy main files
