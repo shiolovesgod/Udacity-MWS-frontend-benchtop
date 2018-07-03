@@ -8,7 +8,7 @@ const server = require('browser-sync');
 const sourcemaps = require('gulp-sourcemaps');
 
 
-gulp.task('watch-files', (done)=>{
+gulp.task('watch-files', (done) => {
   gulp.watch('src/js/**/*.js', gulp.series('scripts'));
   gulp.watch('src/css/**/*.css', gulp.series('styles'));
   gulp.watch('src/*.html', gulp.series('copy-skeleton'));
@@ -17,12 +17,23 @@ gulp.task('watch-files', (done)=>{
   done();
 });
 
+gulp.task('favicon', () => {
+
+  return gulp.src('src/icon/*.png')
+    .pipe(gulp.dest('build/icon/'))
+    .pipe(gulp.dest('dist/icon'))
+});
+
+
 gulp.task('copy-skeleton', (done) => {
   gulp.src('src/*.html')
     .pipe(gulp.dest('build/'));
 
   gulp.src('src/sw.js')
     .pipe(gulp.dest('build/'));
+
+  gulp.src('src/site.webmanifest')
+    .pipe(gulp.dest('build/'))
 
   done();
 });
@@ -41,7 +52,7 @@ gulp.task('styles', () => {
 gulp.task('scripts', () => {
 
   //concat utils
-  gulp.src(['src/js/utils/third-party/*.js','src/js/utils/*.js'])
+  gulp.src(['src/js/utils/third-party/*.js', 'src/js/utils/*.js'])
     .pipe(sourcemaps.init())
     .pipe(concat('library.js'))
     .pipe(sourcemaps.write())
@@ -61,7 +72,7 @@ gulp.task('reload', (done) => {
 
 //Run the build
 gulp.task('default', gulp.parallel('copy-skeleton', 'styles', 'scripts', (done) => {
-  
+
   console.log('starting the watch');
   gulp.watch('src/js/**/*.js', gulp.series('scripts', 'reload'));
   gulp.watch('src/css/**/*.css', gulp.series('styles', 'reload'));
@@ -86,7 +97,7 @@ gulp.task('default', gulp.parallel('copy-skeleton', 'styles', 'scripts', (done) 
 
 gulp.task('minify-js', () => {
   //concat utils
-  gulp.src(['src/js/utils/third-party/*.js','src/js/utils/*.js'])
+  gulp.src(['src/js/utils/third-party/*.js', 'src/js/utils/*.js'])
     // .pipe(sourcemaps.init())
     .pipe(concat('library.js'))
     .pipe(uglify())
@@ -109,7 +120,7 @@ gulp.task('minify-css', () => {
     .pipe(gulp.dest('dist/css/'));
 });
 
-gulp.task('dist', gulp.parallel('minify-css', 'minify-js', (done) => {
+gulp.task('dist', gulp.parallel('minify-css', 'minify-js','favicon', (done) => {
 
   //copy html
   gulp.src('src/*.html')
@@ -119,6 +130,8 @@ gulp.task('dist', gulp.parallel('minify-css', 'minify-js', (done) => {
   gulp.src('src/sw.js')
     .pipe(gulp.dest('dist/'));
 
+  gulp.src('src/site.webmanifest')
+    .pipe(gulp.dest('dist/'))
 
   //copy images
   gulp.src('src/img/**/*')
@@ -128,7 +141,7 @@ gulp.task('dist', gulp.parallel('minify-css', 'minify-js', (done) => {
 
 }));
 
-gulp.task('launch-dist', gulp.series('dist', (done)=>{
+gulp.task('launch-dist', gulp.series('dist', (done) => {
   server.init({
     server: {
       baseDir: './dist'
