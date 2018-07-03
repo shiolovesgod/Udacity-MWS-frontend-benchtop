@@ -3,7 +3,7 @@
  */
 
 //Define cache variables
-const CACHED_DIRS = ['/', '/js/', '/css/', '/css/third-party/', '/img/*', '/data/', 'icon/'];
+const CACHED_DIRS = ['/', '/js/', '/css/', '/css/third-party/', '/img/*', '/data/', '/icon/'];
 const rCACHED_DIRS = CACHED_DIRS.map(dir => {
   return new RegExp(`^${dir.split('*').join('.*')}$`)
 });
@@ -55,6 +55,9 @@ self.addEventListener('fetch', (fetchEvent) => {
 function fetchRequestCallback(req) {
   //1. Parse the request
   var reqParsed = parseRequest(req)
+
+  console.log(req.url)
+  console.log(`Cahce??? ${reqParsed.isCache}`)
 
   //2. If no cache, return
   if (!reqParsed.isCache && !reqParsed.isIDB) return networkFetchHandler(req);
