@@ -191,63 +191,70 @@ class DBHelper {
     if (id) fetchURL = fetchURL + `/${id}`;
 
     //Get the ID from the url
-    const dbReviewsCached = DBHelper._getDbReview(id);
+    const dbReviewsPromised = DBHelper._getDbReview(id);
 
-    //If you find the db fetch, use it
-    if (!id && dbReviewsCached) callback(null, dbReviewsCached);
+    dbReviewsPromised.then(dbReviewsCached => {
 
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', fetchURL);
-    xhr.onload = () => {
-      if (xhr.status == 200) {
-        const restaurants = JSON.parse(xhr.responseText);
+      //If you find the db fetch, use it
+      if (!id && dbReviewsCached) callback(null, dbReviewsCached);
 
-        if (!id) {
-        //update the items in the idb
-        restaurants.forEach(rest => {
-          DBHelper._putDbReview(rest) 
-        });
-      } 
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', fetchURL);
+      xhr.onload = () => {
+        if (xhr.status == 200) {
+          const restaurants = JSON.parse(xhr.responseText);
 
-        //run the callback
-        callback(null, restaurants);
-      } else if (dbReviewsCached && dbReviewsCached.length > 0) {
-        callback(null, dbReviewsCached);
-      } else {
-        let  err = '';
-        if (id) {
-          err = 'Restaurant does not exist';
+          if (!id) {
+            //update the items in the idb
+            restaurants.forEach(rest => {
+              DBHelper._putDbReview(rest)
+            });
+          }
+
+          //run the callback
+          callback(null, restaurants);
+        } else if (dbReviewsCached) {
+          callback(null, dbReviewsCached);
         } else {
-          err = `Request failed and review(s) not cached. Returned status of ${xhr.status}`;
-        }
+          let err = '';
+          if (id) {
+            err = 'Restaurant does not exist';
+          } else {
+            err = `Request failed and review(s) not cached. Returned status of ${xhr.status}`;
+          }
 
-        callback(err, null);
+          callback(err, null);
+        }
       }
-    }
-    xhr.send();
+      xhr.send();
+
+
+    })
+
+
   }
 
   static _getDbReview(id) {
-    DBHelper.dbPromised.then(db => {
+    return DBHelper.dbPromised.then(db => {
       const tx = db.transaction('reviews');
 
       const reviewTable = tx.objectStore('reviews');
 
       if (id) {
-        return reviewTable.get(id);
+        return reviewTable.get(parseInt(id));
       } else {
-        return reviewTable.getAll(); 
+        return reviewTable.getAll();
       }
-    }).then(reviews => reviews);
+    })
 
   }
 
   static _putDbReview(review) {
     //returns true if success, false if fails
     return DBHelper.dbPromised.then(db => {
-      const tx = db.transaction('reviews','readwrite');
+      const tx = db.transaction('reviews', 'readwrite');
       const reviewTable = tx.objectStore('reviews');
-      reviewTable.put(review, review.id);
+      reviewTable.put(review, parseInt(review.id));
 
       return tx.complete;
     }).then(() => true).catch(() => false)
