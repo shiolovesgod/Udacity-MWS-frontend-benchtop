@@ -13,7 +13,11 @@ gulp.task('watch-files', (done) => {
   gulp.watch('src/css/**/*.css', gulp.series('styles'));
   gulp.watch('src/*.html', gulp.series('copy-skeleton'));
   gulp.watch('src/sw.js', gulp.series('copy-skeleton'));
-
+  gulp.watch('README.md', ()=>{
+    return gulp.src('README.md')
+      .pipe(gulp.dest('dist/'));
+  })
+ 
   done();
 });
 
@@ -120,7 +124,12 @@ gulp.task('minify-css', () => {
     .pipe(gulp.dest('dist/css/'));
 });
 
-gulp.task('dist', gulp.parallel('minify-css', 'minify-js', (done) => {
+gulp.task('dist', gulp.parallel('minify-css', 'minify-js','favicon', (done) => {
+
+  
+  //copy readme
+  gulp.src('README.md')
+    .pipe(gulp.dest('dist/'));
 
   //copy html
   gulp.src('src/*.html')

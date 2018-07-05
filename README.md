@@ -2,27 +2,26 @@
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
 
-## Project Overview: Stage 1
+## What is this anyway?
 
-For the **Restaurant Reviews** projects, you will incrementally convert a static webpage to a mobile-ready web application. In **Stage One**, you will take a static design that lacks accessibility and convert the design to be responsive on different sized displays and accessible for screen reader use. You will also add a service worker to begin the process of creating a seamless offline experience for your users.
+Hi there, thanks for checking out my **Restaurant Reviews** project.  This project was a part of my training course for Google's Mobile Web Specialist certification.  The base code was provided by Udacity, and little by little it blossomed into a fully functional, responsive, offline, and accessible web app. 
 
-### Specification
+### Project Overview: Stage 1
 
-You have been provided the code for a restaurant reviews website. The code has a lot of issues. It’s barely usable on a desktop browser, much less a mobile device. It also doesn’t include any standard accessibility features, and it doesn’t work offline at all. Your job is to update the code to resolve these issues while still maintaining the included functionality. 
+In stage one of the project, I transformed the raw code into a responsive and accessible website.  This ensures that users on screens of all sizes, and with different accessibility needs were able to effectively (and efficiently) access the content in my web app.
 
-### What do I do from here?
+### Project Overview: Stage 2
 
-1. In this folder, start up a simple HTTP server to serve up the site files on your local computer. Python has some simple tools to do this, and you don't even need to know Python. For most people, it's already installed on your computer. 
+This stage of the project focused on IndexedDB caching and performance optimization. 
 
-In a terminal, check the version of Python you have: `python -V`. If you have Python 2.x, spin up the server with `python -m SimpleHTTPServer 8000` (or some other port, if port 8000 is already in use.) For Python 3.x, you can use `python3 -m http.server 8000`. If you don't have Python installed, navigate to Python's [website](https://www.python.org/) to download and install the software.
+## How do I get up and running (as a reviewer)?
 
-2. With your server running, visit the site: `http://localhost:8000`, and look around for a bit to see what the current experience looks like.
-3. Explore the provided code, and make start making a plan to implement the required features in three areas: responsive design, accessibility and offline use.
-4. Write code to implement the updates to get this site on its way to being a mobile-ready website.
+1. This project has modified the original content of the "localDiskDB.db" file, I store a little more inforamtion about the reviews in my database.  So first, replace the content of the "./tmp/localDiskDB.db" file on your server hosting the database with the file I have attached.
 
-### Note about ES6
+2. Start the server hosting the database.  I assume that it's hosted on: 
+```
+"http://localhost:1337/restaurants"
+```
 
-Most of the code in this project has been written to the ES6 JavaScript specification for compatibility with modern web browsers and future proofing JavaScript code. As much as possible, try to maintain use of ES6 in any additional JavaScript you write. 
-
-
+3. Launch the dist/index.html folder in your browser and you should be all set.
 
