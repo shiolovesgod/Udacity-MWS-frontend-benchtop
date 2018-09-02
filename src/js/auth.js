@@ -8,6 +8,10 @@ COMMON
 const backendBaseURI = (window.DBHelper) ? DBHelper.DATABASE_URL : 'https://localhost:1337'; 
 
 
+function handleBackendError(errRes, msgDiv) {
+  //errRes is what comes from the backend
+}
+
 /*
 *
 GUI Functionality
@@ -64,6 +68,7 @@ LOCAL
 //Set the actions for login and sign up buttons
 const loginForm = document.body.querySelector('form#signin');
 loginForm.action = `${backendBaseURI}/auth/local`;
+loginForm.onsubmit = loginLocalUser;
 
 const registerForm = document.body.querySelector('form#signup');
 registerForm.action = `${backendBaseURI}/auth/register`;
@@ -71,14 +76,98 @@ registerForm.onsubmit = createLocalUser;
 registerForm.password.onchange = comparePasswords;
 registerForm.password2.onchange = comparePasswords;
 
+
+const errLogin = document.body.querySelector('.errorString.signin');
+const errRegister = document.body.querySelector('.errorString.signup');
+
 function createLocalUser(e){
   
   console.log('New Local User Requested');
+  let formData = form2object(registerForm);
+
   //Manually handle the submission and response
+  fetch(`${backendBaseURI}/auth/register`,{
+    method:'POST',
+    mode: 'cors',
+    headers: {'Content-Type': 'application/json; charset=utf-8'},
+    body: JSON.stringify(formData),
+  }).then(res => {
+      if (!res.ok) throw res;
+      return res.json();
+    }).then( user => {
+    //This should be a redirect from the backend if this works
+    console.log(`${user.name} (id=${user.id}) has been verified from the backend.`); //user information
+  }).catch(err => {
 
+    if(err.status){
+      //Let the user know what went wrong (in a hidden dialog box)
+      err.text().then(errMessage => {
+          errRegister.innerHTML = errMessage;
+      })
+    } else {
+      console.log(err);
+    }
+  });
 
-  return false;
+  return false; //stop default action
 
+}
+
+function loginLocalUser(e) {
+  let formData = form2object(loginForm);
+
+  //Manually handle the submission and response
+  fetch(`${backendBaseURI}/auth/local`, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    body: JSON.stringify(formData),
+  }).then(res => {
+
+    if (!res.ok) throw res;
+    return res.json();
+  }).then(user => {
+
+    //This should be a redirect from the backend if this works
+    console.log(`${user.name} (id=${user.id}) has been verified from the backend.`); //user information
+
+  }).catch(err => {
+
+    if (err.status) {
+
+      //Parse detailed error message
+      err.text().then(errMessage => {
+        switch (err.status) {
+          case 401: //wrong password
+          case 403: //user authenticated using another platform/method
+          case 404: //user not found
+          default: //another error
+
+          errLogin.innerHTML = errMessage;
+          console.log(`ERR ${err.status}: ${errMessage} `);
+        }
+      });
+      //Let the user know what went wrong (in a hidden dialog box)
+    } else {
+      console.log(err); //error message
+    }
+  });
+
+  return false; //stop default action
+
+}
+
+function form2object(form) {
+  let formData = {};
+  let formElements = form.elements;
+
+  for(let i=0; i < formElements.length; i++){
+    let fieldName = formElements[i]['name'] ? formElements[i]['name'] : `field${i}`;
+    formData[fieldName] = formElements[i]['value'];
+  }
+  return formData;
 }
 
 function comparePasswords(){
