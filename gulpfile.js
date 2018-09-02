@@ -85,6 +85,7 @@ gulp.task('default', gulp.parallel('copy-skeleton', 'styles', 'scripts', (done) 
   console.log('now my watch has ended');
   server.init({
     server: {
+      https: true,
       baseDir: './build'
     }
   });
@@ -153,6 +154,7 @@ gulp.task('dist', gulp.parallel('minify-css', 'minify-js','favicon', (done) => {
 gulp.task('launch-dist', gulp.series('dist', (done) => {
   server.init({
     server: {
+      https: true,
       baseDir: './dist'
     }
   });
