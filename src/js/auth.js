@@ -67,12 +67,30 @@ loginForm.action = `${backendBaseURI}/auth/local`;
 
 const registerForm = document.body.querySelector('form#signup');
 registerForm.action = `${backendBaseURI}/auth/register`;
+registerForm.onsubmit = createLocalUser;
+registerForm.password.onchange = comparePasswords;
+registerForm.password2.onchange = comparePasswords;
 
+function createLocalUser(e){
+  
+  console.log('New Local User Requested');
+  //Manually handle the submission and response
+
+
+  return false;
+
+}
 
 function comparePasswords(){
-  //make sure passwords are the same
-  
 
+  const pw1 = registerForm.password;
+  const pw2 = registerForm.password2;
+  //make sure passwords are the same
+  if(pw1.value !== pw2.value) {
+    pw2.setCustomValidity("Passwords are not the same");
+  } else {
+    pw2.setCustomValidity('');
+  }
 }
 
 
