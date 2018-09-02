@@ -6,10 +6,35 @@ COMMON
 
 //DEV: https://localhost:1337; //for development, need another for production
 const backendBaseURI = (window.DBHelper) ? DBHelper.DATABASE_URL : 'https://localhost:1337'; 
+function authErrHandler(errRes, msgDiv) {
+  //errRes is what comes from the SAILS backend
+  //Parse detailed error message
 
+  if (errRes.status) { //err from backend
+    errRes.text().then(errMessage => {
+      switch (errRes.status) {
+        case 401: //wrong password
+        case 403: //user authenticated using another platform/method
+        case 404: //user not found
+        default: //another error
 
-function handleBackendError(errRes, msgDiv) {
-  //errRes is what comes from the backend
+          if (msgDiv) {
+            msgDiv.innerHTML = errMessage; //pring to a div
+          } else {
+            console.log(`ERR ${err.status}: ${errMessage}`); //print to console
+          }
+      }
+    });
+
+  } else { //not a backend error
+    if (msgDiv){
+      msgDiv.innerHTML = errRes;
+    } else {
+      console.log(errRes);
+    }
+
+  }
+
 }
 
 /*
@@ -80,33 +105,28 @@ registerForm.password2.onchange = comparePasswords;
 const errLogin = document.body.querySelector('.errorString.signin');
 const errRegister = document.body.querySelector('.errorString.signup');
 
-function createLocalUser(e){
-  
+function createLocalUser(e) {
+
   console.log('New Local User Requested');
   let formData = form2object(registerForm);
 
   //Manually handle the submission and response
-  fetch(`${backendBaseURI}/auth/register`,{
-    method:'POST',
+  fetch(`${backendBaseURI}/auth/register`, {
+    method: 'POST',
     mode: 'cors',
-    headers: {'Content-Type': 'application/json; charset=utf-8'},
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8'
+    },
     body: JSON.stringify(formData),
   }).then(res => {
-      if (!res.ok) throw res;
-      return res.json();
-    }).then( user => {
+    if (!res.ok) throw res;
+    return res.json();
+  }).then(user => {
     //This should be a redirect from the backend if this works
     console.log(`${user.name} (id=${user.id}) has been verified from the backend.`); //user information
   }).catch(err => {
-
-    if(err.status){
-      //Let the user know what went wrong (in a hidden dialog box)
-      err.text().then(errMessage => {
-          errRegister.innerHTML = errMessage;
-      })
-    } else {
-      console.log(err);
-    }
+    //Let the user know what went wrong (in a hidden dialog box)
+    authErrHandler(err, errRegister);
   });
 
   return false; //stop default action
@@ -134,25 +154,9 @@ function loginLocalUser(e) {
     console.log(`${user.name} (id=${user.id}) has been verified from the backend.`); //user information
 
   }).catch(err => {
-
-    if (err.status) {
-
-      //Parse detailed error message
-      err.text().then(errMessage => {
-        switch (err.status) {
-          case 401: //wrong password
-          case 403: //user authenticated using another platform/method
-          case 404: //user not found
-          default: //another error
-
-          errLogin.innerHTML = errMessage;
-          console.log(`ERR ${err.status}: ${errMessage} `);
-        }
-      });
       //Let the user know what went wrong (in a hidden dialog box)
-    } else {
-      console.log(err); //error message
-    }
+      errDiv = (document.body.querySelector('.tablink.active').name == 'signin') ? errLogin : errRegister;
+      authErrHandler(err, errDiv);
   });
 
   return false; //stop default action
@@ -257,13 +261,20 @@ function sendFBTokenToBackend(authResponse) {
     mode: 'cors',
     headers: {'Content-Type': 'application/json; charset=utf-8'},
     body: JSON.stringify({idtoken: authResponse.accessToken})
-  }).then(res => res.json()).then( user => {
+  }).then(res => {
+    if (!res.ok) throw res
+    return res.json();
+  }).then( user => {
     //TO DO: Change this to a redirect from the backend
     console.log(`${user.name} (id=${user.id}) has been verified from the backend.`); //user information
   }).catch( err => {
     //if there is an error, let the user know
+    
+    
+    errDiv = (document.body.querySelector('.tablink.active').name == 'signin') ? errLogin : errRegister;
+    authErrHandler(err, errDiv);
+    
     //TO DO: Save the authenticated user to the db after we sync again
-      console.log(err);
   })
 
 
@@ -301,14 +312,15 @@ function googleSignIn(e) {
     .catch( err => {
       //if there is an error, let the user know
       //TO DO: Save the authenticated user to the db after we sync again
-      console.log(err);
+      errDiv = (document.body.querySelector('.tablink.active').name == 'signin') ? errLogin : errRegister;
+      authErrHandler(err, errDiv);
     });
     
     
     
-  }).catch(err=>{
-    console.log(err);
-    console.log(`Sigin in failed: ${err.error}`)
+  }).catch( err =>{
+    errDiv = (document.body.querySelector('.tablink.active').name == 'signin') ? errLogin : errRegister;
+    authErrHandler(`Sigin in failed: ${err.error}`, errDiv);
   });
 
 }
