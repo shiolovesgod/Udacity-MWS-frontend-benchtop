@@ -244,7 +244,7 @@ createRestaurantHTML = (restaurant) => {
   const rating_wrapper = document.createElement('div');
   rating_wrapper.className = 'rating';
 
-   
+  
   if (restaurant.average_rating)
   {
     const ratingText = document.createElement('p');
@@ -263,7 +263,7 @@ createRestaurantHTML = (restaurant) => {
 
   const nReviews = document.createElement('p');
   const review_count = 
-  nReviews.innerHTML = restaurant.total_reviews ?  `${restaurant.total_reviews}  Reviews`: 'No Reviews';
+  nReviews.innerHTML = restaurant.total_reviews ?  `${restaurant.total_reviews} Reviews`: 'No Reviews';
   nReviews.className = 'review-count';
   rating_wrapper.appendChild(nReviews);
 
