@@ -17,7 +17,7 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337; // Change this to your server port
-    return `https://localhost:${port}/restaurants`;  //DEV
+    return `https://localhost:${port}`;  //DEV only, need to change in production
   }
 
   static get dbPromised() {
@@ -186,7 +186,7 @@ class DBHelper {
 
   static _handleDBfetch(callback, id) {
 
-    let fetchURL = DBHelper.DATABASE_URL;
+    let fetchURL = `${DBHelper.DATABASE_URL}/restaurants`;
 
     if (id) fetchURL = fetchURL + `/${id}`;
 
