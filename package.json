@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "babel": "^6.23.0",
-    "browser-sync": "^2.24.5",
+    "browser-sync": "^2.24.7",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-jshint": "^1.1.0",
@@ -31,10 +31,13 @@
     "grunt-mkdir": "^1.0.0",
     "grunt-uncss": "^0.8.5",
     "gulp": "^4.0.0",
+    "gulp-dest": "^0.2.3",
+    "gulp-nunjucks-render": "^2.2.2",
     "gulp-sass": "^4.0.1",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.0",
     "gulp-uglify-es": "^1.0.4",
-    "gulp-uglifycss": "^1.1.0"
+    "gulp-uglifycss": "^1.1.0",
+    "nunjucks": "^3.1.3"
   }
 }

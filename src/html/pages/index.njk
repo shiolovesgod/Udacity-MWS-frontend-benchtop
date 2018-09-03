@@ -1,0 +1,36 @@
+{% extends 'layouts/main.njk' %}
+
+{# Set page variables #}
+{% set page_title = "Restaurant Reviews" %}
+{% set body_class = "" %}
+
+{# Main Page Content#}
+
+{% block maincontent %} 
+  <section>
+    <div class="filter-options">
+      <h2 id="filter-label">Filter Results</h2>
+      <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Filter by neighborhood">
+        <option value="all">All Neighborhoods</option>
+      </select>
+      <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-label="Filter by cuisine type">
+        <option value="all">All Cuisines</option>
+      </select>
+    </div>
+  </section>
+  <div class="mobile-wrapper">
+    <section class="section-restaurants" aria-label="Restaurants">
+      <ul class="restaurants-list" aria-label="Restaurant list"></ul>
+    </section>
+    <section class="section-map" aria-label="Restaurant map"> 
+      <div id="map" class="map" tabindex=-1></div>
+    </section>
+  </div>
+  <button class="switch-view" onclick="toggleMap()">Show Map</button>
+{% endblock %}
+
+{% block post_footer %} 
+  <script type="application/javascript" charset="utf-8" src="js/library.js"></script>
+  <script defer type="application/javascript" charset="utf-8" src="js/main.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap"></script>
+{% endblock %}

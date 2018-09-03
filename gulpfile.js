@@ -7,11 +7,15 @@ const uglifycss = require('gulp-uglifycss');
 const server = require('browser-sync');
 const sourcemaps = require('gulp-sourcemaps');
 
+const nunjucksRender = require('gulp-nunjucks-render');
+  const changeExt = require('gulp-dest'); //changeExt (<dest_folder>, <options>)
+
 
 gulp.task('watch-files', (done) => {
   gulp.watch('src/js/**/*.js', gulp.series('scripts'));
   gulp.watch('src/css/**/*.css', gulp.series('styles'));
-  gulp.watch('src/*.html', gulp.series('copy-skeleton'));
+  // gulp.watch('src/*.html', gulp.series('copy-skeleton'));
+  gulp.watch('src/html/**/*.+(njk|html)', gulp.series('build-html'));
   gulp.watch('src/sw.js', gulp.series('copy-skeleton'));
   gulp.watch('README.md', ()=>{
     return gulp.src('README.md')
@@ -28,8 +32,17 @@ gulp.task('favicon', () => {
     .pipe(gulp.dest('dist/icon'))
 });
 
+gulp.task('build-html', () => {
+  return gulp.src('src/html/pages/*.+(html|njk)')
+    .pipe(nunjucksRender({
+      path: ['src/html']
+    })).pipe(changeExt('build/',{ext:'.html'}))
+    .pipe(gulp.dest('./'));
+})
+
 
 gulp.task('copy-skeleton', (done) => {
+  //HTML files
   gulp.src('src/*.html')
     .pipe(gulp.dest('build/'));
 
@@ -80,7 +93,8 @@ gulp.task('default', gulp.parallel('copy-skeleton', 'styles', 'scripts', (done) 
   console.log('starting the watch');
   gulp.watch('src/js/**/*.js', gulp.series('scripts', 'reload'));
   gulp.watch('src/css/**/*.css', gulp.series('styles', 'reload'));
-  gulp.watch('src/*.html', gulp.series('copy-skeleton', 'reload'));
+  // gulp.watch('src/*.html', gulp.series('copy-skeleton','reload'));
+  gulp.watch('src/html/**/*.+(njk|html)', gulp.series('build-html', 'reload'));
   gulp.watch('src/sw.js', gulp.series('copy-skeleton', 'reload'));
   console.log('now my watch has ended');
   server.init({
@@ -107,7 +121,7 @@ gulp.task('minify-js', () => {
     .pipe(concat('library.js'))
     .pipe(uglify())
     // .pipe(sourcemaps.write())
-    .pipe(gulp.dest('dist/js/'));
+    .pipe(gulp.dest('dist/js/'));    
 
   //copy main files
   return gulp.src('src/js/*.js')
@@ -127,14 +141,16 @@ gulp.task('minify-css', () => {
 
 gulp.task('dist', gulp.parallel('minify-css', 'minify-js','favicon', (done) => {
 
-  
   //copy readme
   gulp.src('README.md')
     .pipe(gulp.dest('dist/'));
 
-  //copy html
-  gulp.src('src/*.html')
-    .pipe(gulp.dest('dist/'));
+  //build html pages
+  gulp.src('src/html/pages/*.+(html|njk)')
+    .pipe(nunjucksRender({
+      path: ['src/html']
+    })).pipe(changeExt('dist/',{ext:'.html'}))
+    .pipe(gulp.dest('./'));
 
   //copy sw.js
   gulp.src('src/sw.js')

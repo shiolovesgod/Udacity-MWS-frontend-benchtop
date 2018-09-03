@@ -1,0 +1,42 @@
+{% extends 'layouts/main.njk' %}
+
+{# Set page variables #}
+{% set page_title = "Restaurant Info" %}
+{% set body_class = "inside" %}
+
+{# Main Page Content#}
+
+{% block nav %} 
+  <!-- Beginning breadcrumb -->
+  <ul class="breadcrumb">
+    <li><a href="./">Home</a></li>
+  </ul>
+{% endblock %}
+
+{% block maincontent %} 
+  <!-- Beginning restaurant -->
+  <section id="restaurant-container" class="restaurant-container" aria-label="Restaurant information">
+    <h1 class="restaurant-name"></h1>
+    <a class="restaurant-img-wrapper"></a>
+    <p class="restaurant-cuisine"></p>
+    <p class="restaurant-address"></p>
+    <table class="restaurant-hours" aria-label="Restaurant-hours" role="table"></table>
+  </section>
+
+  <section class="section-map" aria-label="Restaurant location">
+    <div id="map" class="map"></div>
+  </section>
+
+  <!-- Beginning reviews -->
+  <section class="reviews-container" aria-label="Restaurant reviews">
+    <ul class="reviews-list"></ul>
+  </section>
+{% endblock %}
+
+{% block post_footer %} 
+  <!-- Beginning scripts -->
+  <script type="application/javascript" charset="utf-8" src="js/library.js"></script>
+  <script type="text/javascript" src="js/restaurant_info.js"></script>
+  <!-- Google Maps -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap"></script>
+{% endblock %}
