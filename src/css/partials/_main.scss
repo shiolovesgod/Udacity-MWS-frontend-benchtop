@@ -1,0 +1,131 @@
+//Style shared across pages
+
+/* Third Party CSSS */
+
+/* Paul Irish: https://www.paulirish.com/2012/box-sizing-border-box-ftw/ */
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/*
+*
+* Global Styles
+*
+*/
+
+html {
+  font-size: 16px; /*base for rems*/
+  font-family: 'Lato', Arial, Helvetica, sans-serif;
+  overflow-y: hidden;
+  min-height: 100vh;
+  max-height: 100vh;
+}
+
+body,td,th,p{
+	color: #333;
+	line-height: 1.25;
+}
+body {
+	background-color: #fdfdfd;
+	margin: 0;
+  position:relative; 
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-height: 100vh;
+}
+ul, li {
+	color: #333;
+}
+a {
+	color: orange;
+	text-decoration: none;
+}
+a:hover, a:focus {
+	color: #3397db;
+	text-decoration: none;
+}
+a img{
+	border: none 0px #fff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 20px; //10px in inner
+}
+article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+
+h1 { 
+  font-size: 2rem; 
+  line-height:1.25;
+}
+h2 {
+  font-size: 1.625rem; 
+  line-height: 1.1538;
+}
+h3 { 
+  font-size: 1.375rem;
+  line-height: 1.1363;
+}
+
+/*
+*
+* Page Content
+*
+*/
+
+
+/* -----------------------------------
+Navigation 
+----------------------------------- */
+
+nav {
+  width: 100%;
+  
+}
+
+.site-title {
+  background-color: #252831;
+  color: #fff;
+  margin: auto;
+  font-size: 2rem; //inside: 1.625rem;
+  font-family: 'Vidaloka', 'Times New Roman', Times, serif;
+  padding: 10px;
+  font-weight: 200;
+  letter-spacing: 0.2rem; //inside: no letter spacing
+  text-transform: uppercase;
+  text-align: center;
+  // white-space: nowrap;
+}
+
+
+/* -----------------------------------
+Ratings
+----------------------------------- */
+
+.rating {
+  display: flex;
+}
+
+.rating-text, .rating-stars{
+  font-size: 1.2rem;
+  color: #b35f00;
+  padding-right: 5px;
+}
+.review-count {
+  color: #666;
+}
+.rating-stars {
+  font-family: 'FontAwesome';
+}
+
+
+/*
+*
+* AUTHENTICATION
+*
+*/

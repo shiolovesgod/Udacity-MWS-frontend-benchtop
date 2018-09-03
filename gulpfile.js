@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-//const sass = require('gulp-sass'); //no sass in this project
+const sass = require('gulp-sass'); //no sass in this project
 // const autoPre = require('gulp-autoprefixer'); // no needd for auto pre-fixer
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify-es').default;
@@ -14,6 +14,7 @@ const nunjucksRender = require('gulp-nunjucks-render');
 gulp.task('watch-files', (done) => {
   gulp.watch('src/js/**/*.js', gulp.series('scripts'));
   gulp.watch('src/css/**/*.css', gulp.series('styles'));
+  gulp.watch('src/css/**/*.+(scss|sass)', gulp.series('build-css'));
   // gulp.watch('src/*.html', gulp.series('copy-skeleton'));
   gulp.watch('src/html/**/*.+(njk|html)', gulp.series('build-html'));
   gulp.watch('src/sw.js', gulp.series('copy-skeleton'));
@@ -31,6 +32,12 @@ gulp.task('favicon', () => {
     .pipe(gulp.dest('build/icon/'))
     .pipe(gulp.dest('dist/icon'))
 });
+
+gulp.task('build-css',()=>{
+  return gulp.src('src/css/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('build/css/'));
+})
 
 gulp.task('build-html', () => {
   return gulp.src('src/html/pages/*.+(html|njk)')
@@ -93,6 +100,7 @@ gulp.task('default', gulp.parallel('copy-skeleton', 'styles', 'scripts', (done) 
   console.log('starting the watch');
   gulp.watch('src/js/**/*.js', gulp.series('scripts', 'reload'));
   gulp.watch('src/css/**/*.css', gulp.series('styles', 'reload'));
+  gulp.watch('src/css/**/*.+(scss|sass)', gulp.series('build-css', 'reload'));
   // gulp.watch('src/*.html', gulp.series('copy-skeleton','reload'));
   gulp.watch('src/html/**/*.+(njk|html)', gulp.series('build-html', 'reload'));
   gulp.watch('src/sw.js', gulp.series('copy-skeleton', 'reload'));
@@ -131,13 +139,16 @@ gulp.task('minify-js', () => {
 });
 
 gulp.task('minify-css', () => {
-  return gulp.src('src/css/**/*.css')
+  return gulp.src(['src/css/*.scss', 'src/css/**/*.css'])
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('build/css/'))
     .pipe(uglifycss({
       "maxLineLen": 80,
       "uglyComments": true
     }))
     .pipe(gulp.dest('dist/css/'));
 });
+
 
 gulp.task('dist', gulp.parallel('minify-css', 'minify-js','favicon', (done) => {
 

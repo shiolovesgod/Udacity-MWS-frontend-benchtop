@@ -1,12 +1,5 @@
-/* Third Party CSSS */
-
-/* Paul Irish: https://www.paulirish.com/2012/box-sizing-border-box-ftw/ */
-html {
-  box-sizing: border-box;
-}
-*, *:before, *:after {
-  box-sizing: inherit;
-}
+//Import the main structure
+@import "partials/main";
 
 
 /*
@@ -15,96 +8,26 @@ html {
 *
 */
 
-html {
-  font-size: 16px; /*base for rems*/
-  font-family: 'Lato', Arial, Helvetica, sans-serif;
-  min-height: 100vh;
-  max-height: 100vh;
-  overflow-y: hidden;
-}
-
-body,td,th,p{
-	color: #333;
-	line-height: 1.25;
-}
-body.inside {
-  max-height: 100vh;
-	background-color: #fdfdfd;
-	margin: 0;
-  position:relative; 
-  display: flex;
-  flex-direction: column;
-}
-
-ul, li {
-	color: #333;
-}
-a {
-	color: orange;
-	text-decoration: none;
-}
-a:hover, a:focus {
-	color: #3397db;
-	text-decoration: none;
-}
-a img{
-	border: none 0px #fff;
-}
-
+//overwrite header margins
 h1, h2, h3, h4, h5, h6 {
   margin: 0 0 10px;
 }
-article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
-	display: block;
-}
-
-h1 { 
-  font-size: 2rem; 
-  line-height:1.25;
-}
-h2 {
-  font-size: 1.625rem; 
-  line-height: 1.1538;
-}
-h3 { 
-  font-size: 1.375rem;
-  line-height: 1.1363;
-}
-
-/*
-*
-* Page Content
-*
-*/
-
 
 /* -----------------------------------
 Navigation 
 ----------------------------------- */
+
 header {
   max-width: 400px;
 }
 
-
-nav {
-  width: 100%;
-  
-}
-
-.inside .site-title {
-/* ARIA designation of h1 but CSS styles of h2*/
-  background-color: #252831;
-  color: #fff;
-  margin: auto;
+.site-title {
+  /* ARIA designation of h1 but CSS styles of h2*/
   font-size: 1.625rem;
-  line-height: 1.1538;
-  font-family: 'Vidaloka', 'Times New Roman', Times, serif;
-  padding: 10px;
-  font-weight: 200;
-  text-transform: uppercase;
-  text-align: center;
-  white-space: nowrap;
+  line-height: 1.1538; 
+  letter-spacing: 0;
 }
+
 .breadcrumb {
   width: 100%;
   background-color: #eee;
@@ -152,7 +75,7 @@ nav {
 /* -----------------------------------
  Main Content
  ----------------------------------- */
-.maincontent {
+ .maincontent {
   overflow-y: auto;
   position: relative;
   height: 100%;
@@ -271,23 +194,7 @@ Map Container
   max-width: 350px;
   padding: 0 20px;
 }
-.rating {
-  display: flex;
-}
-.rating-text, .rating-stars {
-  font-size: 1.2rem;
-  color: #b35f00;
-  padding-right: 5px;
-}
-.rating-stars {
-  font-family: 'FontAwesome';
-}
-.reviews-container h2 {
-  color:  #b35f00;
-  font-weight: 400;
-  letter-spacing: -1px;
 
-}
 .reviews-list {
   margin: 0;
   padding: 0;
@@ -467,9 +374,9 @@ footer {
 
   /* Rearrange layout */
   body.inside, {
-    background-color: red;
-    width: 350px;
-    z-index: -1;
+    // background-color: red;
+    // width: 350px;
+    // z-index: -1;
   }
   nav {
     margin: 0;
@@ -551,4 +458,3 @@ footer {
     padding: 6px;
   }
 }
-
