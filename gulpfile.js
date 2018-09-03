@@ -49,7 +49,7 @@ gulp.task('build-html', () => {
 
 
 gulp.task('copy-skeleton', (done) => {
-  //HTML files
+  //HTML files (plain)
   gulp.src('src/*.html')
     .pipe(gulp.dest('build/'));
 
@@ -67,10 +67,10 @@ gulp.task('copy-images', () => {
     .pipe(gulp.dest('build/img/'));
 });
 
-gulp.task('styles', () => {
+gulp.task('styles', gulp.parallel('build-css',() => {
   return gulp.src('src/css/**/*.css')
     .pipe(gulp.dest('build/css/'));
-});
+}));
 
 
 gulp.task('scripts', () => {
@@ -95,7 +95,7 @@ gulp.task('reload', (done) => {
 
 
 //Run the build
-gulp.task('default', gulp.parallel('copy-skeleton', 'styles', 'scripts', (done) => {
+gulp.task('default', gulp.parallel('copy-skeleton', 'build-css','styles', 'scripts', (done) => {
 
   console.log('starting the watch');
   gulp.watch('src/js/**/*.js', gulp.series('scripts', 'reload'));
@@ -141,7 +141,6 @@ gulp.task('minify-js', () => {
 gulp.task('minify-css', () => {
   return gulp.src(['src/css/*.scss', 'src/css/**/*.css'])
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('build/css/'))
     .pipe(uglifycss({
       "maxLineLen": 80,
       "uglyComments": true
