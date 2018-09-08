@@ -4,8 +4,13 @@
 {% set page_title = "Restaurant Reviews" %}
 {% set body_class = "" %}
 
-{# Main Page Content#}
+{# Page Styles#}
+{% block user_styles %} 
+  <link rel="stylesheet" href="css/styles.css" async />
+{% endblock %}
 
+
+{# Main Page Content#}
 {% block maincontent %} 
   <section>
     <div class="filter-options">

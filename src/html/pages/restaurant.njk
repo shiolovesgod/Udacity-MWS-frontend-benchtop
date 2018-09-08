@@ -4,8 +4,15 @@
 {% set page_title = "Restaurant Info" %}
 {% set body_class = "inside" %}
 
-{# Main Page Content#}
 
+{# Page Styles#}
+{% block user_styles %} 
+  <link rel="stylesheet" href="css/inner_styles.css" async />
+{% endblock %}
+
+
+ 
+{# Main Page Content#}
 {% block nav %} 
   <!-- Beginning breadcrumb -->
   <ul class="breadcrumb">
