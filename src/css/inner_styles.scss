@@ -82,6 +82,86 @@ header {
 }
 
 /* -----------------------------------
+User Options
+ ----------------------------------- */
+.user-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0;
+  max-width: 400px;
+  overflow: auto;
+}
+
+.uinput__button {
+  height: 50px;
+  padding: 5px;
+  margin: 5px 10px;
+  min-width: 60px;
+  flex-grow: 1;
+  display: flex;
+  align-items: center; //vertically
+  justify-items: center; //horizontally
+
+  // Style
+  border-radius: 5px;
+  background-color: #fff;
+  border: 3px solid #252831;
+  text-transform: uppercase;
+  color: #252831;
+
+}
+
+.uinput__button:hover, .uinput__button:focus {
+  background-color: #252831;
+  color: white;
+}
+
+.uinput__button:active {
+  position: relative;
+  top: 2px;
+}
+
+.button__icon {
+  font-size: 30px;
+  width: 40%;
+}
+
+
+//=============Show button text=====================
+// .uinput__button {
+//   flex-grow: 1;
+// }
+
+// .button__icon {
+//   width: 40%;
+// }
+
+
+// .button__text {
+//   display: block;
+// }
+
+//=============Hide button text=====================
+
+// .uinput__button {
+//   flex-grow: 0;
+// }
+
+// .button__icon {
+//   width: 100%;
+// }
+
+
+// .uinput__button:hover .button__text, .uinput__button:focus .button__text {
+//   display: block;
+// }
+
+// .button__text {
+//   display: none;
+// }
+
+/* -----------------------------------
 Map Container
  ----------------------------------- */
 
@@ -322,7 +402,7 @@ footer {
 
 @media screen and (min-width:400px) {
 
-  header, .inside .restaurant-container, .reviews-container, .inside footer {
+  header, .user-options, .inside .restaurant-container, .reviews-container, .inside footer {
     width: 70%;
   }
   .reviews-container {

@@ -111,7 +111,7 @@ Ratings
   display: flex;
 }
 
-.rating-text, .rating-stars{
+.rating-text, .rating-stars {
   font-size: 1.2rem;
   color: #b35f00;
   padding-right: 5px;
@@ -119,8 +119,8 @@ Ratings
 .review-count {
   color: #666;
 }
-.rating-stars {
-  font-family: 'FontAwesome';
+.rating-stars, .icon-font {
+  font-family: 'FontAwesome','Helvetica','Sans-Serif';
 }
 
 
