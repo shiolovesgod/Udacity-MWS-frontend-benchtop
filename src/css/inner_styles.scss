@@ -96,9 +96,9 @@ User Options
 .uinput__button {
   height: 50px;
   padding: 5px;
-  margin: 5px 10px;
-  min-width: 60px;
-  flex-grow: 1;
+  margin: 2px 5px;
+  width: 130px; //60px for icon only
+  // flex-grow: 1;
   display: flex;
   align-items: center; //vertically
   justify-items: center; //horizontally
@@ -369,6 +369,12 @@ footer {
   /* Site Title */
   .inside .site-title{
     white-space: normal;
+  }
+
+  /* User Options */
+  .uinput__button {
+    flex-grow: 1;
+    margin: 2px 5px;
   }
 
   /* Hours display */

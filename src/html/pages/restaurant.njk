@@ -23,17 +23,7 @@
 
 {% block maincontent %} 
 
-  <!--User Options-->
-  <div class="user-options">
-    <button id="options__favorite" class="uinput__button" role="switch" aria-checked="false">
-      <div id="user-favorite-icon" class="button__icon icon-font">&#61578;</div>
-      <div class="button__text">Add Favorite</div>
-    </button>
-    <button id="options__addReview" class="uinput__button">
-      <div class="button__icon icon-font">&#61504;</div>
-      <div class="button__text">Add Review</div>
-    </button>
-  </div>
+
 
   <!-- Beginning restaurant -->
   <section id="restaurant-container" class="restaurant-container" aria-label="Restaurant information">
@@ -42,6 +32,20 @@
     <p class="restaurant-cuisine"></p>
     <p class="restaurant-address"></p>
     <table class="restaurant-hours" aria-label="Restaurant-hours" role="table"></table>
+  </section>
+
+  <!--User Options-->
+  <section>
+    <div class="user-options">
+      <button id="options__favorite" class="uinput__button" role="switch" aria-checked="false">
+        <div id="user-favorite-icon" class="button__icon icon-font">&#61578;</div>
+        <div class="button__text">Add Favorite</div>
+      </button>
+      <button id="options__addReview" class="uinput__button">
+        <div class="button__icon icon-font">&#61504;</div>
+        <div class="button__text">Add Review</div>
+      </button>
+    </div>
   </section>
 
   <section class="section-map" aria-label="Restaurant location">
