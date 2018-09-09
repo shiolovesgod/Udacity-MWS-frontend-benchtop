@@ -41,7 +41,7 @@
         <div id="user-favorite-icon" class="button__icon icon-font">&#61578;</div>
         <div class="button__text">Add Favorite</div>
       </button>
-      <button id="options__addReview" class="uinput__button">
+      <button id="options__addReview" class="uinput__button btn-trigger-modal" data-mdl-wrpr="review-mdl-wrapper">
         <div class="button__icon icon-font">&#61504;</div>
         <div class="button__text">Add Review</div>
       </button>
@@ -56,6 +56,11 @@
   <section class="reviews-container" aria-label="Restaurant reviews">
     <ul class="reviews-list"></ul>
   </section>
+  
+{% endblock %}
+
+{% block post_main%}
+  {% include 'components/review-form.njk' %}
 {% endblock %}
 
 {% block post_footer %} 

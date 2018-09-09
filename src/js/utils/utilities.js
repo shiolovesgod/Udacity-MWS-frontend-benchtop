@@ -19,13 +19,13 @@ class HTMLHelper {
     if (imgSizes.length > 0) {
       let srcsetVal = [];
       for (let [idx, imgSize] of imgSizes.entries()) {
-        srcsetVal.push(`img/${restaurant.id}-${imgSize}w.jpg ${idx+1}x`)
+        srcsetVal.push(`img/${restaurant.id}-${imgSize}w.jpg ${idx + 1}x`)
       }
       img.setAttribute('data-srcset', srcsetVal.join(', '));
     }
 
     if (sizesQuery.length > 0) {
-      img.setAttribute('sizes', sizesQuery);  
+      img.setAttribute('sizes', sizesQuery);
     }  //i may want to rewrite this to accommodate 'w' instead of 'x'    
 
     return img;
@@ -53,7 +53,7 @@ class HTMLHelper {
         let source = document.createElement('source');
         let srcsetVal = [];
         for (let [idx, imgSize] of imgSizes[i].entries()) {
-          srcsetVal.push(`img/${restaurant.id}-${imgSize}w.jpg ${idx+1}x`)
+          srcsetVal.push(`img/${restaurant.id}-${imgSize}w.jpg ${idx + 1}x`)
         }
 
         source.setAttribute('srcset', srcsetVal.join(', '));
@@ -90,8 +90,8 @@ class HTMLHelper {
         //Remove tab index from: iframe and div
         document.querySelector('#map .gm-style div:first-child').setAttribute('tabindex', -1);
         let iFrame = document.querySelector('#map .gm-style iframe');
-          iFrame.setAttribute('aria-label','Restaurant location map');
-          iFrame.setAttribute('tabindex', -1);
+        iFrame.setAttribute('aria-label', 'Restaurant location map');
+        iFrame.setAttribute('tabindex', -1);
 
         //Tab through divs first
         document.querySelectorAll('#map .gm-style div[role="button"]')
@@ -116,5 +116,99 @@ class HTMLHelper {
       }, 500);
     });
   }
+
+}
+
+//==========================================================
+//FRONT END FUNCTIONALITY
+//==========================================================
+
+/*
+*
+*  MODAL WINDOW
+*
+*/
+
+const modalBtns = document.body.querySelectorAll('.btn-trigger-modal');
+const modalOverlay = document.body.querySelector('#modal-overlay');
+
+var focusedElementBeforeModal;
+
+modalBtns.forEach(iBtn => {
+
+  //get ID for associated modal wrapper
+  let modalID = iBtn.getAttribute('data-mdl-wrpr'); //ID of wrapper
+  let modalWrapper = document.body.querySelector(`#${modalID}`);
+  iBtn.addEventListener('click', (e) => openModalWindow(modalWrapper));
+});
+
+function openModalWindow(modalWrapper) {
+  let modalContent = modalWrapper.querySelector('.modal-content');
+  let modalCancel = modalContent.querySelector('.modal-cancel'); //cancelButton
+
+  //save current focus
+  focusedElementBeforeModal = document.activeElement;
+
+  //Listen for and add keyboard trap
+  modalContent.addEventListener('keydown', trapTabKey);
+
+  //Determine WHICH BUTTONS can close the app (in addition to ESC)
+  modalOverlay.addEventListener('click', closeModal); //click background
+  modalCancel.addEventListener('click', closeModal);
+
+  //Find focusable children
+  var focusableElementsString = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], [contenteditable]';
+
+  var focusableElements = modalContent.querySelectorAll(focusableElementsString);
+
+  var firstTabStop = focusableElements[0];
+  var lastTabStop = focusableElements[focusableElements.length - 1];
+
+  modalWrapper.classList.add('show-modal');
+  modalOverlay.classList.add('show-modal');
+
+  //Focus first child
+  firstTabStop.focus();
+
+  function trapTabKey(e) {
+
+    //Check for tab key press
+    if (e.keyCode === 9) {
+
+      //SHIFT+TAB
+      if (e.shiftKey) {
+        if (document.activeElement === firstTabStop) {
+          e.preventDefault();
+          lastTabStop.focus();
+
+        }
+      }
+      else {
+        //TAB
+
+        if (document.activeElement === lastTabStop) {
+          e.preventDefault();
+          firstTabStop.focus()
+        }
+
+      }
+    }
+
+    //Check for ESC 
+    if (e.keyCode === 27) {
+      closeModal();
+    }
+  }
+
+  function closeModal() {
+    modalWrapper.classList.remove('show-modal');
+    modalOverlay.classList.remove('show-modal');
+
+    //set focus back to element that had it before modal was opened
+    focusedElementBeforeModal.focus();
+
+  }
+
+
 
 }

@@ -1,6 +1,7 @@
 //Import the main structure
 @import "partials/main";
-
+@import "partials/forms";
+@import "partials/modal-dlg";
 
 /*
 *
@@ -109,6 +110,8 @@ User Options
   border: 3px solid #252831;
   text-transform: uppercase;
   color: #252831;
+
+  cursor: pointer;
 
 }
 
@@ -432,6 +435,10 @@ footer {
     height: 100%;
     padding: 0;
     margin: 0;
+  }
+
+  .uinput__button {
+    margin: 2px 10px;
   }
 
 }

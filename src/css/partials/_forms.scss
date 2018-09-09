@@ -1,0 +1,257 @@
+$accent1: #252831;
+/*blue;*/
+
+$accent2: #b35f00;
+/*orange;*/
+
+$lightText1: #fff;
+/*white;*/
+
+$shadow-color: rgba(117, 124, 129, 0.12);
+
+
+
+form {
+  max-width: 480px;
+  margin: auto;
+  border: solid 1px $shadow-color;
+  box-shadow: 2px 2px 3px $shadow-color;
+  background-color: $lightText1;
+  
+}
+
+.form-header {
+  width: 100%;
+  margin: auto;
+  border: solid 1px $accent1;
+  background-color: $accent1;
+  color: $lightText1;
+  text-align: center;
+  
+}
+
+.form-title {
+  font-family: 'Vidaloka', 'Times New Roman', Times, serif;
+  font-size: 1.375rem;
+}
+
+.form-subtitle {
+  font-family: 'Lato', Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  color: orange;
+}
+
+.form-body,
+.form-footer {
+  width: 80%;
+}
+
+.form-body {
+  /* border: solid 1px red; */
+  margin: 10px auto;
+  text-align: center;
+}
+
+form input[type="text"] {
+  border: none;
+  border-bottom: 1px solid gray;
+  margin: 20px 10px;
+  width: 100%;
+  height: 1.5rem;
+}
+
+form input[type="text"]:focus {
+  outline: none;
+  /*   border: none; */
+  /* border-bottom: solid 3px $accent2; */
+}
+
+.multiline-text {
+  /* border: none; */
+  border-bottom: 1px solid gray;
+  display: block;
+  margin: auto;
+  width: 100%;
+  margin: 10px auto;
+  height: 80px;
+}
+
+.multiline-text:focus {
+  outline: none;
+  border: solid 3px $accent2;
+}
+
+.form-error {
+  color: maroon;
+  text-align: right;
+  display: none;
+}
+
+.form-error.invalid {
+  display: block;
+}
+
+.form-footer {
+  display: flex;
+  flex-direction: row-reverse;
+  overflow: auto;
+  margin: 20px auto;
+}
+
+input[type="submit"],
+.btn-form-cancel {
+  padding: 10px 20px;
+  border: solid 2px $accent1;
+  color: $accent1;
+  background-color: $lightText1;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.form-buttons * {
+  margin: 5px;
+  margin-left: 10px;
+  border-radius: 5px;
+  flex-grow: 1;
+  text-align:center;
+}
+
+.form-buttons:first-child {
+  margin-left: 0px;
+}
+
+.form-buttons *:hover,
+.form-buttons *:focus {
+  color: $lightText1;
+  background-color: $accent2;
+  ;
+  border-color: $accent2;
+}
+
+.form-buttons *:active {
+  margin-top: 2px;
+}
+
+.form-buttons *:hover {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 300px) {
+
+  .form-title {
+    font-size: 1.3rem;
+  }
+
+  .form-subtitle {
+    font-size: 1rem;
+    white-space: normal;
+  }
+
+  .form-rating-text.star {
+    font-size: 25px;
+    padding: 0px; 
+    font-weight: 300;
+  }
+
+  .form-buttons{
+    flex-wrap: wrap;
+
+  }
+
+
+}
+
+
+
+/*================RATING.....TEXT....CSSS ==============*/
+
+.offscreen {
+  position: absolute;
+  left: -1000em;
+}
+
+.rating__radiogroup {
+  display: inline-block;
+  padding: 10px;
+  /*  border: dotted 1px black; */
+}
+
+.rating__radiogroup:focus-within {
+  border-left: $accent2 solid 4px;
+}
+
+.rating-error {
+  color: red;
+  padding: 3px 0 0 0;
+  display: none;
+}
+
+.rating-error.invalid {
+  display: block;
+}
+
+.form-rating-text {
+  font-size: 30px;
+  font-family: 'FontAwesome', 'Font Awesome\ 5 Free';
+}
+
+.form-rating-text.star {
+  cursor: pointer;
+}
+
+.rating__radiogroup input+label {
+  color: $accent2;
+}
+
+/*adds border under selected*/
+
+.star-label {
+  border-bottom: 2px solid transparent;
+}
+
+/*turn everything gray*/
+
+.rating__radiogroup input:checked~label {
+  color: #999;
+}
+
+/*make checked label blue, and everything before it blue*/
+
+.rating__radiogroup input:checked+label {
+  color: $accent2;
+  border-bottom-color: $accent2;
+}
+
+/*add dotted border to focused label*/
+
+.rating__radiogroup input:focus+label {
+  border-bottom-style: dotted;
+}
+
+/*turn everything blue when hovering form*/
+
+.rating__radiogroup:hover input+label {
+  color: $accent2;
+}
+
+/*make everything before hover blue*/
+
+.rating__radiogroup input:hover~label,
+.rating__radiogroup input:focus~label,
+.rating__radiogroup input[id="star0"]+label {
+  color: #999;
+}
+
+/* make current selection hover blue*/
+
+.rating__radiogroup input:hover+label,
+.rating__radiogroup input:focus+label {
+  color: $accent2;
+}
+
+/*style the first one red*/
+
+.rating__radiogroup input[id="star0"]:checked+label {
+  color: #ff2d21;
+}

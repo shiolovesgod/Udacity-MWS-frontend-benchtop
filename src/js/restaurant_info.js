@@ -23,10 +23,15 @@ window.initMap = () => {
       });
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+
+      
+    //Set review form restaurant ID & name
+    initializeRestaurantForm(self.restaurant);
     }
 
     // Remove tab index from map items after tiles have been loaded 
     HTMLHelper.setMapTabOrder(self.map);
+
   });
 
 
@@ -226,4 +231,167 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+
+//================================================================
+//FORM FUNCTIONALITY
+//================================================================
+document.addEventListener("DOMContentLoaded", function(event) { 
+  //do work
+});
+
+/**
+ * FORM JS
+ */
+
+ try{
+   //throws an error if already exists
+   const backendBaseURI = (window.DBHelper) ? DBHelper.DATABASE_URL : 'https://localhost:1337';
+ } finally{ }
+
+const star0 = document.body.querySelector('#star0');
+const star1 = document.body.querySelector('#star1');
+
+//Cancel default action
+const reviewForm = document.body.querySelector('#form__user-review');
+const formSubtitle = reviewForm.querySelector('.form-subtitle');
+//reviewForm.action = `${backendBaseURI}/restaurants`; //do this manually
+reviewForm.onsubmit = validateReview;
+
+
+//Initialize restaurant form
+
+function initializeRestaurantForm(rest = self.restaurant) {
+  //Set ID field
+  reviewForm.restaurant_id = rest.id;
+
+  //Change restaurant name
+  formSubtitle.innerText = rest.name;
+
+}
+
+
+//Validate rating
+const formError = document.body.querySelector('.form-error');
+var radioFlag = false;
+
+document.body.querySelectorAll('.radio-star').forEach((iBtn) => {
+  iBtn.addEventListener("click", () => {
+    if (reviewForm.rating.value > 0) {
+      formError.innerText = "";
+
+      if (!radioFlag) star0.disabled = true;
+      radioFlag = true;
+    } else {
+      formError.innerText = "A restaurant rating is required.";
+    }
+  })
+});
+
+
+//Validate the form input
+function validateReview(e) {
+
+  let rating = reviewForm.rating.value;
+
+  if (rating < 1) {
+    formError.innerText = "A restaurant rating is required.";
+    formError.classList.add("invalid");
+    if (!radioFlag) star0.disabled = true;
+    star1.checked = true;
+    star1.focus();
+    return false;
+  }
+
+  output.innerText = `Rating: ${rating} Stars`;
+
+  //GET RESTAURANT ID
+  if (!reviewForm.restaurant_id.value) //set by me
+  {
+    console.log('Please add the restaurant ID!');
+    return false;
+  }
+
+  let formData = form2object(reviewForm);
+  //Escape before submitting to backend?
+  postReview(formData);
+
+  return false;
+}
+
+
+
+//Post to back end
+function postReview(formData) {
+
+  fetch(`${backendBaseURI}/reviews`, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    body: JSON.stringify(formData),
+  }).then(res => {
+
+    if (!res.ok) throw res;
+    return res.json();
+  }).then(review => {
+
+    //This should be a redirect from the backend if this works
+    console.log(`New Review from ${unescape(review.name)} created.`); //user information
+
+  }).catch(err => {
+    //Let the user know what went wrong (in a hidden dialog box)
+
+    authErrHandler(err, formError);
+    formError.classList.add("invalid");
+  });
+}
+
+
+
+//.........................................................
+//REUSABLE FORM & DB FUNCTIONS
+//.........................................................
+
+function form2object(form) {
+  let formData = {};
+  let formElements = form.elements;
+
+  for (let i = 0; i < formElements.length; i++) {
+    let fieldName = formElements[i].name ? formElements[i].name : `field${i}`;
+    formData[fieldName] = escape(formElements[i].value);
+  }
+  return formData;
+}
+
+function authErrHandler(errRes, msgDiv) {
+  //errRes is what comes from the SAILS backend
+  //Parse detailed error message
+
+  if (errRes.status) { //err from backend
+    errRes.text().then(errMessage => {
+      switch (errRes.status) {
+        case 401: //wrong password
+        case 403: //user authenticated using another platform/method
+        case 404: //user not found
+        default: //another error
+
+          if (msgDiv) {
+            msgDiv.innerHTML = errMessage; //pring to a div
+          } else {
+            console.log(`ERR ${err.status}: ${errMessage}`); //print to console
+          }
+      }
+    });
+
+  } else { //not a backend error
+    if (msgDiv) {
+      msgDiv.innerHTML = errRes;
+    } else {
+      console.log(errRes);
+    }
+
+  }
 }
