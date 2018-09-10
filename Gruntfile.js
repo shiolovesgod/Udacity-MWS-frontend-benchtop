@@ -7,8 +7,8 @@
 */
 
 gm = require('gm').subClass({imageMagick: true});
-console.log(gm);
-
+// console.log(process.cwd());
+// return;
 module.exports = function(grunt) {
 
   grunt.initConfig({
@@ -46,8 +46,8 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           src: ['*.{gif,jpg,png}'],
-          cwd: 'images_src/',
-          dest: 'dist/img/'
+          cwd: 'src/img/images_src/',
+          dest: 'src/img/'
         }]
       }
     },
