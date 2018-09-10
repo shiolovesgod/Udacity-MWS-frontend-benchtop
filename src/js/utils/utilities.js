@@ -7,34 +7,41 @@
 class HTMLHelper {
 
   /**
-  * Generate <img> tags with sizes and srcset attributes
-  */
+   * Generate <img> tags with sizes and srcset attributes
+   */
   static generateImgHTML(restaurant, defaultSize, imgSizes = [], sizesQuery = '') {
+
+    var imgId;
+    if (!restaurant.photograph) {
+      imgId = '0';
+    } else {
+      imgId = restaurant.id;
+    }
 
     const img = document.createElement('img');
     img.classList.add('lozad'); //lazy loading
-    img.setAttribute('data-src', `img/${restaurant.id}-${defaultSize}w.jpg`);
+    img.setAttribute('data-src', `img/${imgId}-${defaultSize}w.jpg`);
     img.setAttribute(`alt`, restaurant.photoDesc);
 
     if (imgSizes.length > 0) {
       let srcsetVal = [];
       for (let [idx, imgSize] of imgSizes.entries()) {
-        srcsetVal.push(`img/${restaurant.id}-${imgSize}w.jpg ${idx + 1}x`)
+        srcsetVal.push(`img/${imgId}-${imgSize}w.jpg ${idx + 1}x`)
       }
       img.setAttribute('data-srcset', srcsetVal.join(', '));
     }
 
     if (sizesQuery.length > 0) {
       img.setAttribute('sizes', sizesQuery);
-    }  //i may want to rewrite this to accommodate 'w' instead of 'x'    
+    } //i may want to rewrite this to accommodate 'w' instead of 'x'    
 
     return img;
 
   }
 
   /**
-  * Generate <picture> tags 
-  */
+   * Generate <picture> tags 
+   */
   static generatePictureHTML(restaurant, imgSizes, queries = []) {
 
     /*  Sample inputs
@@ -78,8 +85,8 @@ class HTMLHelper {
   }
 
   /**
-  * Re-configure the order and focusability of Google Maps elements
-  */
+   * Re-configure the order and focusability of Google Maps elements
+   */
   static setMapTabOrder(map) {
     // I may need to move the tabindex value to 1 for non-map elements
     google.maps.event.addListener(map, 'tilesloaded', () => {
@@ -124,10 +131,10 @@ class HTMLHelper {
 //==========================================================
 
 /*
-*
-*  MODAL WINDOW
-*
-*/
+ *
+ *  MODAL WINDOW
+ *
+ */
 
 const modalBtns = document.body.querySelectorAll('.btn-trigger-modal');
 const modalOverlay = document.body.querySelector('#modal-overlay');
@@ -182,8 +189,7 @@ function openModalWindow(modalWrapper) {
           lastTabStop.focus();
 
         }
-      }
-      else {
+      } else {
         //TAB
 
         if (document.activeElement === lastTabStop) {
