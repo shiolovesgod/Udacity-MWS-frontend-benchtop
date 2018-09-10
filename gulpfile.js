@@ -107,7 +107,7 @@ gulp.task('default', gulp.parallel('copy-skeleton', 'build-css','styles', 'scrip
   console.log('now my watch has ended');
   server.init({
     server: {
-      https: true,
+      // https: true,
       baseDir: './build'
     }
   });

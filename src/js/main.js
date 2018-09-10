@@ -24,8 +24,8 @@ var isMapVisible = false;
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   console.log('DOM Content loaded');
-  fetchNeighborhoods();
-  fetchCuisines();
+  // fetchNeighborhoods();
+  // fetchCuisines();
   console.log('Fetch complete');
 });
 
@@ -146,6 +146,7 @@ function toggleMap() {
 /**
  * Update page and map for current restaurants.
  */
+var updateRestaurantCount =  0;
 updateRestaurants = () => {
   const cSelect = document.body.querySelector('#cuisines-select');
   const nSelect = document.body.querySelector('#neighborhoods-select');
@@ -160,13 +161,15 @@ updateRestaurants = () => {
   self.selectedNeighborhood = neighborhood;
 
   DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
-    if (error) { // Got an error!
+    if (error || !restaurants || restaurants.length < 1) { // Got an error!
       console.error(error);
     } else {
       resetRestaurants(restaurants);
       fillRestaurantsHTML();
     }
   })
+  updateRestaurantCount++;
+  console.log(`Update Restaurants has run: ${updateRestaurantCount} times`)
 }
 
 /**
@@ -188,6 +191,11 @@ resetRestaurants = (restaurants) => {
  * Create all restaurants HTML and add them to the webpage.
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
+
+  if (!restaurants || restaurants.length < 1) {
+    cosole.log("There aren't any restaurants, somthing is wrong");
+  }
+
   const ul = document.body.querySelector('.restaurants-list');
   restaurants.forEach((restaurant, idx) => {
     ul.append(createRestaurantHTML(restaurant));
@@ -276,7 +284,9 @@ createRestaurantHTML = (restaurant) => {
 
   const address = document.createElement('p');
 
-  address.innerHTML = restaurant.address.replace(", ", "<br>");
+  if (restaurant.address){
+    address.innerHTML = restaurant.address.replace(", ", "<br>");
+  } 
   text_wrapper.appendChild(address);
 
   content_wrapper.appendChild(text_wrapper);

@@ -2,12 +2,9 @@
  * Common database helper functions.
  */
 
-const DB_PROMISED = idb.open('restreviews-db', 1, upgradeDB => {
-  switch (upgradeDB.oldVersion) {
-    case 0:
-      upgradeDB.createObjectStore('reviews');
-  }
-});
+
+
+
 
 class DBHelper {
 
@@ -17,29 +14,88 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337; // Change this to your server port
-    return `https://localhost:${port}`;  //DEV only, need to change in production
+    return `http://localhost:${port}`;  //DEV only, need to change in production
   }
 
   static get dbPromised() {
     return DB_PROMISED;
   }
 
+  static getDBResource(callback, url) {
+
+    //validate dat
+    if (!url) {
+      console.log('EMPTY Request sent to the Worker');
+      callback('There was not information in request.',[]);
+      return;
+    } else if (typeof(url) != 'string') {
+      console.log('WRONG TYPE OF Request sent to the Worker');
+      callback(`Data was of type: ${typeof(url)} instead of string `,[]);
+      return;
+
+    }
+ 
+    //If browser supports window worker
+    if (window.Worker) {
+      console.log('WebWorker ativated')
+
+      let dbWorker = new Worker('./js/dbWorker.js');
+      
+      dbWorker.postMessage({request: url});
+
+      dbWorker.onmessage = (msg) => {
+        if (!msg.data.response && !msg.data.error) {
+          callback('something is wrong with the web worker...sorry', undefined);
+          return
+        }
+
+        callback(msg.data.error, msg.data.response);
+        console.log(`Web Worker is done in: ${msg.data.timeElapsed} seconds?`)
+      }
+
+    } else {
+      //I will need a plan b
+      console.log('new paln, who dis?')
+
+    }
+
+  }
+
+
 
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    DBHelper._handleDBfetch(callback);
+    DBHelper.getDBResource(callback,'restaurants/');
   }
+
+  /**
+   * Fetch all reviews.
+   */
+  static fetchAllReviews(callback) {
+    DBHelper.getDBResource(callback,'reviews/');
+  }
+
 
   /**
    * Fetch a restaurant by its ID.
    */
-  static fetchRestaurantById(id, callback) {
+  static fetchRestaurantById(rest_id, callback) {
 
     // fetch all restaurants with proper error handling.
-    DBHelper._handleDBfetch(callback, id);
+    DBHelper.getDBResource(callback, `restaurants/${rest_id}`);
   }
+
+  /**
+   * Fetch a reviews by restaurant id
+   */
+  static fetchReviewsByRestaurantId(rest_id, callback) {
+
+    // fetch all restaurants with proper error handling.
+    DBHelper.getDBResource(callback, `reviews?restaurant_id=${rest_id}`);
+  }
+
 
 
 
@@ -48,7 +104,7 @@ class DBHelper {
    */
   static fetchRestaurantByCuisine(cuisine, callback) {
     // Fetch all restaurants  with proper error handling
-    DBHelper.fetchRestaurants((error, restaurants) => {
+    DBHelper.getDBResource((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
@@ -56,7 +112,7 @@ class DBHelper {
         const results = restaurants.filter(r => r.cuisine_type == cuisine);
         callback(null, results);
       }
-    });
+    },'restaurants');
   }
 
   /**
@@ -64,7 +120,7 @@ class DBHelper {
    */
   static fetchRestaurantByNeighborhood(neighborhood, callback) {
     // Fetch all restaurants
-    DBHelper.fetchRestaurants((error, restaurants) => {
+    DBHelper.getDBResource((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
@@ -72,15 +128,28 @@ class DBHelper {
         const results = restaurants.filter(r => r.neighborhood == neighborhood);
         callback(null, results);
       }
-    });
+    },'restaurants');
   }
 
   /**
    * Fetch restaurants by a cuisine and a neighborhood with proper error handling.
    */
   static fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, callback) {
-    // Fetch all restaurants
-    DBHelper.fetchRestaurants((error, restaurants) => {
+    // let urlString = 'restaurants'; 
+    // let queryFlag = false; 
+    // if (cuisine != 'all') {
+    //   urlString+= `&cuisine_type=${cuisine}`;
+    //   queryFlag = true;
+    // }
+    // if (neighborhood != 'all') {
+    //   urlString += `&neighborhood=${neighborhood}`;
+    //   queryFlag = true;
+    // }
+
+    // Fetch all restaurants (can be optimized using index)
+    //This code is redundant and needs improvement
+
+    DBHelper.getDBResource((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
@@ -93,7 +162,7 @@ class DBHelper {
         }
         callback(null, results);
       }
-    });
+    }, '/restaurants');
   }
 
   /**
@@ -101,7 +170,7 @@ class DBHelper {
    */
   static fetchNeighborhoods(callback) {
     // Fetch all restaurants
-    DBHelper.fetchRestaurants((error, restaurants) => {
+    DBHelper.getDBResource((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
@@ -119,7 +188,7 @@ class DBHelper {
    */
   static fetchCuisines(callback) {
     // Fetch all restaurants
-    DBHelper.fetchRestaurants((error, restaurants) => {
+    DBHelper.getDBResource((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
@@ -138,6 +207,11 @@ class DBHelper {
   static urlForRestaurant(restaurant) {
     return (`./restaurant.html?id=${restaurant.id}`);
   }
+
+  static urlForReview(review) {
+    return (`./restaurant.html?id=${review.restaurant_id}#review${review.id}`);
+  }
+
 
   /**
    * Restaurant image URL.
@@ -183,83 +257,28 @@ class DBHelper {
   }
 
 
-
-  static _handleDBfetch(callback, id) {
-
-    let fetchURL = `${DBHelper.DATABASE_URL}/restaurants`;
-
-    if (id) fetchURL = fetchURL + `/${id}`;
-
-    //Get the ID from the url
-    const dbReviewsPromised = DBHelper._getDbReview(id);
-
-    dbReviewsPromised.then(dbReviewsCached => {
-
-      //If you find the db fetch, use it
-      if (!id && dbReviewsCached) callback(null, dbReviewsCached);
-
-      let xhr = new XMLHttpRequest();
-      xhr.open('GET', fetchURL);
-      xhr.onload = () => {
-        if (xhr.status == 200) {
-          const restaurants = JSON.parse(xhr.responseText);
-
-          if (!id) {
-            //update the items in the idb
-            restaurants.forEach(rest => {
-              DBHelper._putDbReview(rest)
-            });
-          }
-
-          //run the callback
-          callback(null, restaurants);
-        } else if (dbReviewsCached) {
-          callback(null, dbReviewsCached);
-        } else {
-          let err = '';
-          if (id) {
-            err = 'Restaurant does not exist';
-          } else {
-            err = `Request failed and review(s) not cached. Returned status of ${xhr.status}`;
-          }
-
-          callback(err, null);
-        }
-      }
-      xhr.send();
+}
 
 
-    })
-
-
-  }
-
-  static _getDbReview(id) {
-    return DBHelper.dbPromised.then(db => {
-      const tx = db.transaction('reviews');
-
-      const reviewTable = tx.objectStore('reviews');
-
-      if (id) {
-        return reviewTable.get(parseInt(id));
-      } else {
-        return reviewTable.getAll();
-      }
-    })
-
-  }
-
-  static _putDbReview(review) {
-    //returns true if success, false if fails
-    return DBHelper.dbPromised.then(db => {
-      const tx = db.transaction('reviews', 'readwrite');
-      const reviewTable = tx.objectStore('reviews');
-      reviewTable.put(review, parseInt(review.id));
-
-      return tx.complete;
-    }).then(() => true).catch(() => false)
-
-  }
-
+function WebWorkerPolyfill() {
+  const DB_PROMISED = idb.open('restreviews-db', 2, upgradeDB => {
+    switch (upgradeDB.oldVersion) {
+      case 1: 
+        upgradeDB.deleteObjectStore('reviews'); //format has changed
+        break;
+      case 0:
+        // upgradeDB.createObjectStore('reviews'); //don't do this
+    }
+  
+    //Create a new object store with a different format
+    var reviewStore = upgradeDB.createObjectStore('reviews');
+    reviewStore.createIndex('restaurant_id', ['restaurant_id','created_at'], {unique: false});
+    reviewStore.createIndex('created_at','created_at',{unique:false});
+  
+    var restStore = upgradeDB.createObjectStore('restaurants');
+    restStore.createIndex('neighborhood','neighborhood',{unique: false});
+    restStore.createIndex('name', 'name', {unique:false});
+  });
+  
 
 }

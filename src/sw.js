@@ -3,7 +3,7 @@
  */
 
 //Define cache variables
-const CACHED_DIRS = ['/', '/js/', '/css/', '/css/third-party/', '/img/*', '/data/', '/icon/'];
+const CACHED_DIRS = ['/', '/js/', '/css/', '/css/third-party/', '/img/*', '/icon/'];
 const rCACHED_DIRS = CACHED_DIRS.map(dir => {
   return new RegExp(`^${dir.split('*').join('.*')}$`)
 });
@@ -13,10 +13,9 @@ const EXT_CACHED = ['https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFC
   'https://fonts.gstatic.com/s/vidaloka/v9/7cHrv4c3ipenMKlEavs7wH8Dnzcj.woff2',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
   'https://maps.googleapis.com/maps-api-v3/api/js/33/3/stats.js',
-  'http://localhost:8000/data/restaurants.json', //most likely hosted elsewhere in future
 ];
 
-const CORE_CACHE_NAME = 'restreviews-static-v2';
+const CORE_CACHE_NAME = 'restreviews-static-v3';
 const IMG_CACHE_NAME = 'restreviews-imgs-v2';
 var allCaches = [CORE_CACHE_NAME, IMG_CACHE_NAME];
 

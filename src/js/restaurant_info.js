@@ -24,18 +24,29 @@ window.initMap = () => {
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
 
-      
-    //Set review form restaurant ID & name
-    initializeRestaurantForm(self.restaurant);
+
+      //Set review form restaurant ID & name
+      initializeRestaurantForm(self.restaurant);
     }
 
     // Remove tab index from map items after tiles have been loaded 
     HTMLHelper.setMapTabOrder(self.map);
 
   });
+  // this runs twice!
+  fetchReviewsFromURL((error, reviews) => {
 
+    if (error) {
+      console.error(error);
+    } else {
+      self.reviews = reviews;
+    }
+  });
 
 }
+
+
+
 
 /**
  * Get current restaurant from page URL.
@@ -47,48 +58,88 @@ fetchRestaurantFromURL = (callback) => {
   }
   const id = getParameterByName('id');
   if (!id) { // no id found in URL
-    error = 'No restaurant id in URL'
+    error = 'No restaurant id in URL';
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+    DBHelper.getDBResource((error, restaurant) => {
+      if (Array.isArray(restaurant)) restaurant = restaurant[0];
       self.restaurant = restaurant;
       if (!restaurant) {
         console.error(error);
         return;
       }
+      
       fillRestaurantHTML();
       callback(null, restaurant)
-    });
+    },`restaurants/${id}`); 
   }
 }
+
+/**
+ * Get current reviews for restaurant.
+ */
+var loadedFlag = false;
+fetchReviewsFromURL = (callback) => {
+  if (self.reviews) { // reviews already fetched!
+    callback(null, self.reviews)
+    return;
+  }
+  const id = getParameterByName('id');
+  if (!id) { // no id found in URL
+    error = 'No restaurant id in URL';
+    callback(error, null);
+  } else {
+    DBHelper.getDBResource((error, reviews) => {
+      self.reviews = reviews;
+      if (!reviews) {
+        console.error(error);
+        return;
+      }
+      if (!loadedFlag) {
+
+        fillReviewsHTML(reviews);
+      }
+      loadedFlag=true;
+      callback(null, reviews)
+    },`restaurants/${id}`);
+  }
+}
+
 
 /**
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.body.querySelector('.restaurant-name');
-  name.innerHTML = restaurant.name;
+  name.appendChild(cleanInput(restaurant.name));
 
   const address = document.body.querySelector('.restaurant-address');
-
+  
+  if (restaurant.address){
   //Add a soft break before state + zip (without RegEx)
-  const addressStr_pre = restaurant.address.split("").reverse().join("").replace(",", " >rbw<,").split("").reverse().join("");
-  address.innerHTML = addressStr_pre;
+    const addressStr_pre = restaurant.address.split("").reverse().join("").replace(",", " >rbw<,").split("").reverse().join("");
+    address.innerHTML = addressStr_pre; 
+  } else {
+    address.innerText = 'Address not listed';
+  }
 
   const image_wrapper = document.body.querySelector('.restaurant-img-wrapper');
-  const picture = HTMLHelper.generatePictureHTML(restaurant, [[400, 800], [200, 400, 600], [400]], ['(min-width:300px)','']);
+  const picture = HTMLHelper.generatePictureHTML(restaurant, [
+    [400, 800],
+    [200, 400, 600],
+    [400]
+  ], ['(min-width:300px)', '']);
   picture.querySelector('img').classList.add('restaurant-img');
   image_wrapper.appendChild(picture);
 
   const cuisine = document.body.querySelector('.restaurant-cuisine');
-  cuisine.innerHTML = restaurant.cuisine_type;
+  cuisine.appendChild(cleanInput(restaurant.cuisine_type));
 
   // fill operating hours
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
+
 }
 
 /**
@@ -102,13 +153,13 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     const day = document.createElement('th');
     day.setAttribute('scope', 'row');
     day.className = 'hours-day';
-    day.innerHTML = key;
+    day.appendChild(cleanInput(key));
     row.appendChild(day);
 
     const timeList = document.createElement('ul');
     for (let timeRange of operatingHours[key].split(",")) {
       const timeItem = document.createElement('li');
-      timeItem.innerHTML = timeRange.trim();
+      timeItem.appendChild(cleanInput(timeRange.trim()));
       timeList.appendChild(timeItem);
     }
 
@@ -116,7 +167,6 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     time.className = 'hours-time';
     time.appendChild(timeList);
     row.appendChild(time);
-
     tbody.appendChild(row);
   }
   hours.appendChild(tbody);
@@ -125,7 +175,11 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews = self.reviews) => {
+
+  if (!Array.isArray(reviews)) reviews = [reviews];
+
+  console.log("Filling the Reviews")
   const container = document.body.querySelector('.reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
@@ -147,17 +201,26 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 /**
  * Create review HTML and add it to the webpage.
  */
+
+ function cleanInput(stringInput) {
+   return document.createTextNode(unescape(stringInput));
+ };
+
 createReviewHTML = (review) => {
+  console.log("I'm writing it")
+  console.log(review);
   const li = document.createElement('li');
+  li.setAttribute('id', `rNo${parseInt(review.id)}`);;
   const name = document.createElement('h3');
-  name.innerHTML = review.name;
+  name.appendChild(cleanInput(review.name));
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  const dateObj = new Date(review.updatedAt);
+  const dateStrFormatted  = `${moment(dateObj).calendar()}`;//(${moment(dateObj).fromNow()})
+
+  date.appendChild(cleanInput(dateStrFormatted));
   li.appendChild(date);
-
-
 
   const rating_wrapper = document.createElement('div');
   rating_wrapper.className = 'rating';
@@ -165,13 +228,13 @@ createReviewHTML = (review) => {
   const ratingIcon = document.createElement('p');
   ratingIcon.innerHTML = DBHelper.rating2stars(review.rating);
   ratingIcon.className = 'rating-stars';
-  ratingIcon.setAttribute('aria-hidden','true');
+  ratingIcon.setAttribute('aria-hidden', 'true');
   rating_wrapper.append(ratingIcon);
 
   const ratingText = document.createElement('p');
-  ratingText.innerHTML = `${review.rating} Stars`;
+  ratingText.appendChild(cleanInput(`${escape(review.rating)} Stars`));
   ratingText.className = 'rating-text';
-  ratingText.setAttribute('aria-label',`User rating ${ratingText.innerHTML}`);
+  ratingText.setAttribute('aria-label', `User rating ${ratingText.innerText}`);
   rating_wrapper.append(ratingText);
 
   li.append(rating_wrapper);
@@ -180,18 +243,18 @@ createReviewHTML = (review) => {
   const comments = document.createElement('p');
   comments.className = "review-comments";
   comments.classList.add("fade-ellipsis");
-  comments.innerHTML = review.comments;
+  comments.appendChild(cleanInput(review.comments));
   comments.setAttribute("tabindex", 0);
 
   //Add listeners if the user clicks or presses key down on element
   comments.addEventListener("click", function toggleEllispis(event) {
     event.target.classList.toggle("fade-ellipsis");
   })
-    
-  comments.addEventListener("keydown", (e)=>{
+
+  comments.addEventListener("keydown", (e) => {
     if (e.keyCode == 13 || e.keyCode == 32) {
       e.preventDefault();
-        event.target.classList.toggle("fade-ellipsis");
+      event.target.classList.toggle("fade-ellipsis");
     }
   });
 
@@ -208,10 +271,10 @@ fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.querySelector('.breadcrumb');
   const li = document.createElement('li');
   const a = document.createElement('a');
-    a.innerHTML = restaurant.name;
-    a.href=`./restaurant.html?id=${restaurant.id}`;
-    a.className = 'current-page';
-    a.setAttribute('aria-current','page');
+  a.appendChild(cleanInput(restaurant.name));
+  a.href = `./restaurant.html?id=${parseInt(restaurant.id)}`;
+  a.className = 'current-page';
+  a.setAttribute('aria-current', 'page');
   li.append(a);
 
   breadcrumb.appendChild(li);
@@ -237,7 +300,7 @@ getParameterByName = (name, url) => {
 //================================================================
 //FORM FUNCTIONALITY
 //================================================================
-document.addEventListener("DOMContentLoaded", function(event) { 
+document.addEventListener("DOMContentLoaded", function (event) {
   //do work
 });
 
@@ -245,10 +308,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
  * FORM JS
  */
 
- try{
-   //throws an error if already exists
-   const backendBaseURI = (window.DBHelper) ? DBHelper.DATABASE_URL : 'https://localhost:1337';
- } finally{ }
+try {
+  //throws an error if already exists
+  const backendBaseURI = (window.DBHelper) ? DBHelper.DATABASE_URL : 'http://localhost:1337';
+} finally {}
 
 const star0 = document.body.querySelector('#star0');
 const star1 = document.body.querySelector('#star1');
@@ -304,8 +367,6 @@ function validateReview(e) {
     return false;
   }
 
-  output.innerText = `Rating: ${rating} Stars`;
-
   //GET RESTAURANT ID
   if (!reviewForm.restaurant_id.value) //set by me
   {
@@ -324,6 +385,8 @@ function validateReview(e) {
 
 //Post to back end
 function postReview(formData) {
+
+  if (!self.backendBaseURI) backendBaseURI = DBHelper.DATABASE_URL;
 
   fetch(`${backendBaseURI}/reviews`, {
     method: 'POST',
