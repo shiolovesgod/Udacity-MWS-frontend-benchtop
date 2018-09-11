@@ -35,7 +35,6 @@ window.initMap = () => {
   });
   // this runs twice!
   fetchReviewsFromURL((error, reviews) => {
-
     if (error) {
       console.error(error);
     } else {
@@ -96,12 +95,11 @@ fetchReviewsFromURL = (callback) => {
         return;
       }
       if (!loadedFlag) {
-
         fillReviewsHTML(reviews);
       }
       loadedFlag=true;
       callback(null, reviews)
-    },`restaurants/${id}`);
+    },`reviews/?restaurant_id=${id}`);
   }
 }
 
@@ -123,20 +121,24 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     address.innerText = 'Address not listed';
   }
 
-  const image_wrapper = document.body.querySelector('.restaurant-img-wrapper');
-  const picture = HTMLHelper.generatePictureHTML(restaurant, [
-    [400, 800],
-    [200, 400, 600],
-    [400]
-  ], ['(min-width:300px)', '']);
-  picture.querySelector('img').classList.add('restaurant-img');
-  image_wrapper.appendChild(picture);
+  if (restaurant.photograph) {
+    const image_wrapper = document.body.querySelector('.restaurant-img-wrapper');
+    const picture = HTMLHelper.generatePictureHTML(restaurant, [
+      [400, 800],
+      [200, 400, 600],
+      [400]
+    ], ['(min-width:300px)', '']);
+    picture.querySelector('img').classList.add('restaurant-img');
+    image_wrapper.appendChild(picture);
+  }
 
-  const cuisine = document.body.querySelector('.restaurant-cuisine');
-  cuisine.appendChild(cleanInput(restaurant.cuisine_type));
+  if (restaurant.cuisine_type){
+    const cuisine = document.body.querySelector('.restaurant-cuisine');
+    cuisine.appendChild(cleanInput(restaurant.cuisine_type));
+  }
 
   // fill operating hours
-  if (restaurant.operating_hours) {
+  if (restaurant.operating_hours) { 
     fillRestaurantHoursHTML();
   }
 
@@ -184,8 +186,8 @@ fillReviewsHTML = (reviews = self.reviews) => {
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
-
-  if (!reviews) {
+ 
+  if (reviews.length < 1 || !reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
     container.appendChild(noReviews);

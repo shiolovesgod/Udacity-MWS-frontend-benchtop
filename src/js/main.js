@@ -231,6 +231,12 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 /**
  * Create restaurant HTML.
  */
+
+function cleanInput(stringInput) {
+  return document.createTextNode(unescape(stringInput));
+};
+
+
 createRestaurantHTML = (restaurant) => {
 
   const li = document.createElement('li');
@@ -239,7 +245,7 @@ createRestaurantHTML = (restaurant) => {
 
 
   const name = document.createElement('h1');
-  name.innerHTML = restaurant.name;
+  name.appendChild(cleanInput(restaurant.name));
   name.className = 'restaurant-name';
   a_wrapper.appendChild(name);
 
@@ -270,8 +276,8 @@ createRestaurantHTML = (restaurant) => {
   rating_wrapper.appendChild(ratingIcon);
 
   const nReviews = document.createElement('p');
-  const review_count = 
-  nReviews.innerHTML = restaurant.total_reviews ?  `${restaurant.total_reviews} Reviews`: 'No Reviews';
+  const reviewCount = restaurant.total_reviews ?  `${restaurant.total_reviews} Reviews`: 'No Reviews Yet';
+  nReviews.appendChild(cleanInput(reviewCount));
   nReviews.className = 'review-count';
   rating_wrapper.appendChild(nReviews);
 
@@ -279,16 +285,21 @@ createRestaurantHTML = (restaurant) => {
 
 
   const neighborhood = document.createElement('p');
-  neighborhood.innerHTML = restaurant.neighborhood;
-  text_wrapper.appendChild(neighborhood);
+  if (restaurant.neighborhood)
+  {
+    neighborhood.appendChild(cleanInput(restaurant.neighborhood));
+    text_wrapper.appendChild(neighborhood);
+  }
 
   const address = document.createElement('p');
 
   if (restaurant.address){
+    //don't let user define address via textbox
     address.innerHTML = restaurant.address.replace(", ", "<br>");
-  } 
+  } else {
+    address.innerText = 'Address not listed';
+  }
   text_wrapper.appendChild(address);
-
   content_wrapper.appendChild(text_wrapper);
 
   //mainly for different screen density
