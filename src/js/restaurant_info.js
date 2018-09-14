@@ -312,7 +312,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 try {
   //throws an error if already exists
-  const backendBaseURI = (window.DBHelper) ? DBHelper.DATABASE_URL : 'http://localhost:1337';
+  const backendBaseURI = (window.DBHelper) ? DBHelper.DATABASE_URL : 'http://localhost:1337/';
 } finally {}
 
 const star0 = document.body.querySelector('#star0');
@@ -329,7 +329,7 @@ reviewForm.onsubmit = validateReview;
 
 function initializeRestaurantForm(rest = self.restaurant) {
   //Set ID field
-  reviewForm.restaurant_id = rest.id;
+  reviewForm.restaurant_id.value = rest.id;
 
   //Change restaurant name
   formSubtitle.innerText = rest.name;
@@ -390,7 +390,7 @@ function postReview(formData) {
 
   if (!self.backendBaseURI) backendBaseURI = DBHelper.DATABASE_URL;
 
-  fetch(`${backendBaseURI}/reviews`, {
+  fetch(`${backendBaseURI}reviews`, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -405,6 +405,9 @@ function postReview(formData) {
 
     //This should be a redirect from the backend if this works
     console.log(`New Review from ${unescape(review.name)} created.`); //user information
+    window.location.replace(`${window.location}#${review.id}`);
+    location.reload(true);
+
 
   }).catch(err => {
     //Let the user know what went wrong (in a hidden dialog box)
