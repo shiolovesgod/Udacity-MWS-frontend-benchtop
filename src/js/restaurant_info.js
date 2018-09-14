@@ -312,7 +312,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 try {
   //throws an error if already exists
-  const backendBaseURI = (window.DBHelper) ? DBHelper.DATABASE_URL : 'http://localhost:1337/';
+  const backendBaseURI = (window.DBHelper) ? DBHelper.DATABASE_URL : 'http://localhost:1337';
 } finally {}
 
 const star0 = document.body.querySelector('#star0');
@@ -376,9 +376,20 @@ function validateReview(e) {
     return false;
   }
 
-  let formData = form2object(reviewForm);
+  let formData = form2object(reviewForm, ['name', 'restaurant_id', 'comments', 'rating']);
+
+  //close the form 
+  modalOverlay.click();
   //Escape before submitting to backend?
-  postReview(formData);
+  // postReview(formData);
+
+  DBHelper._addUserReview(formData, (res) => {
+    console.log('Top Level Response: ');
+    console.log(res);
+    //yes, 
+    //no, 
+    //maybe
+  })
 
   return false;
 }
@@ -390,7 +401,7 @@ function postReview(formData) {
 
   if (!self.backendBaseURI) backendBaseURI = DBHelper.DATABASE_URL;
 
-  fetch(`${backendBaseURI}reviews`, {
+  fetch(`${backendBaseURI}/reviews`, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -412,7 +423,7 @@ function postReview(formData) {
   }).catch(err => {
     //Let the user know what went wrong (in a hidden dialog box)
 
-    authErrHandler(err, formError);
+    DBHelper.serverErrHandler(err, formError);
     formError.classList.add("invalid");
   });
 }
@@ -423,11 +434,14 @@ function postReview(formData) {
 //REUSABLE FORM & DB FUNCTIONS
 //.........................................................
 
-function form2object(form) {
+function form2object(form, fields2keep) {
   let formData = {};
   let formElements = form.elements;
 
   for (let i = 0; i < formElements.length; i++) {
+
+    if (fields2keep && fields2keep.indexOf(formElements[i].name) < 0) continue
+
     let fieldName = formElements[i].name ? formElements[i].name : `field${i}`;
     formData[fieldName] = escape(formElements[i].value);
   }

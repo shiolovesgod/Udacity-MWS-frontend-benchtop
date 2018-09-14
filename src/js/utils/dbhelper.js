@@ -28,6 +28,8 @@ const DB_PROMISED = idb.open('restreviews-db', 2, upgradeDB => {
   });
 });
 
+const cachedDBItems = [];
+
 class DBHelper {
 
   /**
@@ -36,7 +38,7 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337; // Change this to your server port
-    return `http://localhost:${port}/`; //DEV only, need to change in production
+    return `http://localhost:${port}`; //DEV only, need to change in production
   }
 
   static get dbPromised() {
@@ -269,7 +271,7 @@ class DBHelper {
   static _handleDBFetch(callback, urlPath) {
 
     let callbackSent = false;
-    let fetchURL = `${DBHelper.DATABASE_URL}${urlPath}`.replace(/([^:]\/)\/+/g, "$1");
+    let fetchURL = `${DBHelper.DATABASE_URL}/${urlPath}`.replace(/([^:]\/)\/+/g, "$1");
 
     //FIRST: Parse Input
     let opts = DBHelper._parseURLInput(fetchURL);
@@ -337,6 +339,106 @@ class DBHelper {
 
   }
 
+  static _addUserReview(formData, cb) { 
+    //Notify user with callback, (errMsg, successMsg);
+
+    //Save the review to idb (autogenerate ID) and send user success
+    let formDataDB = formData;
+    var tempId = `-${cachedDBItems.length+1}`;
+    var userNotification = '';
+    formDataDB.id = tempId;
+
+  
+    DBHelper._putDBItem(formDataDB,'reviews');
+
+    //Check to see if use is online
+    if (navigator.onLine) {
+
+      DBHelper._postUserReview(formDataDB, (res)=>{
+        if (res.ok) {
+          userNotification = 'Success';
+          cb({status: 'success', message: 'Review Posted.'});
+        } else {
+          userNotification = 'Failure'
+          cb({status: 'failure', message: res.body});
+        } 
+
+      });
+
+    } else {
+
+      //Queue it to send later, and notify user
+      userNotification = 'Later';
+
+      cb({status: 'waiting', message: 'Currently offline, request queued'});
+
+    }
+
+  }
+
+  static _postUserReview(formDataDB, cb) {
+
+    fetch(`${DBHelper.DATABASE_URL}/reviews`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: JSON.stringify(formDataDB),
+    }).then(res => {
+  
+      if (!res.ok) throw res;
+      return res.json();
+    }).then(review => {
+      //Replace the idb review with an updated version (quietly)
+      DBHelper._replaceDBReview(formDataDB.id, review);
+
+      //Send user success message
+      cb({ok: true, status: 200, body: review});
+
+    }).catch( err => {
+
+      //let user know error
+      console.log(err);
+      cb(DBHelper.serverErrHandler(err));
+
+    });
+
+    
+  }
+
+  static serverErrHandler(errRes, msgDiv) {
+    //errRes is what comes from the SAILS backend
+    //Parse detailed error message
+  
+    if (errRes.status) { //err from backend
+      errRes.text().then(errMessage => {
+        switch (errRes.status) {
+          case 401: //wrong password
+          case 403: //user authenticated using another platform/method
+          case 404: //user not found
+          default: //another error
+  
+            if (msgDiv) {
+              msgDiv.innerHTML = errMessage; //pring to a div
+            } else {
+
+              console.log(`ERR ${errRes.status}: ${errMessage}`); //print to console
+              return {ok: false, status: errRes.status, body: errMessage};
+            }
+        }
+      });
+  
+    } else { //not a backend error
+      if (msgDiv) {
+        msgDiv.innerHTML = errRes;
+      } else {
+        console.log(errRes);
+      }
+  
+    }
+  }
+
   //convert request URL for restaurant or review to JSON
   static _parseURLInput(urlString) {
 
@@ -382,9 +484,6 @@ class DBHelper {
 
   }
 
-
-
-
   static _getDBItem(store_name, value, index_name) {
     return DBHelper.dbPromised.then(db => {
       const tx = db.transaction(store_name);
@@ -395,13 +494,13 @@ class DBHelper {
       //modify in the event of an index based search
       if (index_name) {
         dbIdx = dbTable.index(index_name);
-      } else {
-        value = parseInt(value);
       }
+
+      value = isNaN(parseInt(value)) ? value : parseInt(value);
 
       //Retrieve single value or entire table
       if (value) {
-        return dbIdx.getAll(value);
+        return dbIdx.getAll(parseInt(value));
       } else {
         return dbIdx.getAll();
       }
@@ -412,7 +511,7 @@ class DBHelper {
 
   static _putDBItem(entry, store_name) {
     //returns true if success, false if fails
-    return DB_PROMISED.then(db => {
+    return DBHelper.dbPromised.then(db => {
       const tx = db.transaction(store_name, 'readwrite');
       const reviewTable = tx.objectStore(store_name);
       reviewTable.put(entry, parseInt(entry.id));
@@ -420,6 +519,24 @@ class DBHelper {
       return tx.complete;
     }).then(() => true).catch(() => false)
 
+  }
+
+  static _replaceDBReview(old_id, new_entry) {
+    return DBHelper.dbPromised.then( db => {
+      const tx = db.transaction('reviews', 'readwrite');
+      const reviewTable = tx.objectStore('reviews');
+      reviewTable.delete(old_id);
+      reviewTable.put(new_entry, parseInt(new_entry.id));
+
+      return tx.complete;
+    }).then(()=> {
+      console.log(`It's replacesd`)
+     return true
+
+    }).catch((err) => {
+      console.log('Not replaced');
+      return false;
+    });
   }
 
 
