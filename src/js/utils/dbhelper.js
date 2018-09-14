@@ -23,7 +23,7 @@ class DBHelper {
 
   static getDBResource(callback, url) {
 
-    //validate dat
+    //validate url
     if (!url) {
       console.log('EMPTY Request sent to the Worker');
       callback('There was not information in request.',[]);
@@ -32,8 +32,8 @@ class DBHelper {
       console.log('WRONG TYPE OF Request sent to the Worker');
       callback(`Data was of type: ${typeof(url)} instead of string `,[]);
       return;
-
     }
+
  
     //If browser supports window worker
     if (window.Worker) {
@@ -44,6 +44,7 @@ class DBHelper {
       dbWorker.postMessage({request: url});
 
       dbWorker.onmessage = (msg) => {
+        
         if (!msg.data.response && !msg.data.error) {
           callback('something is wrong with the web worker...sorry', undefined);
           return

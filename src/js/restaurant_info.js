@@ -108,6 +108,9 @@ fetchReviewsFromURL = (callback) => {
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
+
+  if (!restaurant) debugger;
+
   const name = document.body.querySelector('.restaurant-name');
   name.appendChild(cleanInput(restaurant.name));
 
@@ -329,7 +332,7 @@ reviewForm.onsubmit = validateReview;
 
 function initializeRestaurantForm(rest = self.restaurant) {
   //Set ID field
-  reviewForm.restaurant_id = rest.id;
+  reviewForm.restaurant_id.value = rest.id;
 
   //Change restaurant name
   formSubtitle.innerText = rest.name;
@@ -377,12 +380,12 @@ function validateReview(e) {
   }
 
   let formData = form2object(reviewForm);
+
   //Escape before submitting to backend?
   postReview(formData);
 
   return false;
 }
-
 
 
 //Post to back end
@@ -394,17 +397,19 @@ function postReview(formData) {
     method: 'POST',
     mode: 'cors',
     headers: {
-      'Content-Type': 'application/json; charset=utf-8'
+      'Content-Type': 'application/json; charset=utf-8',
     },
     body: JSON.stringify(formData),
   }).then(res => {
 
     if (!res.ok) throw res;
     return res.json();
-  }).then(review => {
+  }).then(review => { 
 
     //This should be a redirect from the backend if this works
     console.log(`New Review from ${unescape(review.name)} created.`); //user information
+ 
+    window.location.replace(`${window.location}#${review.id}`);
 
   }).catch(err => {
     //Let the user know what went wrong (in a hidden dialog box)
