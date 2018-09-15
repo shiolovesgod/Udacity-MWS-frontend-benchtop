@@ -167,7 +167,7 @@ updateRestaurants = () => {
   self.selectedNeighborhood = neighborhood;
 
   DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
-    if (error || !restaurants || restaurants.length < 1) { // Got an error!
+    if (error || !restaurants) { // Got an error! || restaurants.length < 1
       console.error(error);
     } else {
       resetRestaurants(restaurants);
@@ -201,9 +201,9 @@ resetRestaurants = (restaurants) => {
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
 
-  if (!restaurants || restaurants.length < 1) {
-    cosole.log("There aren't any restaurants, somthing is wrong");
-  }
+  // if (!restaurants || restaurants.length < 1) {
+  //   cosole.log("There aren't any restaurants, somthing is wrong");
+  // }
 
   const ul = document.body.querySelector('.restaurants-list');
   restaurants.forEach((restaurant, idx) => {
