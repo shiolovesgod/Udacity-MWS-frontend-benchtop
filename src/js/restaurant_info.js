@@ -446,6 +446,9 @@ function validateReview(e) {
       newReview.classList.add('pending')
       reviewsList.prepend(newReview);
 
+      //Reset form
+      resetReviewForm();
+
       //OLD PLAN: redirect and reload page (send notifiacation through session storage)
       // let currentURL = window.location.href.replace(window.location.hash, '');
       // window.location.replace(`${currentURL}#${res.review.id}`);
@@ -460,39 +463,16 @@ function validateReview(e) {
   return false;
 }
 
+function resetReviewForm () {
+  
+  star0.disabled = false;
+  star0.checked = true;
+  formError.innerText = "";
+  formError.classList.remove("invalid");
+  reviewForm.name.value = '';
+  reviewForm.comments.value = '';
 
-//Post to back end
-function postReview(formData) {
-
-  if (!self.backendBaseURI) backendBaseURI = DBHelper.DATABASE_URL;
-
-  fetch(`${backendBaseURI}/reviews`, {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8'
-    },
-    body: JSON.stringify(formData),
-  }).then(res => {
-
-    if (!res.ok) throw res;
-    return res.json();
-  }).then(review => {
-
-    //This should be a redirect from the backend if this works
-    console.log(`New Review from ${String(review.name)} created.`); //user information
-    window.location.replace(`${window.location}#${review.id}`);
-    location.reload(true);
-
-
-  }).catch(err => {
-    //Let the user know what went wrong (in a hidden dialog box)
-
-    DBHelper.serverErrHandler(err, formError);
-    formError.classList.add("invalid");
-  });
 }
-
 
 
 //.........................................................
@@ -513,32 +493,4 @@ function form2object(form, fields2keep) {
   return formData;
 }
 
-function authErrHandler(errRes, msgDiv) {
-  //errRes is what comes from the SAILS backend
-  //Parse detailed error message
 
-  if (errRes.status) { //err from backend
-    errRes.text().then(errMessage => {
-      switch (errRes.status) {
-        case 401: //wrong password
-        case 403: //user authenticated using another platform/method
-        case 404: //user not found
-        default: //another error
-
-          if (msgDiv) {
-            msgDiv.innerHTML = errMessage; //pring to a div
-          } else {
-            console.log(`ERR ${err.status}: ${errMessage}`); //print to console
-          }
-      }
-    });
-
-  } else { //not a backend error
-    if (msgDiv) {
-      msgDiv.innerHTML = errRes;
-    } else {
-      console.log(errRes);
-    }
-
-  }
-}
