@@ -173,6 +173,25 @@ class DBHelper {
     }, '/restaurants');
   }
 
+  static parseCuisines (restaurants) {
+    
+    const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type)
+    
+    // Remove duplicates from cuisines
+    const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i);
+    return uniqueCuisines;
+  }
+
+  static parseNeighborhoods (restaurants) {
+
+    const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood)
+    
+    // Remove duplicates from neighborhoods
+    const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)
+    return uniqueNeighborhoods;
+
+  }
+
   /**
    * Fetch all neighborhoods with proper error handling.
    */
@@ -188,7 +207,7 @@ class DBHelper {
         const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)
         callback(null, uniqueNeighborhoods);
       }
-    });
+    },'/restaurants');
   }
 
   /**
@@ -206,7 +225,7 @@ class DBHelper {
         const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i)
         callback(null, uniqueCuisines);
       }
-    });
+    },'/restaurants');
   }
 
   /**
@@ -293,11 +312,9 @@ class DBHelper {
         callbackSent = true;
       }
 
-      console.log("Na man, I'm good")
       let xhr = new XMLHttpRequest();
       xhr.open('GET', fetchURL);
       xhr.onload = () => {
-        console.log('I have an XHR update');
         if (xhr.status == 200) {
           const dbRecords = JSON.parse(xhr.responseText);
 
@@ -334,7 +351,6 @@ class DBHelper {
         }
       }
       xhr.send();
-      console.log("I sent an  XHR")
 
     })
 

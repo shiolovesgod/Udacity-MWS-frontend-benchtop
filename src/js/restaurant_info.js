@@ -209,8 +209,7 @@ function cleanInput(stringInput) {
 };
 
 createReviewHTML = (review) => {
-  console.log("I'm writing it")
-  console.log(review);
+  
   const li = document.createElement('li');
   li.setAttribute('id', `rNo${parseInt(review.id)}`);;
   const name = document.createElement('h3');

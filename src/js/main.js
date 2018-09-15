@@ -23,25 +23,18 @@ var isMapVisible = false;
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  console.log('DOM Content loaded');
-  // fetchNeighborhoods();
-  // fetchCuisines();
-  console.log('Fetch complete');
+  ///This is now done when the map is updated
 });
 
 
 /**
  * Fetch all neighborhoods and set their HTML.
  */
-fetchNeighborhoods = () => {
-  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
-    if (error) { // Got an error
-      console.error(error);
-    } else {
-      self.neighborhoods = neighborhoods;
-      fillNeighborhoodsHTML();
-    }
-  });
+fetchNeighborhoods = (restaurants = self.restaurants) => {
+  let neighborhoods = DBHelper.parseNeighborhoods(restaurants);
+  self.neighborhoods = neighborhoods;
+  fillNeighborhoodsHTML(neighborhoods);
+  
 }
 
 /**
@@ -60,15 +53,10 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
 /**
  * Fetch all cuisines and set their HTML.
  */
-fetchCuisines = () => {
-  DBHelper.fetchCuisines((error, cuisines) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      self.cuisines = cuisines;
-      fillCuisinesHTML();
-    }
-  });
+fetchCuisines = (restaurants) => {
+  let cuisines = DBHelper.parseCuisines(restaurants);
+  self.cuisines = cuisines;
+  fillCuisinesHTML(cuisines);
 }
 
 /**
@@ -117,8 +105,26 @@ window.initMap = () => {
   // Remove tab index from map items after tiles have been loaded 
   HTMLHelper.setMapTabOrder(self.map);
 
+  //Initialize the restaurants;
+  DBHelper.fetchRestaurants((err, restaurants) => {
 
-  updateRestaurants();
+    if (err) {
+      console.error('Could not fetch restaurants');
+      console.log(err);
+    }
+
+    //Fill page
+    self.restaurants = restaurants;
+    fillRestaurantsHTML();
+
+    //get neigborhoods and cuisines
+    fetchCuisines(restaurants);
+    fetchNeighborhoods(restaurants);
+
+  });
+  
+  //updateRestaurants(); //REPLACED by DBHelper.fetchRestaurants
+
   setMapSize(); //set initial map size
 
 }
@@ -168,6 +174,9 @@ updateRestaurants = () => {
       fillRestaurantsHTML();
     }
   })
+
+
+
   updateRestaurantCount++;
   console.log(`Update Restaurants has run: ${updateRestaurantCount} times`)
 }
