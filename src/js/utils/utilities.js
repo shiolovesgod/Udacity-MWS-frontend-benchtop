@@ -130,6 +130,41 @@ class HTMLHelper {
 //FRONT END FUNCTIONALITY
 //==========================================================
 
+//Offline listener
+
+window.addEventListener('online', syncWithBackend);
+
+window.addEventListener('offline', (e)=>{
+  //note is an object: {title, status, message}
+    //status = ['info', 'failure', 'success']
+  postNotification({title: 'Offline', status: 'info', message: 'You are offline.'});
+});
+
+function syncWithBackend(e) {
+  //this function is called when you are back online
+  postNotification({title: 'Online', status: 'success', message: 'Welcome back!'});
+
+  
+  //Process the DBQueue
+
+  DBQueue.forEach(req => {
+
+    //check if online
+    if (!navigator.onLine) break;
+
+  });
+
+  
+  //TO DO: Next iteration, this should be handled by a web worker
+
+
+}
+
+
+//==========================================================
+//FRONT END FUNCTIONALITY
+//==========================================================
+
 /*
  *
  *  MODAL WINDOW
@@ -224,7 +259,7 @@ function openModalWindow(modalWrapper) {
 const notificationWrapper = document.querySelector('.notification-wrapper');
 
 
-function postNotification(note) { 
+function postNotification (note) { 
   //note is an object: {title, status, message}
     //status = ['info', 'failure', 'success']
 

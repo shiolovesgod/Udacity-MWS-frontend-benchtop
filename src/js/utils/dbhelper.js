@@ -28,7 +28,7 @@ const DB_PROMISED = idb.open('restreviews-db', 2, upgradeDB => {
   });
 });
 
-const cachedDBItems = [];
+const DBQueue = [];
 
 class DBHelper {
 
@@ -356,52 +356,107 @@ class DBHelper {
 
   }
 
-  static _addUserReview(formData, cb) { 
+  static _addUserReview(formData, rest_name, cb) { 
     //Notify user with callback, (errMsg, successMsg);
 
     //Save the review to idb (autogenerate ID) and send user success
-    let formDataDB = formData;
-    var tempId = `-${cachedDBItems.length+1}`;
-    var userNotification = '';
-    formDataDB.id = tempId;
+    let formDataDB, note;
 
-  
-    DBHelper._putDBItem(formDataDB,'reviews');
+    if (formData.id) {
+      //Already in IDB
+      formDataDB = formData;
+
+    } else {
+
+      //Add to IDB
+      formDataDB = formData;
+      var tempId = `-${DBQueue.length+1}`;
+      var userNotification = '';
+      formDataDB.id = tempId;
+
+      DBHelper._putDBItem(formDataDB,'reviews');
+
+    }
+
+    
 
     //Check to see if use is online
     if (navigator.onLine) {
 
-      DBHelper._postUserReview(formDataDB, (res)=>{
-        if (res && res.ok) {
+      DBHelper._postUserReview(formDataDB, (res)=> {
+        
+        
+
+        if (res && res.ok) { //res fields --> ok, status, body || err: also retry
           //Successful
-          cb({status: 'success', message: 'Review Posted.', review: res.body});
+
+          note = {
+            title: 'Review Posted',
+            status: 'success',
+            message: `Review${rest_name ? ' for ' +rest_name:''} created. Thanks!`,
+          };
 
         } else if (res && res.retry) { //server offline
           //Server offline, poll to see when the server will be back online
-          cb({status: 'waiting', message: res.body, review: formDataDB});
+
+          note = {
+            title: 'Review Pending',
+            status: 'info',
+            message: `Review${rest_name ? ' for ' +rest_name: ''}will be posted when you reconnect.`,
+          };
+
           //QUEUE IT TO SEND LATER, poll server!!!
+          DBQueue.push(formDataDB);
 
         } else if (res && !res.retry) {
           //Server Error, something wrong with form
-          cb({status: 'failure', message: res.body, formError: true});
+          note = {
+            title: 'Error',
+            status: 'failure',
+            message: `There was an error posting your review. See form for details`,
+          };
+
+          //remove from DB 
+          DBHandler._deleteDBItem(formDataDB.id);
 
         } else { 
-          //Something is wrong with the code
-          cb({status: 'failure', message: 'An unknown error occured. Please email support.'});
 
+            note = {
+            title: 'Error',
+            status: 'failure',
+            message: `An unknown error occured. Please email support.`,
+          };
+
+          res.body = 'An unknown error occured. Please email support.';
+
+          //remove from DB 
+          DBHandler._deleteDBItem(formDataDB.id);
         }
+
+        //notify  user
+        postNotification(note);
+        //udpate frontend
+        if (cb) cb(res);
 
       });
 
     } else {
+      
+      note = {
+        title: 'Review Pending',
+        status: 'info',
+        message: `Review${rest_name ? ' for ' +rest_name: ''}will be posted when you reconnect.`,
+      };
 
       //QUEUE IT TO SEND LATER!!!
-      cb({status: 'waiting', message: 'Currently offline, but saved.', 
-      review: formDataDB});
+      DBQueue.push(formDataDB);
+
+      postNotification(note);
+      if (cb) cb({ok: false, status: 301, body: formDataDB});
 
     }
-
   }
+
 
   static _postUserReview(formDataDB, cb) {
 
@@ -568,14 +623,16 @@ class DBHelper {
       reviewTable.put(new_entry, parseInt(new_entry.id));
 
       return tx.complete;
-    }).then(()=> {
-      console.log(`It's replacesd`)
-     return true
+    }).then(() => true).catch(()=> false);
+  }
 
-    }).catch((err) => {
-      console.log('Not replaced');
-      return false;
-    });
+  static _deleteDBReview(old_id) {
+    return DBHelper.dbPromised.then( db => {
+      const tx = db.transaction('reviews', 'readwrite');
+      const reviewTable = tx.objectStore('reviews');
+      reviewTable.delete(parseInt(old_id));
+      return tx.complete;
+    }).then(() => true).catch(()=> false);
   }
 
 

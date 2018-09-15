@@ -175,8 +175,6 @@ updateRestaurants = () => {
     }
   })
 
-
-
   updateRestaurantCount++;
   console.log(`Update Restaurants has run: ${updateRestaurantCount} times`)
 }

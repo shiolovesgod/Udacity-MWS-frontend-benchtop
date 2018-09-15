@@ -383,65 +383,16 @@ function validateReview(e) {
   //Escape before submitting to backend?
   // postReview(formData);
 
-  DBHelper._addUserReview(formData, (res) => {
+  DBHelper._addUserReview(formData, self.restaurant.name, (res) => {
     console.log('Top Level Response: ');
     console.log(res);
 
-    let note;
-
-    //Parse post response
-    switch (res.status) {
-      case 'success':
-        //yes, review posted
-        //create note for user
-        note = {
-          title: 'Review Posted',
-          status: 'success',
-          message: `Review for ${self.restaurant.name} created. Thanks!`,
-        };
-
-        break;
-
-      case 'failure':
-        //no, post failed
-        if (res.formError) {
-          note = {
-            title: 'Error',
-            status: 'failure',
-            message: `There was an error posting your review. See form for details`,
-            //set error message on form, click add review button
-          };
-
-          formError.innerText = res.message;
-        } else { //unknown error
-          note = {
-            title: 'Error', 
-            status: failure,
-            message: res.message,
-          }
-        }
-
-
-        break;
-
-      case 'waiting':
-        //maybe
-        //create note for user
-        note = {
-          title: 'Review Pending',
-          status: 'info',
-          message: `Review for "${self.restaurant.name}" will be posted when you reconnect.`,
-        };
-
-        break;
-    }
-
     //show the user the revioew
-    if (res.review) {
+    if (res.ok && !res.retry) {
 
       //Add review to top of page
       let reviewsList = document.body.querySelector('.reviews-list');
-      let newReview = createReviewHTML(res.review);
+      let newReview = createReviewHTML(res.body);
       newReview.classList.add('pending')
       reviewsList.prepend(newReview);
 
@@ -452,10 +403,11 @@ function validateReview(e) {
       // let currentURL = window.location.href.replace(window.location.hash, '');
       // window.location.replace(`${currentURL}#${res.review.id}`);
       // location.reload();
+    } else {
+
+      formError.innerText = res.body; //even if i don't know the error, show it
+      formError.classList.add('invalid');
     }
-
-    postNotification(note);
-
 
   });
 
