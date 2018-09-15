@@ -365,6 +365,7 @@ class DBHelper {
     if (formData.id) {
       //Already in IDB
       formDataDB = formData;
+      rest_name = formDataDB.restaurant_name;
 
     } else {
 
@@ -406,6 +407,8 @@ class DBHelper {
           };
 
           //QUEUE IT TO SEND LATER, poll server!!!
+          formDataDB.restaurant_name = rest_name;
+          res.retry = true;
           DBQueue.push(formDataDB);
 
         } else if (res && !res.retry) {
@@ -449,10 +452,11 @@ class DBHelper {
       };
 
       //QUEUE IT TO SEND LATER!!!
+      formDataDB.restaurant_name = rest_name;
       DBQueue.push(formDataDB);
 
       postNotification(note);
-      if (cb) cb({ok: false, status: 301, body: formDataDB});
+      if (cb) cb({ok: false, retry: true,status: 301, body: formDataDB});
 
     }
   }

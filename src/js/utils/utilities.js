@@ -148,9 +148,10 @@ function syncWithBackend(e) {
   //Process the DBQueue
 
   DBQueue.forEach(req => {
-
     //check if online
-    if (!navigator.onLine) break;
+    if (!navigator.onLine) continue; 
+
+    DBHelper._addUserReview(req);
 
   });
 

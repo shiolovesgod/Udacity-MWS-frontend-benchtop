@@ -209,20 +209,20 @@ function cleanInput(stringInput) {
 };
 
 createReviewHTML = (review) => {
-  
+
   const li = document.createElement('li');
   li.setAttribute('id', `rNo${parseInt(review.id)}`);;
   const name = document.createElement('h3');
   name.appendChild(cleanInput(review.name));
   li.appendChild(name);
 
-  const date = document.createElement('p');
-  const dateObj = new Date(review.updatedAt);
-  const dateStrFormatted = `${moment(dateObj).calendar()}`; //(${moment(dateObj).fromNow()})
-
-  date.appendChild(cleanInput(dateStrFormatted));
-  li.appendChild(date);
-
+  if (review.updatedAt) {
+    const dateObj = new Date(review.updatedAt);
+    const date = document.createElement('p');
+    const dateStrFormatted = `${moment(dateObj).calendar()}`; //(${moment(dateObj).fromNow()})
+    date.appendChild(cleanInput(dateStrFormatted));
+    li.appendChild(date);
+  }
   const rating_wrapper = document.createElement('div');
   rating_wrapper.className = 'rating';
 
@@ -388,7 +388,7 @@ function validateReview(e) {
     console.log(res);
 
     //show the user the revioew
-    if (res.ok && !res.retry) {
+    if (res.ok || res.retry) {
 
       //Add review to top of page
       let reviewsList = document.body.querySelector('.reviews-list');
@@ -414,8 +414,8 @@ function validateReview(e) {
   return false;
 }
 
-function resetReviewForm () {
-  
+function resetReviewForm() {
+
   star0.disabled = false;
   star0.checked = true;
   formError.innerText = "";
@@ -443,5 +443,3 @@ function form2object(form, fields2keep) {
   }
   return formData;
 }
-
-
