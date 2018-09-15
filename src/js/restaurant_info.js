@@ -299,10 +299,28 @@ getParameterByName = (name, url) => {
 
 
 //================================================================
-//FORM FUNCTIONALITY
+//REVIEW FORM FUNCTIONALITY
 //================================================================
 document.addEventListener("DOMContentLoaded", function (event) {
-  //do work
+  
+  //add listeners to the window for connectivity changes
+  window.addEventListener('online', DataSync.syncWithBackend);
+
+  window.addEventListener('offline', (e) => {
+    //note is an object: {title, status, message}
+    //status = ['info', 'failure', 'success']
+    HTMLHelper.postNotification({
+      title: 'Offline',
+      status: 'info',
+      message: 'You are offline.'
+    });
+  });
+
+  //check the queue
+  if (navigator.onLine) {
+    DataSync.syncWithBackend;
+  }
+
 });
 
 /**

@@ -3,6 +3,17 @@
  *  1. Create descriptions for functions
  */
 
+ /*
+ *
+ *  Global DOM vars
+ *
+ */
+
+ 
+ //Notifications
+ //...................
+const notificationWrapper = document.querySelector('.notification-wrapper');
+
 
 class HTMLHelper {
 
@@ -124,42 +135,218 @@ class HTMLHelper {
     });
   }
 
+
+/*
+ *
+ * NOTIFICATIONS
+ *
+ */
+  static postNotification(note) {
+    //note is an object: {title, status, message}
+    //status = ['info', 'failure', 'success']
+  
+    //create msg structure
+    let msgWrapper = document.createElement('div');
+    msgWrapper.setAttribute('role', 'alert');
+    msgWrapper.classList.add('notification-msg');
+    msgWrapper.classList.add('show');
+    msgWrapper.classList.add(note.status.toLowerCase());
+  
+  
+    let msgHeader = document.createElement('div');
+    msgHeader.setAttribute('role', 'heading');
+    msgHeader.setAttribute('aria-level', '2');
+    msgHeader.classList.add('notification-msg--header');
+  
+    let msgBody = document.createElement('div');
+    msgBody.classList.add('notification-msg--body');
+  
+    let closeBtn = document.createElement('a');
+    closeBtn.innerText = 'X';
+    closeBtn.classList.add('notification-msg--close');
+    closeBtn.setAttribute('href', '#');
+  
+    //Add the notification header & text
+    let msgTitle = note.title ? note.title : note.status;
+    msgHeader.appendChild(document.createTextNode(String(msgTitle)));
+    msgBody.appendChild(document.createTextNode(String(note.message)));
+  
+    //Add a listener to the close 
+    msgWrapper.addEventListener('click', function () {
+      msgWrapper.classList.remove('show');
+      msgWrapper.classList.add('seen');
+    });
+  
+    window.setTimeout(() => {
+      msgWrapper.classList.remove('show');
+    }, 8000); //5 seconds to fade
+  
+  
+    //Build the element
+    msgWrapper.appendChild(msgHeader);
+    msgWrapper.appendChild(msgBody);
+    msgWrapper.appendChild(closeBtn);
+  
+  
+    //append to notifications
+    notificationWrapper.appendChild(msgWrapper);
+  
+  }
+
 }
 
 //==========================================================
 //FRONT END FUNCTIONALITY
 //==========================================================
 
-//Offline listener
+//Initialize storage
+var reviewQueue, favQueue;
 
-window.addEventListener('online', syncWithBackend);
+class DataSync {
 
-window.addEventListener('offline', (e)=>{
-  //note is an object: {title, status, message}
-    //status = ['info', 'failure', 'success']
-  postNotification({title: 'Offline', status: 'info', message: 'You are offline.'});
-});
+  //Main Operations
+  static _getQueue(name) {
 
-function syncWithBackend(e) {
-  //this function is called when you are back online
-  postNotification({title: 'Online', status: 'success', message: 'Welcome back!'});
+    let thisQueue;
 
-  
-  //Process the DBQueue
+    if (window.localStorage) {
+      thisQueue = window.localStorage[name];
+    } else {
+      thisQueue = self[`${name}Queue`].splice(0);
+    }
 
-  DBQueue.forEach(req => {
-    //check if online
-    if (!navigator.onLine) continue; 
+    //return a cloned copy of the queue (not the actual queue)
+    return thisQueue ? JSON.parse(thisQueue) : []; //intialize to empty arrray
+  }
 
-    DBHelper._addUserReview(req);
+  static _updateQueue(name, newValue) { //'review' or 'fav'
 
-  });
+    if (window.localStorage) {
+      return window.localStorage[name] = JSON.stringify(newValue);
+    } else {
+      return self[`${name}Queue`] = newValue;
+    }
 
-  
-  //TO DO: Next iteration, this should be handled by a web worker
 
+  }
+
+  static get favoriteQueue() {
+    return DataSync._getQueue('fav');
+
+  }
+  static get reviewQueue() {
+    return DataSync._getQueue('review');
+  }
+
+  static queueReview(newReview) {
+    let rQueue =  DataSync.reviewQueue;
+    rQueue.push(newReview);
+    DataSync._updateQueue('review', rQueue);
+  }
+
+  static queueFavorite(newFavorite) {
+
+    let currentQueue = DataSync.favoriteQueue;
+    let duplicateFlag = false;
+    let newFavStr = JSON.stringify(newFavorite);
+
+    //If a restaurant is already on the queue, remove it
+    for (let i=0; i < currentQueue.length; i++) {
+      if (JSON.stringify(currentQueue[i]) == newFavStr) {
+
+        duplicateFlag = true;
+
+        //remove item from current queue
+        currentQueue.splice(i,0);
+
+        //stop looking, there will only every be one
+        break;
+      }
+    }
+
+    if (!duplicateFlag) {
+      //add to the queue
+      currentQueue.push(newFavorite);
+    }
+
+    DataSync._updateQueue('fav', currentQueue);
+
+  }
+
+  static syncWithBackend(e) {
+    //this function is called when you are back online
+    HTMLHelper.postNotification({
+      title: 'Online',
+      status: 'success',
+      message: 'Welcome back!'
+    });
+
+    //Sync Reviews
+    DataSync._syncReviews();
+
+    //Improvement: Next iteration, this should be handled by a web worker
+
+
+  }
+
+  static _syncReviews() {
+
+    //Get Queue from localStorage
+    let reviewQueue = DataSync.reviewQueue;
+
+    if (!reviewQueue) return;
+
+    //Process the Queue
+    for (let i = reviewQueue.length; i>0; i--) {
+      if (navigator.onLine) {
+        DBHelper._addUserReview(reviewQueue[i-1], reviewQueue[i-1].restaurant_name, (res) => {
+          debugger
+          if (!res.retry) {
+
+            //remove from queue
+            reviewQueue.splice(i-1, 1);
+
+            //Update the localStorage (async, so can't wait until all done w/o promise)
+            DataSync._updateQueue('review', reviewQueue);
+          }
+        })
+      } else {
+        break;
+      }
+    }
+
+    
+
+  }
+
+  static _syncFavorites() {
+
+    //Get Queue from localStorage
+    let favsQueue = DataSync.favoriteQueue;
+
+    if (!favsQueue) return;
+
+    //Process the Queue
+    for (let i = favsQueue.length; i > 0; i--) {
+      if (navigator.onLine) {
+        // DBHelper._addUserReview(favsQueue[i - 1], (err, res) => {
+        //   if (!res.retry) {
+        //     //remove from queue
+        //     favsQueue.splice(i, 1);
+
+        //   }
+        // })
+      } else {
+        break;
+      }
+    }
+    //Update the localStorage
+    DataSync._updateQueue('fav', favsQueue);
+  }
 
 }
+
+
 
 
 //==========================================================
@@ -251,63 +438,6 @@ function openModalWindow(modalWrapper) {
   }
 }
 
-/*
- *
- * NOTIFICATIONS
- *
- */
-
-const notificationWrapper = document.querySelector('.notification-wrapper');
 
 
-function postNotification (note) { 
-  //note is an object: {title, status, message}
-    //status = ['info', 'failure', 'success']
 
-  //create msg structure
-  let msgWrapper = document.createElement('div');
-  msgWrapper.setAttribute('role', 'alert');
-  msgWrapper.classList.add('notification-msg');
-  msgWrapper.classList.add('show');
-  msgWrapper.classList.add(note.status.toLowerCase());
-
-
-  let msgHeader = document.createElement('div');
-  msgHeader.setAttribute('role', 'heading');
-  msgHeader.setAttribute('aria-level', '2');
-  msgHeader.classList.add('notification-msg--header');
-
-  let msgBody = document.createElement('div');
-  msgBody.classList.add('notification-msg--body');
-
-  let closeBtn = document.createElement('a');
-  closeBtn.innerText = 'X';
-  closeBtn.classList.add('notification-msg--close');
-  closeBtn.setAttribute('href','#');
-
-  //Add the notification header & text
-  let msgTitle  = note.title ? note.title : note.status;
-  msgHeader.appendChild(document.createTextNode(String(msgTitle)));
-  msgBody.appendChild(document.createTextNode(String(note.message)));
-
-  //Add a listener to the close 
-  msgWrapper.addEventListener('click', function() {
-    msgWrapper.classList.remove('show');
-    msgWrapper.classList.add('seen');
-  });
-
-  window.setTimeout(() => {
-    msgWrapper.classList.remove('show');
-  }, 8000); //5 seconds to fade
-
-
-  //Build the element
-  msgWrapper.appendChild(msgHeader);
-  msgWrapper.appendChild(msgBody);
-  msgWrapper.appendChild(closeBtn);
-
-
-  //append to notifications
-  notificationWrapper.appendChild(msgWrapper);
-
-}

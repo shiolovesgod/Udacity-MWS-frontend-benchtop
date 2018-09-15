@@ -28,8 +28,6 @@ const DB_PROMISED = idb.open('restreviews-db', 2, upgradeDB => {
   });
 });
 
-const DBQueue = [];
-
 class DBHelper {
 
   /**
@@ -362,16 +360,18 @@ class DBHelper {
     //Save the review to idb (autogenerate ID) and send user success
     let formDataDB, note;
 
+    if (!formData) debugger; //something is reaally wrong
+
     if (formData.id) {
       //Already in IDB
       formDataDB = formData;
-      rest_name = formDataDB.restaurant_name;
+      rest_name = rest_name ? rest_name : formDataDB.restaurant_name;
 
     } else {
 
       //Add to IDB
       formDataDB = formData;
-      var tempId = `-${DBQueue.length+1}`;
+      var tempId = `-${DataSync.reviewQueue.length+1}`;
       var userNotification = '';
       formDataDB.id = tempId;
 
@@ -406,10 +406,10 @@ class DBHelper {
             message: `Review${rest_name ? ' for ' +rest_name: ''}will be posted when you reconnect.`,
           };
 
-          //QUEUE IT TO SEND LATER, poll server!!!
+          //Queue to send later, poll server (no listener currently setup)!!!
           formDataDB.restaurant_name = rest_name;
           res.retry = true;
-          DBQueue.push(formDataDB);
+          DataSync.queueReview(formDataDB);
 
         } else if (res && !res.retry) {
           //Server Error, something wrong with form
@@ -437,7 +437,7 @@ class DBHelper {
         }
 
         //notify  user
-        postNotification(note);
+        HTMLHelper.postNotification(note);
         //udpate frontend
         if (cb) cb(res);
 
@@ -451,11 +451,11 @@ class DBHelper {
         message: `Review${rest_name ? ' for ' +rest_name: ''}will be posted when you reconnect.`,
       };
 
-      //QUEUE IT TO SEND LATER!!!
+      //Queue to send later
       formDataDB.restaurant_name = rest_name;
-      DBQueue.push(formDataDB);
+      DataSync.queueReview(formDataDB);
 
-      postNotification(note);
+      HTMLHelper.postNotification(note);
       if (cb) cb({ok: false, retry: true,status: 301, body: formDataDB});
 
     }

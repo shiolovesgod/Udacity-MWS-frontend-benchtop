@@ -121,6 +121,11 @@ window.initMap = () => {
     fetchCuisines(restaurants);
     fetchNeighborhoods(restaurants);
 
+    //Make sure any pending reviews are processed
+      if (navigator.onLine) {
+        DataSync.syncWithBackend;
+      }
+
   });
   
   //updateRestaurants(); //REPLACED by DBHelper.fetchRestaurants
