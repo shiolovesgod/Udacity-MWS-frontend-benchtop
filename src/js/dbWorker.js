@@ -59,6 +59,8 @@ self.onmessage = (msg) => {
   console.log("Let's get this party started!!");
   //msg.request coming in
   let resourceURI = msg.data.request;
+
+  if (!resourceURI) return;
   let t0 = performance.now();
 
   _handleDBFetch((err, res) => {

@@ -12,10 +12,10 @@ const DB_PROMISED = idb.open('restreviews-db', 2, upgradeDB => {
 
   //Create a new object store with a different format
   var reviewStore = upgradeDB.createObjectStore('reviews');
-  reviewStore.createIndex('restaurant_id', ['restaurant_id', 'created_at'], {
+  reviewStore.createIndex('restaurant_id', 'restaurant_id', {
     unique: false
   });
-  reviewStore.createIndex('created_at', 'created_at', {
+  reviewStore.createIndex('createdAt', 'createdAt', {
     unique: false
   });
 
@@ -59,6 +59,7 @@ class DBHelper {
     }
 
     DBHelper._handleDBFetch((err, res) => {
+      console.log(`${url} was fetched from: ${res.source}`);
       callback(err, res.resource);
     }, url);
 
@@ -355,22 +356,32 @@ class DBHelper {
     if (navigator.onLine) {
 
       DBHelper._postUserReview(formDataDB, (res)=>{
-        if (res.ok) {
-          userNotification = 'Success';
-          cb({status: 'success', message: 'Review Posted.', body: res.body});
-        } else {
-          userNotification = 'Failure'
-          cb({status: 'failure', message: res.body});
-        } 
+        if (res && res.ok) {
+          //Successful
+          cb({status: 'success', message: 'Review Posted.', review: res.body});
+
+        } else if (res && res.retry) { //server offline
+          //Server offline, poll to see when the server will be back online
+          cb({status: 'waiting', message: res.body, review: formDataDB});
+          //QUEUE IT TO SEND LATER, poll server!!!
+
+        } else if (res && !res.retry) {
+          //Server Error, something wrong with form
+          cb({status: 'failure', message: res.body, formError: true});
+
+        } else { 
+          //Something is wrong with the code
+          cb({status: 'failure', message: 'An unknown error occured. Please email support.'});
+
+        }
 
       });
 
     } else {
 
-      //Queue it to send later, and notify user
-      userNotification = 'Later';
-
-      cb({status: 'waiting', message: 'Currently offline, request queued'});
+      //QUEUE IT TO SEND LATER!!!
+      cb({status: 'waiting', message: 'Currently offline, but saved.', 
+      review: formDataDB});
 
     }
 
@@ -424,12 +435,16 @@ class DBHelper {
             } else {
 
               console.log(`ERR ${errRes.status}: ${errMessage}`); //print to console
-              return {ok: false, status: errRes.status, body: errMessage};
+              return {ok: false, status: errRes.status, body: errMessage, retry: false};
             }
         }
       });
   
     } else { //not a backend error
+
+      if (errRes.stack && errRes.stack == "TypeError: Failed to fetch") {
+        return {ok: false, retry: true, status: 'waiting', body: 'Failed to fetch, Server not found'};
+      }
       if (msgDiv) {
         msgDiv.innerHTML = errRes;
       } else {
@@ -499,7 +514,9 @@ class DBHelper {
       value = isNaN(parseInt(value)) ? value : parseInt(value);
 
       //Retrieve single value or entire table
-      if (value) {
+
+
+      if (value) { 
         return dbIdx.getAll(parseInt(value));
       } else {
         return dbIdx.getAll();
@@ -517,7 +534,13 @@ class DBHelper {
       reviewTable.put(entry, parseInt(entry.id));
 
       return tx.complete;
-    }).then(() => true).catch(() => false)
+    }).then((res) => {
+      console.log('EntryAdded');
+      return true;
+    }).catch((err) => {
+      console.log('Problem Posting');
+      return false;
+    })
 
   }
 
@@ -525,7 +548,7 @@ class DBHelper {
     return DBHelper.dbPromised.then( db => {
       const tx = db.transaction('reviews', 'readwrite');
       const reviewTable = tx.objectStore('reviews');
-      reviewTable.delete(old_id);
+      reviewTable.delete(parseInt(old_id));
       reviewTable.put(new_entry, parseInt(new_entry.id));
 
       return tx.complete;

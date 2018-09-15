@@ -251,12 +251,13 @@ function postNotification(note) {
 
   //Add the notification header & text
   let msgTitle  = note.title ? note.title : note.status;
-  msgHeader.appendChild(document.createTextNode(unescape(note.status)));
-  msgBody.appendChild(document.createTextNode(unescape(note.message)));
+  msgHeader.appendChild(document.createTextNode(String(msgTitle)));
+  msgBody.appendChild(document.createTextNode(String(note.message)));
 
   //Add a listener to the close 
   msgWrapper.addEventListener('click', function() {
     msgWrapper.classList.remove('show');
+    msgWrapper.classList.add('seen');
   });
 
   window.setTimeout(() => {

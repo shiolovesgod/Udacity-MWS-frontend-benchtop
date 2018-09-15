@@ -233,7 +233,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 
 function cleanInput(stringInput) {
-  return document.createTextNode(unescape(stringInput));
+  return document.createTextNode(String(stringInput));
 };
 
 

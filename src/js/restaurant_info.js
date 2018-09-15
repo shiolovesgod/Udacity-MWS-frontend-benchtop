@@ -205,7 +205,7 @@ fillReviewsHTML = (reviews = self.reviews) => {
  */
 
 function cleanInput(stringInput) {
-  return document.createTextNode(unescape(stringInput));
+  return document.createTextNode(String(stringInput));
 };
 
 createReviewHTML = (review) => {
@@ -234,7 +234,7 @@ createReviewHTML = (review) => {
   rating_wrapper.append(ratingIcon);
 
   const ratingText = document.createElement('p');
-  ratingText.appendChild(cleanInput(`${escape(review.rating)} Stars`));
+  ratingText.appendChild(cleanInput(`${review.rating} Stars`));
   ratingText.className = 'rating-text';
   ratingText.setAttribute('aria-label', `User rating ${ratingText.innerText}`);
   rating_wrapper.append(ratingText);
@@ -389,58 +389,72 @@ function validateReview(e) {
     console.log(res);
 
     let note;
-    let currentURL = window.location.href.replace(window.location.hash, '');
 
     //Parse post response
     switch (res.status) {
       case 'success':
-        //yes,
-        //show link or reload page
-        window.location.replace(`${currentURL}#${res.body.id}`);
-        location.reload();
-
+        //yes, review posted
         //create note for user
         note = {
           title: 'Review Posted',
           status: 'success',
-          message: `Review for ${res.body.name} created. Thanks!`,
+          message: `Review for ${self.restaurant.name} created. Thanks!`,
         };
 
         break;
 
       case 'failure':
-        //no, 
-        note = {
-          title: 'Error',
-          status: 'failure',
-          message: `There was an error posting your review. See form for details`,
-        };
+        //no, post failed
+        if (res.formError) {
+          note = {
+            title: 'Error',
+            status: 'failure',
+            message: `There was an error posting your review. See form for details`,
+            //set error message on form, click add review button
+          };
 
-        //set error message on form, click add review button
-        formError.innerText = `ERR ${res.status}: ${res.body}`;
+          formError.innerText = res.message;
+        } else { //unknown error
+          note = {
+            title: 'Error', 
+            status: failure,
+            message: res.message,
+          }
+        }
+
 
         break;
 
       case 'waiting':
         //maybe
-        //tell them will sync when back online
-        //show link or reload page
-        
-        window.location.replace(`${currentURL}#${res.body.id}`);
-        location.reload();
-
         //create note for user
         note = {
           title: 'Review Pending',
           status: 'info',
-          message: `Review for ${res.body.name} will be posted when you reconnect.`,
+          message: `Review for "${self.restaurant.name}" will be posted when you reconnect.`,
         };
 
         break;
     }
 
-    //send notification
-    postMessage(note);
+    //show the user the revioew
+    if (res.review) {
+
+      //Add review to top of page
+      let reviewsList = document.body.querySelector('.reviews-list');
+      let newReview = createReviewHTML(res.review);
+      newReview.classList.add('pending')
+      reviewsList.prepend(newReview);
+
+      //OLD PLAN: redirect and reload page (send notifiacation through session storage)
+      // let currentURL = window.location.href.replace(window.location.hash, '');
+      // window.location.replace(`${currentURL}#${res.review.id}`);
+      // location.reload();
+    }
+
+    postNotification(note);
+
+
   });
 
   return false;
@@ -466,7 +480,7 @@ function postReview(formData) {
   }).then(review => {
 
     //This should be a redirect from the backend if this works
-    console.log(`New Review from ${unescape(review.name)} created.`); //user information
+    console.log(`New Review from ${String(review.name)} created.`); //user information
     window.location.replace(`${window.location}#${review.id}`);
     location.reload(true);
 
@@ -494,7 +508,7 @@ function form2object(form, fields2keep) {
     if (fields2keep && fields2keep.indexOf(formElements[i].name) < 0) continue
 
     let fieldName = formElements[i].name ? formElements[i].name : `field${i}`;
-    formData[fieldName] = escape(formElements[i].value);
+    formData[fieldName] = formElements[i].value;
   }
   return formData;
 }
