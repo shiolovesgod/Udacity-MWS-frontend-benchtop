@@ -281,7 +281,7 @@ class DBHelper {
 
     dbEntriesPromised.then(dbEntriesCached => {
 
-      if (!id) dbEntriesCached.reverse();
+      if (opts.endpoint=='reviews') dbEntriesCached.reverse();
 
       //If you find the db fetch, use it
       if (dbEntriesCached.length > 0 || dbEntriesCached.id) {
@@ -357,7 +357,7 @@ class DBHelper {
       DBHelper._postUserReview(formDataDB, (res)=>{
         if (res.ok) {
           userNotification = 'Success';
-          cb({status: 'success', message: 'Review Posted.'});
+          cb({status: 'success', message: 'Review Posted.', body: res.body});
         } else {
           userNotification = 'Failure'
           cb({status: 'failure', message: res.body});

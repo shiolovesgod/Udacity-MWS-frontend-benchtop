@@ -67,10 +67,10 @@ fetchRestaurantFromURL = (callback) => {
         console.error(error);
         return;
       }
-      
+
       fillRestaurantHTML();
       callback(null, restaurant)
-    },`restaurants/${id}`); 
+    }, `restaurants/${id}`);
   }
 }
 
@@ -97,9 +97,9 @@ fetchReviewsFromURL = (callback) => {
       if (!loadedFlag) {
         fillReviewsHTML(reviews);
       }
-      loadedFlag=true;
+      loadedFlag = true;
       callback(null, reviews)
-    },`reviews/?restaurant_id=${id}`);
+    }, `reviews/?restaurant_id=${id}`);
   }
 }
 
@@ -112,11 +112,11 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   name.appendChild(cleanInput(restaurant.name));
 
   const address = document.body.querySelector('.restaurant-address');
-  
-  if (restaurant.address){
-  //Add a soft break before state + zip (without RegEx)
+
+  if (restaurant.address) {
+    //Add a soft break before state + zip (without RegEx)
     const addressStr_pre = restaurant.address.split("").reverse().join("").replace(",", " >rbw<,").split("").reverse().join("");
-    address.innerHTML = addressStr_pre; 
+    address.innerHTML = addressStr_pre;
   } else {
     address.innerText = 'Address not listed';
   }
@@ -132,13 +132,13 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     image_wrapper.appendChild(picture);
   }
 
-  if (restaurant.cuisine_type){
+  if (restaurant.cuisine_type) {
     const cuisine = document.body.querySelector('.restaurant-cuisine');
     cuisine.appendChild(cleanInput(restaurant.cuisine_type));
   }
 
   // fill operating hours
-  if (restaurant.operating_hours) { 
+  if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
 
@@ -186,7 +186,7 @@ fillReviewsHTML = (reviews = self.reviews) => {
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
- 
+
   if (reviews.length < 1 || !reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
@@ -204,9 +204,9 @@ fillReviewsHTML = (reviews = self.reviews) => {
  * Create review HTML and add it to the webpage.
  */
 
- function cleanInput(stringInput) {
-   return document.createTextNode(unescape(stringInput));
- };
+function cleanInput(stringInput) {
+  return document.createTextNode(unescape(stringInput));
+};
 
 createReviewHTML = (review) => {
   console.log("I'm writing it")
@@ -219,7 +219,7 @@ createReviewHTML = (review) => {
 
   const date = document.createElement('p');
   const dateObj = new Date(review.updatedAt);
-  const dateStrFormatted  = `${moment(dateObj).calendar()}`;//(${moment(dateObj).fromNow()})
+  const dateStrFormatted = `${moment(dateObj).calendar()}`; //(${moment(dateObj).fromNow()})
 
   date.appendChild(cleanInput(dateStrFormatted));
   li.appendChild(date);
@@ -321,6 +321,7 @@ const star1 = document.body.querySelector('#star1');
 //Cancel default action
 const reviewForm = document.body.querySelector('#form__user-review');
 const formSubtitle = reviewForm.querySelector('.form-subtitle');
+const formErrorDiv = reviewForm.querySelector('.form-error');
 //reviewForm.action = `${backendBaseURI}/restaurants`; //do this manually
 reviewForm.onsubmit = validateReview;
 
@@ -386,14 +387,64 @@ function validateReview(e) {
   DBHelper._addUserReview(formData, (res) => {
     console.log('Top Level Response: ');
     console.log(res);
-    //yes, 
-    //no, 
-    //maybe
-  })
+
+    let note;
+    let currentURL = window.location.href.replace(window.location.hash, '');
+
+    //Parse post response
+    switch (res.status) {
+      case 'success':
+        //yes,
+        //show link or reload page
+        window.location.replace(`${currentURL}#${res.body.id}`);
+        location.reload();
+
+        //create note for user
+        note = {
+          title: 'Review Posted',
+          status: 'success',
+          message: `Review for ${res.body.name} created. Thanks!`,
+        };
+
+        break;
+
+      case 'failure':
+        //no, 
+        note = {
+          title: 'Error',
+          status: 'failure',
+          message: `There was an error posting your review. See form for details`,
+        };
+
+        //set error message on form, click add review button
+        formError.innerText = `ERR ${res.status}: ${res.body}`;
+
+        break;
+
+      case 'waiting':
+        //maybe
+        //tell them will sync when back online
+        //show link or reload page
+        
+        window.location.replace(`${currentURL}#${res.body.id}`);
+        location.reload();
+
+        //create note for user
+        note = {
+          title: 'Review Pending',
+          status: 'info',
+          message: `Review for ${res.body.name} will be posted when you reconnect.`,
+        };
+
+        break;
+    }
+
+    //send notification
+    postMessage(note);
+  });
 
   return false;
 }
-
 
 
 //Post to back end

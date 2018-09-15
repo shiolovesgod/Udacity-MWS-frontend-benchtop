@@ -212,9 +212,65 @@ function openModalWindow(modalWrapper) {
 
     //set focus back to element that had it before modal was opened
     focusedElementBeforeModal.focus();
-
   }
+}
+
+/*
+ *
+ * NOTIFICATIONS
+ *
+ */
+
+const notificationWrapper = document.querySelector('.notification-wrapper');
 
 
+function postNotification(note) { 
+  //note is an object: {title, status, message}
+    //status = ['info', 'failure', 'success']
+
+  //create msg structure
+  let msgWrapper = document.createElement('div');
+  msgWrapper.setAttribute('role', 'alert');
+  msgWrapper.classList.add('notification-msg');
+  msgWrapper.classList.add('show');
+  msgWrapper.classList.add(note.status.toLowerCase());
+
+
+  let msgHeader = document.createElement('div');
+  msgHeader.setAttribute('role', 'heading');
+  msgHeader.setAttribute('aria-level', '2');
+  msgHeader.classList.add('notification-msg--header');
+
+  let msgBody = document.createElement('div');
+  msgBody.classList.add('notification-msg--body');
+
+  let closeBtn = document.createElement('a');
+  closeBtn.innerText = 'X';
+  closeBtn.classList.add('notification-msg--close');
+  closeBtn.setAttribute('href','#');
+
+  //Add the notification header & text
+  let msgTitle  = note.title ? note.title : note.status;
+  msgHeader.appendChild(document.createTextNode(unescape(note.status)));
+  msgBody.appendChild(document.createTextNode(unescape(note.message)));
+
+  //Add a listener to the close 
+  msgWrapper.addEventListener('click', function() {
+    msgWrapper.classList.remove('show');
+  });
+
+  window.setTimeout(() => {
+    msgWrapper.classList.remove('show');
+  }, 8000); //5 seconds to fade
+
+
+  //Build the element
+  msgWrapper.appendChild(msgHeader);
+  msgWrapper.appendChild(msgBody);
+  msgWrapper.appendChild(closeBtn);
+
+
+  //append to notifications
+  notificationWrapper.appendChild(msgWrapper);
 
 }
