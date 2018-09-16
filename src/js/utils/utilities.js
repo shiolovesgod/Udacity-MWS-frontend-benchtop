@@ -131,6 +131,12 @@ class HTMLHelper {
             el.setAttribute('tabindex', -1);
             el.classList.add('map-link');
           }); //zoom in, zoomout, full screen
+
+        //Set the alt attribute on google maps
+        document.querySelectorAll('#map img:not([alt])')
+          .forEach((el) => {
+            el.setAttribute('alt',`""`);
+          })
       }, 500);
     });
   }
@@ -284,7 +290,7 @@ class HTMLHelper {
   static toggleOfflineClass(favObj, isMakeOffline) {
     /*INPUT: favObj = {id, btn, isFav}...isMakeOffline=Boolean*/
 
-    let btn = document.body.querySelector(`#options__favorite[data-rest-id="${favObj.id}"]`);
+    let btn = document.body.querySelector(`.options__favorite[data-rest-id="${favObj.id}"]`);
     if (!btn) return; //cant find the button
     
     //toggle it

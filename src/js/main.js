@@ -364,7 +364,7 @@ createRestaurantHTML = (restaurant) => {
 
   //Create favorite button
   const favButton = document.createElement('button');
-  favButton.id = 'options__favorite';
+  favButton.classList.add('options__favorite');
   favButton.setAttribute('data-rest-id', restaurant.id);
   HTMLHelper.initFavElement(favButton, restaurant.is_favorite); //set ARIA & callback
   li.append(favButton);
