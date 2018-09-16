@@ -65,7 +65,7 @@ class DBHelper {
   }
 
   //==============================================
-  // PUBLIC FUNCTIONS
+  // PUBLIC FUNCTIONS 
   //==============================================
 
 
@@ -256,7 +256,9 @@ class DBHelper {
       url: DBHelper.urlForRestaurant(restaurant),
       map: map,
       animation: google.maps.Animation.DROP,
-      rest_id: restaurant.id
+      rest_id: restaurant.id, 
+      is_fav: restaurant.is_favorite,
+      icon: `./img/icons/map-icon-${restaurant.is_favorite ? 'favorite' : 'regular'}.png`,
     });
 
     return marker;
@@ -282,79 +284,70 @@ class DBHelper {
   }
 
 
-
   //==============================================
-  // PRIVATE FUNCTIONS
+  // FAVORITES
   //==============================================
-  static _handleDBFetch(callback, urlPath) {
 
-    let callbackSent = false;
-    let fetchURL = `${DBHelper.DATABASE_URL}/${urlPath}`.replace(/([^:]\/)\/+/g, "$1");
+  static setFavoriteStatus(favObj, cb) {
+    /*INPUT: favObj = {id: integer, is_favorite: Boolean}*/
 
-    //FIRST: Parse Input
-    let opts = DBHelper._parseURLInput(fetchURL);
-    let id = opts.value;
+    //Update in the local database
+    let dbSuccess = DBHelper._changeDBFavorite(favObj);
+    
+    //Update on server
+    if (navigator.onLine) {
 
-    const dbEntriesPromised = DBHelper._getDBItem(opts.endpoint, opts.value, opts.index_name);
+      DBHelper._postFavoriteDB(favObj, res => {
 
-    dbEntriesPromised.then(dbEntriesCached => {
-
-      if (opts.endpoint=='reviews') dbEntriesCached.reverse();
-
-      //If you find the db fetch, use it
-      if (dbEntriesCached.length > 0 || dbEntriesCached.id) {
-        callback(null, {
-          resource: dbEntriesCached,
-          source: 'cache'
-        });
-        callbackSent = true;
-      }
-
-      let xhr = new XMLHttpRequest();
-      xhr.open('GET', fetchURL);
-      xhr.onload = () => {
-        if (xhr.status == 200) {
-          const dbRecords = JSON.parse(xhr.responseText);
-
-          //run the callback as soon as a response comes
-          if (!callbackSent) {
-            callback(null, {
-              resource: dbRecords,
-              source: 'server'
-            });
-            callbackSent = true;
-          }
-
-          //ALWAYS update the items in the idb
-          if (Array.isArray(dbRecords)) {
-            dbRecords.forEach(record => {
-              DBHelper._putDBItem(record, opts.endpoint);
-            });
-          } else {
-            DBHelper._putDBItem(dbRecords, opts.endpoint);
-          }
-
+        //Add to Q if server error
+        if (res && res.retry) {
+          
+          DataSync.queueFavorite(favObj);
+          HTMLHelper.toggleOfflineClass(favObj, true);
         } else {
-          let err = '';
-          if (id) {
-            err = `${endpoint[0].toUpperCase()}${endpoint.substr(1)} does not exist`;
-          } else {
-            err = `Request failed and ${endpoint}(s) not cached. Returned status of ${xhr.status}`;
-            callback(err, {
-              resource: null,
-              source: 'null'
-            });
-          }
-
+          HTMLHelper.toggleOfflineClass(favObj, false);
         }
-      }
-      xhr.send();
+        cb(res); // send back the res
+      });
+    } else { //OFFLINE
+      //Add to Q
+      DataSync.queueFavorite(favObj);
+      HTMLHelper.toggleOfflineClass(favObj, true);
+    }
+      
+  }
 
-    })
+  static _postFavoriteDB(favObj, cb) {
+
+     //put method restaurants/rest_id, {is_favorite: value}
+    fetch(`${DBHelper.DATABASE_URL}/restaurants/${favObj.id}`,{
+      method: 'PUT',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: JSON.stringify({is_favorite: favObj.is_favorite}),
+    }).then(res => {
+      if (!res.ok) throw res;
+      return res.json();
+    }).then(restaurant => {
+
+      //Update idb (for good measure)
+      DBHelper._putDBItem(restaurant,'restaurants');
+
+      //Send back the response
+      cb({ok: true, status: 200, body:restaurant});
+
+    }).catch( err => cb(DBHelper.serverErrHandler(err)) );
 
   }
 
-  static _addUserReview(formData, rest_name, cb) { 
+
+  //==============================================
+  // REVIEWS
+  //==============================================
+  
+  static addUserReview(formData, rest_name, cb) { 
     //Notify user with callback, (errMsg, successMsg);
 
     //Save the review to idb (autogenerate ID) and send user success
@@ -472,7 +465,7 @@ class DBHelper {
       },
       body: JSON.stringify(formDataDB),
     }).then(res => {
-  
+
       if (!res.ok) throw res;
       return res.json();
     }).then(review => {
@@ -491,6 +484,77 @@ class DBHelper {
     });
 
     
+  }
+
+  //==============================================
+  // PRIVATE FUNCTIONS (mainly)...need to reorganize
+  //==============================================
+  static _handleDBFetch(callback, urlPath) {
+
+    let callbackSent = false;
+    let fetchURL = `${DBHelper.DATABASE_URL}/${urlPath}`.replace(/([^:]\/)\/+/g, "$1");
+
+    //FIRST: Parse Input
+    let opts = DBHelper._parseURLInput(fetchURL);
+    let id = opts.value;
+
+    const dbEntriesPromised = DBHelper._getDBItem(opts.endpoint, opts.value, opts.index_name);
+
+    dbEntriesPromised.then(dbEntriesCached => {
+
+      if (opts.endpoint=='reviews') dbEntriesCached.reverse();
+
+      //If you find the db fetch, use it
+      if (dbEntriesCached.length > 0 || dbEntriesCached.id) {
+        callback(null, {
+          resource: dbEntriesCached,
+          source: 'cache'
+        });
+        callbackSent = true;
+      }
+
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', fetchURL);
+      xhr.onload = () => {
+        if (xhr.status == 200) {
+          const dbRecords = JSON.parse(xhr.responseText);
+
+          //run the callback as soon as a response comes
+          if (!callbackSent) {
+            callback(null, {
+              resource: dbRecords,
+              source: 'server'
+            });
+            callbackSent = true;
+          }
+
+          //ALWAYS update the items in the idb
+          if (Array.isArray(dbRecords)) {
+            dbRecords.forEach(record => {
+              DBHelper._putDBItem(record, opts.endpoint);
+            });
+          } else {
+            DBHelper._putDBItem(dbRecords, opts.endpoint);
+          }
+
+        } else {
+          let err = '';
+          if (id) {
+            err = `${opts.endpoint[0].toUpperCase()}${opts.endpoint.substr(1)} does not exist`;
+          } else {
+            err = `Request failed and ${endpoint}(s) not cached. Returned status of ${xhr.status}`;
+            callback(err, {
+              resource: null,
+              source: 'null'
+            });
+          }
+
+        }
+      }
+      xhr.send();
+
+    })
+
   }
 
   static serverErrHandler(errRes, msgDiv) {
@@ -610,12 +674,34 @@ class DBHelper {
 
       return tx.complete;
     }).then((res) => {
-      console.log('EntryAdded');
+      // console.log('EntryAdded');
       return true;
     }).catch((err) => {
-      console.log('Problem Posting');
+      // console.log('Problem Posting');
       return false;
     })
+
+  }
+
+  static _changeDBFavorite(entry) {
+
+    return DBHelper.dbPromised.then( async db => {
+      const tx = db.transaction('restaurants','readwrite');
+      const dbTable = tx.objectStore('restaurants');
+      
+      //Retrieve single value or entire table
+      restaurant = await dbTable.get(parseInt(entry.id));
+
+      if (!restaurant) return //no need for error, will update on next sync
+
+      //Update and replace
+      restaurant.is_favorite = Boolean(entry.is_favorite);
+      dbTable.put(restaurant, parseInt(entry.id));
+
+      //Done
+      return tx.complete;
+    });
+
 
   }
 

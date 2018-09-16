@@ -23,7 +23,8 @@ var isMapVisible = false;
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  ///This is now done when the map is updated
+  //
+  
 });
 
 

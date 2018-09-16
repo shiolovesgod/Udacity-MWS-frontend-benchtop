@@ -8,6 +8,7 @@
 let restaurant;
 var map;
 
+
 /**
  * Initialize Google map, called from HTML.
  */
@@ -22,11 +23,12 @@ window.initMap = () => {
         scrollwheel: false
       });
       fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+      let marker = DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+      self.marker = marker;
 
 
       //Set review form restaurant ID & name
-      initializeRestaurantForm(self.restaurant);
+      initializeRestaurantPage(self.restaurant);
     }
 
     // Remove tab index from map items after tiles have been loaded 
@@ -181,7 +183,7 @@ fillReviewsHTML = (reviews = self.reviews) => {
 
   if (!Array.isArray(reviews)) reviews = [reviews];
 
-  console.log("Filling the Reviews")
+  // console.log("Filling the Reviews")
   const container = document.body.querySelector('.reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
@@ -299,6 +301,29 @@ getParameterByName = (name, url) => {
 
 
 //================================================================
+// USER OPTIONS
+//================================================================
+
+function initializeRestaurantPage(rest = self.restaurant) {
+
+  //FORM.....
+  reviewForm.restaurant_id.value = rest.id; //Set ID field
+  formSubtitle.innerText = rest.name; //Change restaurant name
+
+  //FAVORITEBTN...
+  favoriteBtn.setAttribute('data-rest-id', rest.id);
+  HTMLHelper.initFavElement(favoriteBtn, rest.is_favorite);
+
+
+}
+
+//================================================================
+//FAVORITES
+//================================================================
+
+const favoriteBtn = document.body.querySelector('#options__favorite');
+
+//================================================================
 //REVIEW FORM FUNCTIONALITY
 //================================================================
 document.addEventListener("DOMContentLoaded", function (event) {
@@ -341,18 +366,6 @@ const formSubtitle = reviewForm.querySelector('.form-subtitle');
 const formErrorDiv = reviewForm.querySelector('.form-error');
 //reviewForm.action = `${backendBaseURI}/restaurants`; //do this manually
 reviewForm.onsubmit = validateReview;
-
-
-//Initialize restaurant form
-
-function initializeRestaurantForm(rest = self.restaurant) {
-  //Set ID field
-  reviewForm.restaurant_id.value = rest.id;
-
-  //Change restaurant name
-  formSubtitle.innerText = rest.name;
-
-}
 
 
 //Validate rating
@@ -401,7 +414,7 @@ function validateReview(e) {
   //Escape before submitting to backend?
   // postReview(formData);
 
-  DBHelper._addUserReview(formData, self.restaurant.name, (res) => {
+  DBHelper.addUserReview(formData, self.restaurant.name, (res) => {
     console.log('Top Level Response: ');
     console.log(res);
 

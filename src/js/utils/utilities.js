@@ -193,6 +193,124 @@ class HTMLHelper {
   
   }
 
+  /*
+  *
+  * Favorites
+  * 
+  */
+
+  //This is for the first page, when restaurants are created
+  static initFavElement(btn, isFav) {
+
+    //add event listener
+    btn.addEventListener('click', (e) => HTMLHelper.toggleFavorite(btn));
+
+    //set ARIA roles
+    btn.setAttribute('role','switch');
+
+    if (isFav) {
+      btn.classList.add('favorite');
+      btn.setAttribute('aria-checked',true);
+      btn.setAttribute('aria-label','Remove from Favorites');
+    } else {
+      btn.setAttribute('aria-checked',false);
+      btn.setAttribute('aria-label','Add to Favorites');
+    }
+
+    //Set Icon & Aria
+    HTMLHelper._setFavButtonChildren(btn, isFav);
+
+  }
+
+  static _setFavButtonChildren(favBtn, isFav) {
+    
+     //update button label
+     let btnTxt = favBtn.querySelector('.button__text');
+     let btnIcon = favBtn.querySelector('.button__icon');
+ 
+     if (btnTxt) {
+       if (isFav) { 
+         btnTxt.innerText = 'Remove Favorite';
+         
+       } else {
+         btnTxt.innerText = 'Add Favorite';
+       }
+     }
+ 
+     //use css maybe?
+     if (btnIcon) {
+       if (isFav) {
+         btnIcon.innerHTML = '&#61444;'; //closed heart 
+       } else {
+         btnIcon.innerHTML = '&#61578;'; //open heart 
+       }
+     }
+
+  }
+
+  static toggleFavorite(thisBtn) {
+
+    let thisId = thisBtn.getAttribute('data-rest-id');
+    if (!thisId) return; //Don't have an associated restaurant
+    
+    let isFavorite = thisBtn.classList.contains('favorite');
+    let newState = !Boolean(isFavorite);
+  
+    //FRONT END changes
+    //.................................
+    thisBtn.classList.toggle('favorite'); //class
+    thisBtn.setAttribute('aria-checked', newState);
+    HTMLHelper._setFavButtonChildren(thisBtn, newState);
+
+  
+    //BACK END changes
+    //.................................
+    let favObj = {btn: thisBtn, id: parseInt(thisId), is_favorite: newState}
+    DBHelper.setFavoriteStatus(favObj, (res)=> {
+  
+      //add a special class for offline
+      console.log('Favorite changed:'); 
+      console.log(res);
+  
+    });
+
+    //change map marker
+    HTMLHelper.updateFavoriteMarker(favObj)
+  }
+
+  static toggleOfflineClass(favObj, isMakeOffline) {
+    /*INPUT: favObj = {id, btn, isFav}...isMakeOffline=Boolean*/
+
+    let btn = favObj.btn || document.body.querySelector(`#options__favorite[data-rest-id="${favObj.id}"]`);
+    if (!btn) return; //cant find the button
+    
+    //toggle it
+    if (isMakeOffline) {
+      btn.classList.add('offline');
+    } else { btn.classList.remove('offline'); }
+  }
+
+  static updateFavoriteMarker(favObj) {
+    
+    //find the marker
+    let marker;
+    if(self.marker) {
+      marker = self.marker;
+    } else if(self.markers) {
+      marker = self.markers.find((element) => {
+        return element.rest_id == id
+      });
+    }
+
+    if (!marker) return;
+
+    marker.setIcon(`./img/icons/map-icon-${favObj.is_favorite ? 'favorite':'regular'}.png`);
+    
+    // marker.setAnimation(google.maps.Animation.DROP);
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(() => marker.setAnimation(null), 1500);
+  }
+
 }
 
 //==========================================================
@@ -299,7 +417,7 @@ class DataSync {
     //Process the Queue
     for (let i = reviewQueue.length; i>0; i--) {
       if (navigator.onLine) {
-        DBHelper._addUserReview(reviewQueue[i-1], reviewQueue[i-1].restaurant_name, (res) => {
+        DBHelper.addUserReview(reviewQueue[i-1], reviewQueue[i-1].restaurant_name, (res) => {
           debugger
           if (!res.retry) {
 
@@ -329,13 +447,12 @@ class DataSync {
     //Process the Queue
     for (let i = favsQueue.length; i > 0; i--) {
       if (navigator.onLine) {
-        // DBHelper._addUserReview(favsQueue[i - 1], (err, res) => {
-        //   if (!res.retry) {
-        //     //remove from queue
-        //     favsQueue.splice(i, 1);
-
-        //   }
-        // })
+        DBHelper.setFavoriteStatus(favsQueue[i - 1], (res) => {
+          if (!res.retry) {
+            //remove from queue
+            favsQueue.splice(i, 1);
+          }
+        })
       } else {
         break;
       }
