@@ -11,14 +11,14 @@ How do I get up and running (as a reviewer)?
 1. File Setup
 This project has modified both the back and frontend so you will need both repositories
 
-Server
-a. You can access the server code at this repo:
+Server (checkout `submitted` branch)
+a. You can access the server code at this repo: https://github.com/shiolovesgod/mws-restaurant-stage-3.git 
 
 b. Please be sure that the content of the "localDiskDB.db" file is the one in the Github repo referenced above. I store a little more information about the reviews in my database and read the file from "./tmp/localDiskDB.db".
 
 c. You may need to run npm install but I don't think additional packages were used
 
-Frontend
+Frontend (checkout `submitted` branch)
 a. You can access frontend here: https://github.com/shiolovesgod/uda-mws-3.git
 
 2. Up & Running
