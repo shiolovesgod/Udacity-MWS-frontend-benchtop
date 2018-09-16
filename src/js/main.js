@@ -222,9 +222,9 @@ resetRestaurants = (restaurants) => {
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
 
-  // if (!restaurants || restaurants.length < 1) {
-  //   cosole.log("There aren't any restaurants, somthing is wrong");
-  // }
+  if (!restaurants || restaurants.length < 1) {
+    console.log("There aren't any restaurants, server may be offline");
+  }
 
   const ul = document.body.querySelector('.restaurants-list');
   restaurants.forEach((restaurant, idx) => {
@@ -285,34 +285,39 @@ createRestaurantHTML = (restaurant) => {
   const text_wrapper = document.createElement('div');
   text_wrapper.className = 'restaurant-info-text';
 
-  const rating_wrapper = document.createElement('div');
-  rating_wrapper.className = 'rating';
+    const rating_wrapper = document.createElement('div');
+    rating_wrapper.className = 'rating';
 
-  
-  if (restaurant.average_rating)
-  {
+    const total_stars = parseInt(restaurant.total_stars) || 0;
+    const total_reviews = parseInt(restaurant.total_reviews) || 0;
+    let averageRating;
+
     const ratingText = document.createElement('p');
-    ratingText.innerHTML = restaurant.average_rating.toFixed(1);
-    ratingText.setAttribute('aria-label', `Average rating ${ratingText.innerHTML}`);
-    ratingText.className = 'rating-text';
-    rating_wrapper.appendChild(ratingText);
-  }
+    
+    if (total_reviews > 0) {
 
+      averageRating = (total_stars / total_reviews).toFixed(1);
+      ratingText.appendChild(cleanInput(averageRating));
+      ratingText.setAttribute('aria-label', `Average rating ${ratingText.innerHTML}`);
+      ratingText.className = 'rating-text';
+      rating_wrapper.appendChild(ratingText);
 
-  const ratingIcon = document.createElement('p');
-  ratingIcon.innerHTML = DBHelper.rating2stars(restaurant.average_rating);
-  ratingIcon.className = 'rating-stars';
-  ratingIcon.setAttribute('aria-hidden', 'true');
-  rating_wrapper.appendChild(ratingIcon);
+      const ratingIcon = document.createElement('p');
+      ratingIcon.innerHTML = DBHelper.rating2stars(averageRating);
+      ratingIcon.className = 'rating-stars';
+      ratingIcon.setAttribute('aria-hidden', 'true');
+      rating_wrapper.appendChild(ratingIcon);
 
-  const nReviews = document.createElement('p');
-  const reviewCount = restaurant.total_reviews ?  `${restaurant.total_reviews} Reviews`: 'No Reviews Yet';
-  nReviews.appendChild(cleanInput(reviewCount));
-  nReviews.className = 'review-count';
-  rating_wrapper.appendChild(nReviews);
+    }
 
-  text_wrapper.appendChild(rating_wrapper);
+    const nReviews = document.createElement('p');
+    const reviewString = total_reviews ? `${total_reviews} Reviews` : 'No Reviews Yet';
+    nReviews.appendChild(cleanInput(reviewString));
+    nReviews.className = 'review-count';
+    rating_wrapper.appendChild(nReviews);
 
+    text_wrapper.appendChild(rating_wrapper);
+  
 
   const neighborhood = document.createElement('p');
   if (restaurant.neighborhood)
@@ -339,7 +344,6 @@ createRestaurantHTML = (restaurant) => {
 
   a_wrapper.appendChild(content_wrapper);
 
-
   //link the html element to the marker index
   a_wrapper.setAttribute('data-rest-id', restaurant.id);
   a_wrapper.addEventListener('mouseenter', (e) => {
@@ -356,6 +360,15 @@ createRestaurantHTML = (restaurant) => {
   });
 
   li.append(a_wrapper);
+
+
+  //Create favorite button
+  const favButton = document.createElement('button');
+  favButton.id = 'options__favorite';
+  favButton.setAttribute('data-rest-id', restaurant.id);
+  HTMLHelper.initFavElement(favButton, restaurant.is_favorite); //set ARIA & callback
+  li.append(favButton);
+    
 
   return li;
 

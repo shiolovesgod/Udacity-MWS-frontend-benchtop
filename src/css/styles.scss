@@ -105,6 +105,7 @@ Map
   padding: 0;
   margin: 5px auto;
   width: 95%;
+  position: relative;
 }
 
 .restaurants-list li a {
@@ -156,7 +157,33 @@ Map
   margin: 0;
 }
 
+//Favorites Button
 
+#options__favorite {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 48px;
+  height: 48px;
+
+  font-size: 1.3em;
+  font-family: FontAwesome;
+  background-color: rgba(0,0,0,0);
+  color: #b35f00;
+  border: none;
+}
+#options__favorite.favorite {
+  color: #F14336;
+}
+#options__favorite:hover, 
+#options__favorite:focus {
+  cursor: pointer;
+  font-size: 2rem;
+  outline: none;
+}
+#options__favorite:active {
+  top: 3px;
+}
 /* -----------------------------------
  Switch between map and list
  ----------------------------------- */

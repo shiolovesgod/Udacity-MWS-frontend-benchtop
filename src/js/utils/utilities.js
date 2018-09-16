@@ -202,6 +202,7 @@ class HTMLHelper {
   //This is for the first page, when restaurants are created
   static initFavElement(btn, isFav) {
 
+
     //add event listener
     btn.addEventListener('click', (e) => HTMLHelper.toggleFavorite(btn));
 
@@ -244,6 +245,13 @@ class HTMLHelper {
        } else {
          btnIcon.innerHTML = '&#61578;'; //open heart 
        }
+     } else {
+       
+      if (isFav) {
+        favBtn.innerHTML = '&#61444;'; //closed heart 
+      } else {
+        favBtn.innerHTML = '&#61578;'; //open heart 
+      }
      }
 
   }
@@ -294,7 +302,7 @@ class HTMLHelper {
       marker = self.marker;
     } else if(self.markers) {
       marker = self.markers.find((element) => {
-        return element.rest_id == id
+        return element.rest_id == favObj.id
       });
     }
 
