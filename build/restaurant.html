@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   
+  <link rel="stylesheet" href="css/inner_styles.css" async />
+
+  <link rel="stylesheet" href="css/third-party/google-fonts.css" type="text/css" async defer />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" defer />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="70x70" href="icon/mstile-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon/android-chrome-32x32.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon/android-chrome-32x32.png">
+  <link rel="manifest" href="/site.webmanifest" async defer>
+  <meta name="theme-color" content="#3397db"/> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Restaurant Info</title>
+</head>
+
+<body class="inside">
+  <header>
+      <h1 class="site-title">
+        <a href="./">Restaurant Reviews</a>
+      </h1>
+    <nav>
+       
+  <!-- Beginning breadcrumb -->
+  <ul class="breadcrumb"> 
+    <li><a href="./">Home</a></li>
+  </ul>
+
+
+    </nav>
+  </header>
+
+  <section class="notification-wrapper" aria-label="notifications">
+     
+  </section>
+
+   
+
+  <main class="maincontent">
+     
+
+
+
+  <!-- Beginning restaurant -->
+  <section id="restaurant-container" class="restaurant-container" aria-label="Restaurant information">
+    <h1 class="restaurant-name"></h1>
+    <a class="restaurant-img-wrapper"></a>
+    <p class="restaurant-cuisine"></p>
+    <p class="restaurant-address"></p>
+    <table class="restaurant-hours" aria-label="Restaurant-hours" role="table"></table>
+  </section>
+
+  <!--User Options-->
+  <section>
+    <div class="user-options">
+      <button id="options__favorite" class="uinput__button options__favorite" role="switch" aria-checked="false">
+        <div id="user-favorite-icon" class="button__icon icon-font" aria-hidden="true">&#61578;</div>
+        <div class="button__text">Add Favorite</div>
+      </button>
+      <button id="options__addReview" class="uinput__button btn-trigger-modal" data-mdl-wrpr="review-mdl-wrapper">
+        <div class="button__icon icon-font" aria-hidden="true">&#61504;</div>
+        <div class="button__text">Add Review</div>
+      </button>
+    </div>
+  </section>
+
+  <section class="section-map" aria-label="Restaurant location">
+    <div id="map" class="map"></div>
+  </section>
+
+  <!-- Beginning reviews -->
+  <section class="reviews-container" aria-label="Restaurant reviews">
+    <ul class="reviews-list"></ul>
+  </section>
+  
+
+  </main>
+
+  
+  <div id="review-mdl-wrapper" class="modal-wrapper">
+  <div class="modal-content">
+    
+    <!-- https://www.w3.org/WAI/tutorials/foms/custom-controls/ -->
+
+    <form id="form__user-review" action="javascript:void(0)" method="POST" aria-labelledby="review-form-header">
+      <div class="form-header" id="review-form-header">
+        <h2 class="form-title">Rate & Review</h2>
+        <h3 class="form-subtitle">Name of Restaurant</h3>
+        <input type="text" value="" style="display:none" name="restaurant_id" disabled>
+      </div>
+
+      <div class="form-body">
+        <!-- <h3>Add a Review</h3> -->
+        <input type="text" placeholder="Name" name="name" required>
+        <div role="radiogroup" aria-label="Rating" id="rating__radiogroup" class="rating__radiogroup" aria-label="Rating" required>
+
+          <!-- No Rating -->
+          <input id="star0" type="radio" checked class="offscreen radio-star" value="0" name="rating" aria-label="No Rating">
+
+          <!-- One Star -->
+          <input id="star1" type="radio" class="offscreen radio-star" value="1" name="rating">
+          <label class="star-label" for="star1">
+            <span class="offscreen">One Star</span>
+            <span class="form-rating-text star">&#61445;</span>
+          </label>
+
+          <!-- Two Stars -->
+          <input id="star2" type="radio" class="offscreen radio-star" value="2" name="rating">
+          <label class="star-label" for="star2">
+            <span class="offscreen">Two Stars</span>
+            <span class="form-rating-text star">&#61445;</span>
+          </label>
+
+          <!-- Three Stars -->
+          <input id="star3" type="radio" class="offscreen radio-star" value="3" name="rating">
+          <label class="star-label" for="star3">
+            <span class="offscreen">Three Stars</span>
+            <span class="form-rating-text star">&#61445;</span>
+          </label>
+
+          <!-- Four Stars -->
+          <input id="star4" type="radio" class="offscreen radio-star" value="4" name="rating">
+          <label class="star-label" for="star4">
+            <span class="offscreen">Four Stars</span>
+            <span class="form-rating-text star"> &#61445;</span>
+          </label>
+
+          <!-- Five Stars -->
+          <input id="star5" type="radio" class="offscreen radio-star" value="5" name="rating">
+          <label class="star-label" for="star5">
+            <span class="offscreen">Five Stars</span>
+            <span class="form-rating-text star">&#61445;</span>
+          </label>
+
+          <div class="rating-error">A rating is required</div>
+        </div>
+
+        <textarea name="comments" form="form__user-review" class="multiline-text" placeholder="Tell us about your experience."></textarea>
+
+        <div role="alert" class="form-error"></div>
+
+      </div>
+
+      <div class="form-footer form-buttons">
+        <input type="submit" value="Post">
+        <a href="#" class="btn-form-cancel modal-cancel" role="button" aria-label="cancel">Cancel</a>
+
+      </div>
+
+
+    </form>
+
+    <div class="output"></div>
+
+  </div>
+</div>
+
+<div id="modal-overlay" class="modal-overlay"></div>
+
+
+  <footer id="footer">
+    Copyright (c) 2017
+    <a href="./">
+      <strong>Restaurant Reviews</strong>
+    </a> All Rights Reserved.
+  </footer>
+
+   
+  <!-- Beginning scripts -->
+  <script type="application/javascript" charset="utf-8" src="js/library.js"></script>
+  <script type="text/javascript" src="js/restaurant_info.js"></script>
+  <!-- Google Maps -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap"></script>
+
+
+</body>
+
+</html>
