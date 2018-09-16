@@ -12,58 +12,58 @@
 
       <div class="form-body">
         <!-- <h3>Add a Review</h3> -->
-        <input type="text" placeholder="Name" name="name" required>
+        <input type="text" placeholder="Name" name="name" aria-label="name" required>
         <div role="radiogroup" aria-label="Rating" id="rating__radiogroup" class="rating__radiogroup" aria-label="Rating" required>
 
           <!-- No Rating -->
           <input id="star0" type="radio" checked class="offscreen radio-star" value="0" name="rating" aria-label="No Rating">
 
           <!-- One Star -->
-          <input id="star1" type="radio" class="offscreen radio-star" value="1" name="rating">
+          <input id="star1" type="radio" class="offscreen radio-star" value="1" name="rating" aria-label="1 Star">
           <label class="star-label" for="star1">
             <span class="offscreen">One Star</span>
             <span class="form-rating-text star">&#61445;</span>
           </label>
 
           <!-- Two Stars -->
-          <input id="star2" type="radio" class="offscreen radio-star" value="2" name="rating">
+          <input id="star2" type="radio" class="offscreen radio-star" value="2" name="rating" aria-label="2 Stars">
           <label class="star-label" for="star2">
             <span class="offscreen">Two Stars</span>
             <span class="form-rating-text star">&#61445;</span>
           </label>
 
           <!-- Three Stars -->
-          <input id="star3" type="radio" class="offscreen radio-star" value="3" name="rating">
+          <input id="star3" type="radio" class="offscreen radio-star" value="3" name="rating" aria-label="3 Stars">
           <label class="star-label" for="star3">
             <span class="offscreen">Three Stars</span>
             <span class="form-rating-text star">&#61445;</span>
           </label>
 
           <!-- Four Stars -->
-          <input id="star4" type="radio" class="offscreen radio-star" value="4" name="rating">
+          <input id="star4" type="radio" class="offscreen radio-star" value="4" name="rating" aria-label="4 Stars">
           <label class="star-label" for="star4">
             <span class="offscreen">Four Stars</span>
             <span class="form-rating-text star"> &#61445;</span>
           </label>
 
           <!-- Five Stars -->
-          <input id="star5" type="radio" class="offscreen radio-star" value="5" name="rating">
+          <input id="star5" type="radio" class="offscreen radio-star" value="5" name="rating" aria-label="5 Stars">
           <label class="star-label" for="star5">
             <span class="offscreen">Five Stars</span>
             <span class="form-rating-text star">&#61445;</span>
           </label>
 
-          <div class="rating-error">A rating is required</div>
+          <div class="rating-error" aria-label="rating error">A rating is required</div>
         </div>
 
-        <textarea name="comments" form="form__user-review" class="multiline-text" placeholder="Tell us about your experience."></textarea>
+        <textarea name="comments" form="form__user-review" class="multiline-text" placeholder="Tell us about your experience." aria-label="comments"></textarea>
 
         <div role="alert" class="form-error"></div>
 
       </div>
 
       <div class="form-footer form-buttons">
-        <input type="submit" value="Post">
+        <input type="submit" value="Post" role="button" aria-label="sbmit">
         <a href="#" class="btn-form-cancel modal-cancel" role="button" aria-label="cancel">Cancel</a>
 
       </div>
