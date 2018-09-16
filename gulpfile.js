@@ -94,6 +94,12 @@ gulp.task('reload', (done) => {
 })
 
 
+/*
+ *
+ * QUICK DEV CODE
+ *
+ */
+
 //Run the build
 gulp.task('default', gulp.parallel('copy-skeleton', 'build-css','styles', 'scripts', (done) => {
 
@@ -114,6 +120,26 @@ gulp.task('default', gulp.parallel('copy-skeleton', 'build-css','styles', 'scrip
   done();
 }));
 
+
+
+
+
+/*
+ *
+ * BUILD CODE (no watching)
+ *
+ */
+
+gulp.task('build', gulp.parallel('copy-skeleton','copy-images','styles', 'scripts','build-html','favicon', (done) => {
+
+  server.init({
+    server: {
+      // https: true,
+      baseDir: './build'
+    }
+  });
+  done();
+}));
 
 /*
  *
