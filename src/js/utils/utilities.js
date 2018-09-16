@@ -268,10 +268,6 @@ class HTMLHelper {
     let favObj = {btn: thisBtn, id: parseInt(thisId), is_favorite: newState}
     DBHelper.setFavoriteStatus(favObj, (res)=> {
   
-      //add a special class for offline
-      console.log('Favorite changed:'); 
-      console.log(res);
-  
     });
 
     //change map marker
@@ -281,7 +277,7 @@ class HTMLHelper {
   static toggleOfflineClass(favObj, isMakeOffline) {
     /*INPUT: favObj = {id, btn, isFav}...isMakeOffline=Boolean*/
 
-    let btn = favObj.btn || document.body.querySelector(`#options__favorite[data-rest-id="${favObj.id}"]`);
+    let btn = document.body.querySelector(`#options__favorite[data-rest-id="${favObj.id}"]`);
     if (!btn) return; //cant find the button
     
     //toggle it
@@ -401,6 +397,7 @@ class DataSync {
 
     //Sync Reviews
     DataSync._syncReviews();
+    DataSync._syncFavorites();
 
     //Improvement: Next iteration, this should be handled by a web worker
 
@@ -418,7 +415,7 @@ class DataSync {
     for (let i = reviewQueue.length; i>0; i--) {
       if (navigator.onLine) {
         DBHelper.addUserReview(reviewQueue[i-1], reviewQueue[i-1].restaurant_name, (res) => {
-          debugger
+
           if (!res.retry) {
 
             //remove from queue

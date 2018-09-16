@@ -3,7 +3,7 @@
  */
 
 //Define cache variables
-const CACHED_DIRS = ['/', '/js/', '/css/', '/css/third-party/', '/img/*', '/icon/'];
+const CACHED_DIRS = ['/', '/js/', '/css/', '/css/third-party/', '/img/*', '/img/icon/*','/icon/'];
 const rCACHED_DIRS = CACHED_DIRS.map(dir => {
   return new RegExp(`^${dir.split('*').join('.*')}$`)
 });
@@ -32,7 +32,8 @@ self.addEventListener('install', (event) => {
   const initCacheURLs = ['/', '/restaurant.html',
     '/js/main.js', '/js/restaurant_info.js', '/js/library.js',
     '/css/styles.css', '/css/inner_styles.css',
-    '/css/third-party/google-fonts.css'
+    '/css/third-party/google-fonts.css',
+    '/img/icons/map-icon-favorite.png','/img/icons/map-icon-regular.png',
   ];
   event.waitUntil(caches.open(CORE_CACHE_NAME).then(cache => {
     return cache.addAll(initCacheURLs);

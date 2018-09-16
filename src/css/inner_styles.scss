@@ -104,21 +104,28 @@ User Options
   align-items: center; //vertically
   justify-items: center; //horizontally
 
-  // Style
-  border-radius: 5px;
+  // Style (shadow: by Samuel Thornton)
+  border-radius: 5px; 
   background-color: #fff;
   border: 3px solid #252831;
   text-transform: uppercase;
   color: #252831;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 
   cursor: pointer;
 
 }
 
-.uinput__button:hover, .uinput__button:focus {
+.uinput__button:hover {
   background-color: #252831;
   color: white;
 }
+
+.uinput__button:focus {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
 
 .uinput__button:active {
   position: relative;
@@ -129,7 +136,6 @@ User Options
   font-size: 30px;
   width: 40%;
 }
-
 
 //=============Show button text=====================
 // .uinput__button {
@@ -518,10 +524,15 @@ footer {
     margin: 0 0 15px;
     padding: 15px;
   }
+
   .reviews-list li p, 
   .reviews-list li div 
   {
     margin: 0 0 10px;
+  }
+
+  .reviews-list li.offline h3 {
+    color: gray;
   }
 
 }

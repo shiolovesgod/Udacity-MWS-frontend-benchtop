@@ -160,6 +160,19 @@ Ratings
   font-family: 'FontAwesome', 'Helvetica', 'Sans-Serif';
 }
 
+/* -----------------------------------
+Favorite Icons
+----------------------------------- */
+
+#options__favorite.favorite .button__icon {
+  color: #F14336; //red
+}
+
+#options__favorite.offline {
+  color: gray;
+  border-color: gray;
+}
+
 /*
 *
 * AUTHENTICATION

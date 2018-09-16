@@ -542,7 +542,7 @@ class DBHelper {
           if (id) {
             err = `${opts.endpoint[0].toUpperCase()}${opts.endpoint.substr(1)} does not exist`;
           } else {
-            err = `Request failed and ${endpoint}(s) not cached. Returned status of ${xhr.status}`;
+            err = `Request failed and ${opts.endpoint}(s) not cached. Returned status of ${xhr.status}`;
             callback(err, {
               resource: null,
               source: 'null'
