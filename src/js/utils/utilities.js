@@ -205,6 +205,7 @@ class HTMLHelper {
 
     //add event listener
     btn.addEventListener('click', (e) => HTMLHelper.toggleFavorite(btn));
+    btn.setAttribute('aria-label','Favorites');
 
     //set ARIA roles
     btn.setAttribute('role','switch');
@@ -212,10 +213,8 @@ class HTMLHelper {
     if (isFav) {
       btn.classList.add('favorite');
       btn.setAttribute('aria-checked',true);
-      btn.setAttribute('aria-label','Remove from Favorites');
     } else {
       btn.setAttribute('aria-checked',false);
-      btn.setAttribute('aria-label','Add to Favorites');
     }
 
     //Set Icon & Aria
