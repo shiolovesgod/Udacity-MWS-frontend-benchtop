@@ -301,18 +301,13 @@ class DBHelper {
 
         //Add to Q if server error
         if (res && res.retry) {
-          
           DataSync.queueFavorite(favObj);
-          HTMLHelper.toggleOfflineClass(favObj, true);
-        } else {
-          HTMLHelper.toggleOfflineClass(favObj, false);
-        }
+        } 
         cb(res); // send back the res
       });
     } else { //OFFLINE
       //Add to Q
       DataSync.queueFavorite(favObj);
-      HTMLHelper.toggleOfflineClass(favObj, true);
     }
       
   }
@@ -690,7 +685,7 @@ class DBHelper {
       const dbTable = tx.objectStore('restaurants');
       
       //Retrieve single value or entire table
-      restaurant = await dbTable.get(parseInt(entry.id));
+      let restaurant = await dbTable.get(parseInt(entry.id));
 
       if (!restaurant) return //no need for error, will update on next sync
 

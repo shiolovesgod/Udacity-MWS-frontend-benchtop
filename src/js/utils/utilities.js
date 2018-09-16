@@ -362,16 +362,16 @@ class DataSync {
 
     let currentQueue = DataSync.favoriteQueue;
     let duplicateFlag = false;
-    let newFavStr = JSON.stringify(newFavorite);
 
     //If a restaurant is already on the queue, remove it
     for (let i=0; i < currentQueue.length; i++) {
-      if (JSON.stringify(currentQueue[i]) == newFavStr) {
+      if (currentQueue[i].id == newFavorite.id) {
 
         duplicateFlag = true;
 
         //remove item from current queue
-        currentQueue.splice(i,0);
+        HTMLHelper.toggleOfflineClass(currentQueue[i],false);
+        currentQueue.splice(i,1);
 
         //stop looking, there will only every be one
         break;
@@ -381,6 +381,7 @@ class DataSync {
     if (!duplicateFlag) {
       //add to the queue
       currentQueue.push(newFavorite);
+      HTMLHelper.toggleOfflineClass(newFavorite,true);
     }
 
     DataSync._updateQueue('fav', currentQueue);
@@ -421,6 +422,7 @@ class DataSync {
             //remove from queue
             reviewQueue.splice(i-1, 1);
 
+
             //Update the localStorage (async, so can't wait until all done w/o promise)
             DataSync._updateQueue('review', reviewQueue);
           }
@@ -447,6 +449,7 @@ class DataSync {
         DBHelper.setFavoriteStatus(favsQueue[i - 1], (res) => {
           if (!res.retry) {
             //remove from queue
+            HTMLHelper.toggleOfflineClass(favsQueue[i-1],false);
             favsQueue.splice(i, 1);
           }
         })

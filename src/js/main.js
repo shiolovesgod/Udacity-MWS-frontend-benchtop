@@ -23,8 +23,25 @@ var isMapVisible = false;
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  //
-  
+  //add listeners to the window for connectivity changes
+  window.addEventListener('online', DataSync.syncWithBackend);
+
+  window.addEventListener('offline', (e) => {
+    //note is an object: {title, status, message}
+    //status = ['info', 'failure', 'success']
+    HTMLHelper.postNotification({
+      title: 'Offline',
+      status: 'info',
+      message: 'You are offline.'
+    });
+  });
+
+  //check the queue
+  if (navigator.onLine) {
+    DataSync.syncWithBackend;
+  }
+
+
 });
 
 
