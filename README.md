@@ -1,13 +1,13 @@
-What is this anyway?
+# What is this anyway?
 Hi there, thanks for checking out my Restaurant Reviews project. This project was a part of my training course for Google's Mobile Web Specialist certification. The base code was provided by Udacity, and little by little it blossomed into a fully functional, responsive, offline, and accessible web app.
 
-Project Overview: Stage 1
+## Project Overview: Stage 1
 In stage one of the project, I transformed the raw code into a responsive and accessible website. This ensures that users on screens of all sizes, and with different accessibility needs were able to effectively (and efficiently) access the content in my web app.
 
-Project Overview: Stage 2
+## Project Overview: Stage 2
 This stage of the project focused on IndexedDB caching and performance optimization.
 
-How do I get up and running (as a reviewer)?
+### How do I get up and running (as a Udacity reviewer)?
 1. File Setup
 This project has modified both the back and frontend so you will need both repositories
 
